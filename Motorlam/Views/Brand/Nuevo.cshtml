@@ -1,0 +1,59 @@
+﻿@model Motorlam.Entities.Brand
+@using Motorlam.Entities                  
+
+
+@{
+    Layout = "~/Views/Shared/AdministrationLayout.cshtml";
+}
+<h2>Datos Marca de Coche</h2>
+
+@using (Html.BeginForm("SalvarBrand", "Brand", FormMethod.Post, new { id = "AltaBrandForm" }))
+{
+
+    @Html.Hidden("BrandId",Model.BrandId)
+     
+<div id="tabs" class="ui-tabs ui-widget ui-widget-content ui-corner-all">                           
+        <div class="tabsContent">           
+            <div class="infoAdminContent">
+                <div class="rowForm">
+                    <label class="fieldName" style="width: 100px;">Nombre:</label>
+                    <input type="text" style="width: 200px;" id="@BrandFields.BrandName" name="@BrandFields.BrandName" value="@Model.BrandName" />
+                </div>
+                <div class="buttonBarCriteria">
+                    <div class="leftContent">
+                        <a href='@(Url.Action("Index", "Brand", null))' class="submitButton" style="text-decoration:none;">Volver</a>
+                    </div>    
+                    <div class="rightContent">
+                        <input type="submit" id="SalvarBrand" value="Guardar" />
+                    </div>
+                </div>
+          </div>
+      </div>
+</div>
+<div id="SaveBrandCorrect" style="display:none" class="popup validationDiv">
+    <div class="main">
+        <a href="#" class="btnClose validationClose">Cerrar </a>
+        <label class="succesSave">Marca Guardada Correctamente</label>
+    </div>
+    <div class="footer"></div>       
+</div>
+   
+}
+<script type="text/javascript">
+
+    jQuery("#SalvarBrand").click(function (e) {
+            e.preventDefault();
+            jQuery("#AltaBrandForm").ajaxSubmit({
+                type: "POST",
+                success: function () {
+                    jQuery("#SaveBrandCorrect").show();
+                    jQuery(".validationClose").click(function (e) {
+                        e.preventDefault();
+                        jQuery(".validationDiv, .validationDivError").hide("slow");
+                    });
+                }
+            });
+
+        });
+ 
+</script>

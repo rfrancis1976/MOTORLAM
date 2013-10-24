@@ -1,0 +1,136 @@
+﻿@using Motorlam.Entities
+
+@model IList<Car>
+
+@{           
+    string rowClass = string.Empty;
+    int cont = 1;   
+}
+
+<div id="DatosNuevoCoche" style="display:none;">
+    @Html.Partial("~/Views/Invoice/DatosCoche.cshtml", new Car())
+
+</div>
+<table class="Grid evaluationTable" border="0" cellpadding="0" cellspacing="0">
+    <thead>
+        <tr>
+        <th colspan="100" class="nRegisters">
+                <div class="fullTableSearchDocs">            
+	                <div class="rightButton">
+                       <a href='#' class="newCar submitButton">Nuevo</a>
+                    </div>
+                    <span class="textNRegister">
+                        @Model.Count registro/s encontrados
+                    </span>
+                </div>
+            </th>
+           
+        </tr>
+        <tr> 
+            <th>Marca</th>
+            <th>Modelo</th>
+            <th>Motor</th>
+            <th>Kilometros</th>
+            <th class="separator TH52"></th>
+        </tr>        
+    </thead>
+    <tbody>
+         @foreach (var car in Model)
+         {
+            rowClass = cont % 2 != 0 ? "odd" : string.Empty;
+            
+            <tr class="@rowClass">                                
+                <td class="left TH120">@car.BrandName</td>
+                <td class="left TH140">@car.ModelName</td>
+                <td class="center TH180">@car.MotorName</td>
+                <td class="center TH90">@car.CarKilometres</td>
+                <td class="TH67 center">
+                    <a href='#' id="custom_@(car.CarId)" class="btnEdit selectCar"></a>                    
+                </td>
+            </tr>
+            cont++;
+         }    
+
+         @for (int i = Model.Count; i <= 5; i++)
+         {
+            rowClass = cont % 2 != 0 ? "odd" : string.Empty;
+            <tr class="@rowClass">
+                <td class="TH120"></td>
+                <td class="TH140"></td>
+                <td class="TH180"></td>
+                <td class="TH90"></td>
+                <td class="TH67 center"></td>
+            </tr>
+            cont++;
+        }
+    </tbody>
+    <tfoot>
+        <td colspan="8"></td>
+    </tfoot>
+</table>
+
+<script type="text/javascript">
+
+    jQuery(".selectCar").click(function () {
+        var dataURL = '@Url.Action("LoadCar","Invoice")';
+        var carID = this.id.split('_')[1];
+        jQuery.ajax({
+            type: "POST",
+            url: dataURL,
+            data: { CarID: carID },
+            cache: false,
+            success: function (event) {
+                if (event.result == "success") {
+                    jQuery("#CarId").val(event.Car.CarId);
+                    jQuery("#CarNameComplete").val(event.Car.BrandName + " " + event.Car.ModelName + " " + event.Car.MotorName);
+                    jQuery("#InvoiceKilometres").val(event.Car.CarKilometres);
+                    jQuery("#CarRack").val(event.Car.CarRack);
+                    jQuery("#DialogSearchCar").dialog("destroy");
+                }
+            }
+        });
+
+    });
+
+    jQuery(".newCar").click(function () {
+        jQuery("#DatosNuevoCoche").show();
+    });
+
+    jQuery(".SaveCar").click(function (e) {
+        e.preventDefault();
+        var SaveCarUrl = '@Url.Action("SalvarCoche","Invoice")';
+        var Id = jQuery("#CustomerId").val();
+        jQuery("#CocheClienteForm").ajaxSubmit({
+            type: "POST",
+            url: SaveCarUrl,
+            data: { CustomerID: Id },
+            success: function (event) {
+                if (event.result == "success") {
+                    jQuery("#CarId").val(event.Car.CarId);
+                    jQuery("#CarNameComplete").val(event.Car.BrandName + " " + event.Car.ModelName + " " + event.Car.ModelMotor);
+                    jQuery("#InvoiceKilometres").val(event.Car.CarKilometres);
+                    jQuery("#CarRack").val(event.Car.CarRack);
+                    jQuery("#DialogSearchCar").dialog("destroy");
+                }
+                else {
+                    jQuery("#ErrorPassword").show();
+                    jQuery("#ErrorPassword .validationClose").remove();
+                    if (event.validationErrors) {
+                        jQuery("#ErrorPassword ul").fromTemplate('templateErrors', event);
+                        ShowValidationErrors("#ChangePasswordForm", event.validationErrors, "errorListTemplate");
+                    }
+                }
+                jQuery(".validationClose").click(function (e) {
+                    e.preventDefault();
+                    jQuery(".validationDiv, .validationDivError").hide("slow");
+                });
+            },
+            dataType: "json",
+            cache: false
+
+        });
+    });
+   
+</script>
+
+

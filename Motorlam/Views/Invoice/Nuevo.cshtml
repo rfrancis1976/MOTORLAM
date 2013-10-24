@@ -1,0 +1,212 @@
+﻿@model Motorlam.Entities.Invoice
+@using Motorlam.Entities                  
+
+@{
+    Layout = "~/Views/Shared/InvoiceLayout.cshtml";  
+    var lines = (IList<InvoiceLine>)ViewBag.InvoiceLines;
+    int tab = (int)ViewBag.Tab;
+    
+}
+
+<h2>Factura nº @if (!string.IsNullOrEmpty(@Model.InvoiceNumber)) { @Model.InvoiceNumber }</h2>
+
+
+<div id="tabs" class="ui-tabs ui-widget ui-widget-content ui-corner-all" style="width: 868px">
+    <ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all"> 
+        @if (tab == 1)
+        {
+            if (Model.InvoiceId != 0)
+            {
+                <li class="ui-state-default ui-corner-top ui-state-active ui-tabs">
+                    <a href="#tabs-2">Detalle Factura</a>                
+                </li>
+            }                
+            <li class="ui-state-default ui-corner-top ui-state-active ui-tabs-selected">
+                <a href="#tabs-1">Datos Factura</a>
+            </li>
+        }
+        else
+        { 
+            if (Model.InvoiceId != 0)
+            {
+                <li class="ui-state-default ui-corner-top ui-state-active ui-tabs-selected">
+                <a href="#tabs-2">Detalle Factura</a>                
+                </li>                
+            }
+            <li class="ui-state-default ui-corner-top ui-state-active ui-tabs">
+                <a href="#tabs-1">Datos Factura</a>
+            </li>
+          
+        }
+    </ul> 
+
+     @if (Model.InvoiceId != 0)
+     {
+    <div id="tabs-2" class="ui-tabs-panel ui-widget-content ui-corner-bottom">
+        <div class="tabsContent">           
+            <div class="infoAdminContent">
+                <div id="NewInvoiceLine">
+                @Html.Partial("~/Views/Invoice/DatosLineaFactura.cshtml", new InvoiceLine())    
+                </div>
+                <div id="ContainerInvoiceLines">
+                    @if (lines != null)
+                    {
+                        @Html.Partial("~/Views/Invoice/OrderList.cshtml", lines)
+                    }
+                    else
+                    {
+                        @Html.Partial("~/Views/Invoice/OrderList.cshtml", new List<InvoiceLine>())
+                    }
+               </div> 
+            </div>
+       </div>
+    </div>
+     }
+    
+    <div id="tabs-1" class="ui-tabs-panel ui-widget-content ui-corner-bottom">
+        <div class="tabsContent">           
+            <div class="infoAdminContent"> 
+                @Html.Partial("~/Views/Invoice/DatosFactura.cshtml")
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="DialogSearchCustomer" style="display:none;" title="Seleccionar Cliente">
+    @Html.Partial("~/Views/Invoice/SearchCustomer.cshtml")
+</div>  
+
+<div id="SaveInvoiceCorrect" style="display:none" class="popup validationDiv">
+        <div class="main">
+            <a href="#" class="btnClose validationClose">Cerrar </a>
+            <label class="succesSave">Factura Guardada Correctamente</label>
+        </div>
+        <div class="footer"></div>       
+</div>     
+
+<script type="text/javascript">
+    var LoadCityUrl = '@Url.Action("LoadCityByProvince", "Cliente")';
+    var reloadUrl = '@Url.Action("Editar", "Invoice")';
+
+        
+    jQuery(".SaveInvoice").click(function (e) {
+        e.preventDefault();
+        jQuery("#AltaFacturaForm").ajaxSubmit({
+            success: function (event) {
+                jQuery("#SaveInvoiceCorrect").show();
+                jQuery(".validationClose").click(function (e) {
+                    e.preventDefault();
+                    jQuery(".validationDiv, .validationDivError").hide("slow");
+                    window.location = reloadUrl + "?InvoiceId=" + event.Invoice.InvoiceId + "&tab=" + 1;
+                });
+            }
+        });
+
+    });
+
+    jQuery("#ProvinceId").ReloadCascadeDropDown({
+        fatherFieldName: "ProvinceId",
+        childFieldName: "CityId",
+        loadChildUrl: LoadCityUrl
+    });
+
+    
+   
+    jQuery("#Buscar").click(function (e) {
+        e.preventDefault();
+       jQuery("#DialogSearchCustomer").dialog({
+            autoOpen: true,
+            modal: true,
+            show: 'fold',
+            width: 650,
+            position: ['center', 100],
+            close: function () {
+               jQuery("#DialogSearchCustomer").dialog("destroy");
+            }
+        });
+    });
+
+    jQuery(".OpenListCar").click(function (e) {
+        e.preventDefault();
+        var loadCarsUrl = '@Url.Action("LoadCarsByCustomer", "Invoice")';
+        jQuery("#DialogSearchCar").html("");
+        jQuery.ajax({
+            url: loadCarsUrl,
+            type: "POST",
+            data: { CustomerId: jQuery("#CustomerId").val() },
+            cache: false,
+            success: function (data) {
+                jQuery("#DialogSearchCar").html(data);
+            }
+
+        });
+        jQuery("#DialogSearchCar").dialog({
+            autoOpen: true,
+            modal: true,
+            show: 'fold',
+            width: 600,
+            position: ['center', 100],
+            close: function () {
+                jQuery("#DialogSearchCar").dialog("destroy");
+            }
+        });
+    });
+ 
+    jQuery("input[id='@InvoiceFields.InvoiceBy']").click(function () {
+        isCheckedFacturarA(this);
+    });
+
+    function isCheckedFacturarA(obj) {
+        var value = jQuery(obj).val();
+        var cityId = 0;
+        if (value == 1) {
+            var dataURL = '@Url.Action("LoadCustomer", "Invoice")';
+            var customerID = jQuery("#CustomerId").val();
+            jQuery.ajax({
+                type: "POST",
+                url: dataURL,
+                data: { CustomerID: customerID },
+                cache: false,
+                async: false,
+                success: function (event) {
+                    if (event.result == "success") {
+                        if (event.Customer.CustomerSurName != null)
+                            jQuery("#@InvoiceFields.InvoiceCustomerName").val(event.Customer.CustomerName + " " + event.Customer.CustomerSurName);
+                        else
+                            jQuery("#@InvoiceFields.InvoiceCustomerName").val(event.Customer.CustomerName);
+                        jQuery("#@InvoiceFields.InvoiceCustomerNIF").val(event.Customer.CustomerNIF);
+                        jQuery("#@InvoiceFields.InvoiceCustomerAddress").val(event.Customer.CustomerAddress);
+                        jQuery("#@InvoiceFields.ProvinceId").val(event.Customer.ProvinceId);
+                        document.getElementById("CityId").options.length = 0;
+                        document.getElementById("CityId").add(new Option("<< seleccione >>", ""))
+
+                        if (event.Cities.length > 0) {
+                            for (var item in event.Cities) {
+                                if (event.Cities[item].CityId == event.Customer.CityId) {
+                                    jQuery("#CityId").append("<option value='" + event.Cities[item].CityId + " ' selected='selected'>" + event.Cities[item].CityName + "</option>");
+                                } else {
+                                    jQuery("#CityId").append("<option value='" + event.Cities[item].CityId + "'>" + event.Cities[item].CityName + "</option>");
+                                }
+                            }
+                        }
+                        jQuery("#@InvoiceFields.CityId").val(event.Customer.CityId);
+                        jQuery("#@InvoiceFields.InvoiceCustomerCodPostal").val(event.Customer.CustomerCodPostal);
+                        jQuery("#@InvoiceFields.InvoiceCustomerPhone").val(event.Customer.CustomerPhone1);
+                    }
+                }
+            });
+        } else {
+            jQuery("#@InvoiceFields.InvoiceCustomerName").val("");
+            jQuery("#@InvoiceFields.InvoiceCustomerNIF").val("");
+            jQuery("#@InvoiceFields.InvoiceCustomerAddress").val("");
+            jQuery("#@InvoiceFields.ProvinceId").val("");
+            jQuery("#@InvoiceFields.CityId").val("");
+            jQuery("#@InvoiceFields.InvoiceCustomerCodPostal").val("");
+            jQuery("#@InvoiceFields.InvoiceCustomerPhone").val("");
+
+        }
+
+        
+
+    }
+</script>

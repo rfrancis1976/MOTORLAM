@@ -1,0 +1,54 @@
+﻿@model Motorlam.Entities.InvoiceLine
+@using Motorlam.Entities
+
+@Html.Hidden("InvoiceLineId",Model.InvoiceLineId)
+<div id="tabs" class="ui-tabs ui-widget ui-widget-content ui-corner-all">                           
+   <div class="tabsContent">           
+            <div class="infoAdminContent"> 
+                <h2>Añadir Nueva Linea Factura</h2>         
+                <div class="rowForm">
+                    <label class="fieldName" style="width: 120px;">Referencia:</label>
+                    <input type="text" style="width: 100px;" id="@InvoiceLineFields.ProductReference" name="@InvoiceLineFields.ProductReference" value="@Model.ProductReference" />
+                </div>
+                <div class="rowForm">
+                    <label class="fieldName" style="width: 120px;">Nombre Producto:</label>
+                    <input type="text" style="width: 350px;" id="@InvoiceLineFields.ProductName" name="@InvoiceLineFields.ProductName" value="@Model.ProductName" />
+                </div>
+                <div class="rowForm">
+                    <label class="fieldName" style="width: 120px;">PVP:</label>
+                    <input type="text" style="width: 90px;" id="@InvoiceLineFields.ProductCost" name="@InvoiceLineFields.ProductCost" value="@Model.ProductCost" /><b> €</b>
+                </div>
+                <div class="rowForm">
+                    <label class="fieldName" style="width: 120px;">Cantidad:</label>
+                    <input type="text" style="width: 100px;" id="@InvoiceLineFields.InvoiceLineQuantity" name="@InvoiceLineFields.InvoiceLineQuantity" value="@Model.InvoiceLineQuantity" />
+                </div> 
+                <div class="rowForm">
+                    <label class="fieldName" style="width: 120px;">Descuento:</label>
+                    <input type="text" style="width: 67px;" id="@InvoiceLineFields.InvoiceLineDiscount" name="@InvoiceLineFields.InvoiceLineDiscount" value="@Model.InvoiceLineDiscount" /> <b> %</b>
+                </div>                           
+                <div class="buttonBarCriteria">
+                    <div class="rightContent">
+                        <input type="submit" class="SaveInvoiceLine"value="Guardar" />
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
+
+
+<script type="text/javascript">
+
+    var LoadModelUrl = '@Url.Action("LoadModelByBrand", "Cliente")';
+ 
+    jQuery("#BrandId").ReloadCascadeDropDown({
+        fatherFieldName: "BrandId",
+        childFieldName: "ModelId",
+        loadChildUrl: LoadModelUrl
+    });
+
+    jQuery("#@InvoiceLineFields.ProductCost").change(function () {
+        var value = jQuery(this).val();
+        var newValue = value.replace(".", ",");
+        jQuery(this).val(newValue);
+    })
+</script>

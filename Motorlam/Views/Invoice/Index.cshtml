@@ -1,0 +1,44 @@
+﻿@{
+    ViewBag.Title = "Pagina Inicio";
+    Layout = "~/Views/Shared/InvoiceLayout.cshtml";
+}
+<h2>BUSCADOR DE FACTURAS</h2>
+@using (Html.BeginForm("SearchInvoices", "Invoice", FormMethod.Post, new { id = "BuscarInvoiceForm" }))
+{
+    <div class="criteriaContainer">
+        @Html.Partial("~/Views/Invoice/Criteria.cshtml") 
+    </div>
+    <div class="buttonBarCriteria">
+        <div class="leftContent"></div>            
+        <div class="rightContent">
+            <input type="submit" id="buscarInvoice" onkeypress="return event.keyCode!=13" value="Buscar" />
+        </div>
+    </div>            
+}
+
+<div id="ListContainer1">
+    @Html.Partial("~/Views/Invoice/List.cshtml")
+</div>
+
+<script type="text/javascript">
+    jQuery("#buscarInvoice").click(function (e) {
+        var searchUrl='@Url.Action("SearchInvoices","Invoice")';
+        e.preventDefault();
+        jQuery.ajax({
+            url: searchUrl,
+            type: "POST",
+            data: {
+                InvoiceNumber: jQuery("#InvoiceNumber").val(),
+                CustomerName: jQuery("#CustomerName").val(),
+                InvoiceDate: jQuery("#invoiceDate").val(),
+                NIF: jQuery("#InvoiceCustomerNIF").val(),
+                CarRack: jQuery("#CarRack").val(),
+                IsInvoicePaid: jQuery("input[name='IsInvoicePaid']:checked").val()
+            },
+            cache: false,
+            success: function (data) {
+                jQuery("#ListContainer1").html(data);
+            }
+        });
+    });
+</script>

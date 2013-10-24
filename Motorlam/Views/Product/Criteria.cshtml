@@ -1,0 +1,35 @@
+﻿@using Motorlam.Entities
+
+@{
+    var Suppliers = (IList<Supplier>)ViewBag.Suppliers;
+    var BrandsProduct = (IList<BrandProduct>)ViewBag.BrandsProduct;
+    var TypeProducts = (IList<TypeProduct>)ViewBag.TypeProducts;
+}
+<h2 class="titleTabs" style="margin:10px 0 10px 0;">Buscador</h2>      
+<div id="tabs" class="ui-tabs ui-widget ui-widget-content ui-corner-all">                           
+     <div class="tabsContent">           
+       <div class="infoAdminContent">    
+            <div class="rowForm">
+                <span><label class="fieldName" style="width: 100px;">Referencia:</label>
+                <input name="@ProductFields.ProductReference" id="@ProductFields.ProductReference" type="text" style="width: 120px;" /> 
+                </span><span>
+                <label class="fieldName" style="width: 100px;">Marca:</label>
+                @Html.DropDownList(@BrandProductFields.BrandProductId, new SelectList(BrandsProduct, @BrandProductFields.BrandProductId, @BrandProductFields.BrandProductName), "<< seleccione >>", new { style = "width:250px" })             
+                </span>             
+            </div>
+            <div class="rowForm">
+                <span>
+                <label class="fieldName" style="width: 100px;">Nombre:</label>
+                <input name="@ProductFields.ProductName" id="@ProductFields.ProductName" type="text" style="width: 200px;" />           
+                </span><span>
+                <label class="fieldName" style="width: 100px;">Proveedor:</label>
+                @Html.DropDownList(@SupplierFields.SupplierId, new SelectList(Suppliers, @SupplierFields.SupplierId, @SupplierFields.SupplierName), "<< seleccione >>", new { style = "width:250px" })             
+                </span>
+            </div>
+            <div class="rowForm">
+                <label class="fieldName" style="width: 100px;">Tipo Producto:</label>
+                @Html.DropDownList(@TypeProductFields.TypeProductId, new SelectList(TypeProducts, @TypeProductFields.TypeProductId, @TypeProductFields.TypeProductName), "<< seleccione >>", new { style = "width:250px" })             
+            </div>
+        </div>
+    </div>
+</div>

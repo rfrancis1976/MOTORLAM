@@ -1,0 +1,80 @@
+﻿@using Motorlam.Entities
+
+@model IList<BrandProduct>
+
+@{           
+    string rowClass = string.Empty;
+    int cont = 1;   
+}
+
+
+<table class="Grid evaluationTable" border="0" cellpadding="0" cellspacing="0">
+    <thead>
+        <tr>
+        <th colspan="100" class="nRegisters">
+                <div class="fullTableSearchDocs">            
+	                <div class="rightButton">
+                       <a href='@(Url.Action("Nuevo", "BrandProduct", null))' class="submitButton">Nuevo</a>
+
+                    </div>
+                    <span class="textNRegister">
+                        @Model.Count registro/s encontrados
+                    </span>
+                </div>
+            </th>
+           
+        </tr>
+        <tr> 
+            <th>Id</th>
+            <th>Marca</th>              
+            <th class="separator TH52"></th>
+        </tr>        
+    </thead>
+    <tbody>
+         @foreach (var brand in Model)
+         {
+            rowClass = cont % 2 != 0 ? "odd" : string.Empty;
+            
+            <tr class="@rowClass">                                
+                <td class="center TH120">@brand.BrandProductId</td>
+                <td class="left">@brand.BrandProductName</td>
+                <td class="TH67 center">
+                    <a href='@(Url.Action("Editar", "BrandProduct", new { BrandProductId = brand.BrandProductId }))' class="btnView"></a>
+                    <a href="#" class="btnDelete" id="delete_@(brand.BrandProductId)"></a>
+                </td>
+            </tr>
+            cont++;
+         }    
+
+         @for (int i = Model.Count; i <= 10; i++)
+         {
+            rowClass = cont % 2 != 0 ? "odd" : string.Empty;
+            <tr class="@rowClass">
+                <td></td>
+                <td></td>               
+                <td class="TH67 center"></td>
+            </tr>
+            cont++;
+        }
+    </tbody>
+    <tfoot>
+        <td colspan="3"></td>
+    </tfoot>
+</table>
+<div id="DeleteDialog" style="display:none" ><center><br />¿Está seguro que desea eliminar este Marca?</center></div>
+
+<script type="text/javascript">
+
+    var DeleteEntityUrl = '@Url.Action("DeleteBrandProduct", "BrandProduct")';
+    var ReloadListUrl = '@Url.Action("LoadBrandProducts", "BrandProduct")';
+
+    jQuery(function () {
+        jQuery(".btnDelete").DeleteItem({
+            deleteUrl: DeleteEntityUrl,
+            listContainer: "ListContainer",
+            reloadUrl: ReloadListUrl
+        });
+    });       
+</script>
+
+

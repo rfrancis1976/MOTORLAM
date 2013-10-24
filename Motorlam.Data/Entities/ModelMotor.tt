@@ -1,0 +1,10 @@
+﻿<#@ template language="C#" hostspecific="True" debug="True" #>
+<#@ output extension="cs" #>
+<#@ include file="T4Toolbox.tt" #>
+<#@ include file="EntityTemplate.tt" #>
+<#
+	EntityTemplate template = new EntityTemplate();
+	template.EntityName = "ModelMotor";
+	template.BaseTable = "ModelMotors";
+	template.Render();
+#>

@@ -1,0 +1,121 @@
+﻿@using Motorlam.Entities
+@model IList<DeliveryLine>
+
+@{           
+    string rowClass = string.Empty;
+    int cont = 1;
+    var DeliveryLine = (DeliveryLine) ViewBag.DeliveryLine;
+    decimal totalsinIVA = 0;
+    decimal totalconIVA = 0;
+}
+
+<table class="Grid evaluationTable" border="0" cellpadding="0" cellspacing="0">
+    <thead>
+        <tr>
+           <th colspan="100" class="nRegisters">
+                <div class="fullTableSearchDocs">            
+	                 <span class="textNRegister">
+                        Lineas Albaran
+                    </span>
+                </div>
+            </th>
+        </tr>
+        <tr> 
+            <th>Referencia</th>
+            <th>Producto</th>
+            <th>Cantidad</th>
+            <th>Precio</th>
+            <th>Descuento</th>
+            <th>Total</th>
+            <th class="separator TH52"></th>
+        </tr>        
+    </thead>
+    <tbody>
+        
+         @foreach (var line in Model)
+         {
+            rowClass = cont % 2 != 0 ? "odd" : string.Empty;
+            
+            <tr class="@rowClass">                                
+                <td class="center TH90">@line.ProductReference</td>
+                <td class="left TH250">@line.BrandProductName @line.ProductName</td>
+                <td class="center TH90">@line.DeliveryLineQuantity</td>
+                <td class="right TH100">@String.Format("{0:#.##}",line.ProductCost) €</td>
+                @if (line.discount > 0){<td class="center">@(line.discount*100) %</td>} else { <td class="center">-</td> }
+                <td class="right TH100">@String.Format("{0:#.##}",@line.LineCostTotal) €</td>
+                <td class="TH52 center">
+                    <a href="#" id="btnEdit_@(line.DeliveryLineId)" class="btnView"></a>
+                    <a href="#" class="btnDelete deleteLinea" id="delete_@(line.DeliveryLineId)"></a> 
+                </td>
+            </tr>
+            cont++;
+            totalsinIVA += ((decimal)line.ProductCost-(decimal)line.ProductCost*(decimal)line.discount)*(decimal)line.DeliveryLineQuantity;
+         }    
+
+         @for (int i = Model.Count; i <= 5; i++)
+         {
+            rowClass = cont % 2 != 0 ? "odd" : string.Empty;
+            <tr class="@rowClass">
+                <td class="TH90"></td>
+                <td class="TH250"></td>
+                <td class="TH90"></td>
+                <td class="TH100"></td>
+                <td class=""></td>                                
+                <td class="TH100"></td>                
+                <td class="TH67 center"></td>
+            </tr>
+            cont++;
+        }
+    </tbody>
+    <tfoot>
+        @{
+            totalconIVA = totalsinIVA + (totalsinIVA * 18 / 100);   
+         }
+         <tr align="right"><td colspan="7" style="font-size:small;">Total sin IVA:<b> @String.Format("{0:#.##}",@totalsinIVA) €</b></td></tr>
+         <tr align="right"><td colspan="7" style="font-size:small;">Total con IVA (18%):<b> @String.Format("{0:#.##}",@totalconIVA) € </b></td></tr>
+    </tfoot>
+</table>
+
+
+
+<script type="text/javascript">
+
+    jQuery(".deleteLinea").click(function () {
+        var DeleteURL = '@Url.Action("DeleteDeliveryLine","Delivery")';
+        var lineID = this.id.split('_')[1];
+        if (confirm("¿Estas seguro de eliminar esta Linea?")) {
+            jQuery("#ContainerDeliveryLines").html("");
+            jQuery.ajax({
+                url: DeleteURL,
+                data: { ID: lineID },
+                cache: false,
+                success: function (data) {
+                    jQuery("#ContainerDeliveryLines").html(data);
+                }
+            });
+        }
+    });
+
+
+
+    jQuery('.btnView').click(function () {
+        var id = this.id.split('_')[1];
+        var EditDeliveryLineUrl = '@Url.Action("EditarLinea", "Delivery")';
+
+        jQuery.ajax({
+            url: EditDeliveryLineUrl,
+            cache: false,
+            data: { DeliveryLineId: id },
+            success: function (data) {
+                jQuery("#NewDeliveryLine").html(data);
+            }
+        });
+        return false;
+    });
+
+    
+   
+   
+</script>
+
+

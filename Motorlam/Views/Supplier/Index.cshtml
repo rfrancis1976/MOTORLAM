@@ -1,0 +1,33 @@
+﻿@{
+    ViewBag.Title = "Pagina Inicio";
+    Layout = "~/Views/Shared/AdministrationLayout.cshtml";
+}
+
+<h2>Proveedores</h2>
+
+@using (Html.BeginForm("Buscar", "Supplier", FormMethod.Post, new { id = "BuscarForm" }))
+{
+    <div class="criteriaContainer">
+        @Html.Partial("~/Views/Supplier/Criteria.cshtml") 
+    </div>
+    <div class="buttonBarCriteria">
+        <div class="leftContent"></div>            
+        <div class="rightContent">
+            <input type="submit" id="buscar" onkeypress="return event.keyCode!=13" value="Buscar" />
+        </div>
+    </div>            
+}
+  
+<div id="ListContainer">
+    @Html.Partial("~/Views/Supplier/List.cshtml")
+</div>
+
+<script type="text/javascript">
+
+    jQuery("#buscar").Search({
+        formName: "BuscarForm",
+        listContainer: "ListContainer"
+    });
+
+</script>
+

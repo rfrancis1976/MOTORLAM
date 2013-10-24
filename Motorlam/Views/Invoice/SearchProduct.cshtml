@@ -1,0 +1,47 @@
+﻿@using Motorlam.Entities
+@{
+    ViewBag.Title = "SearchProduct";  
+}
+
+@using (Html.BeginForm("SearchProduct", "Invoice", FormMethod.Post, new { id = "BuscarProductForm" }))
+{
+        <div class="criteriaContainer">
+            @Html.Partial("~/Views/Invoice/CriteriaProduct.cshtml") 
+        </div>
+        <div class="buttonBarCriteria">
+            <div class="leftContent"></div>            
+            <div class="rightContent">
+                <input type="submit" id="buscarProduct" onkeypress="return event.keyCode!=13" value="Buscar" />
+            </div>
+        </div>            
+}
+  
+        <div id="ListContainerProduct">
+            @Html.Partial("~/Views/Invoice/ListProduct.cshtml", new List<Product>())
+        </div>
+
+
+<script type="text/javascript">
+
+    jQuery("#buscarProduct").click(function (e) {
+        var url = '@Url.Action("SearchProduct","Invoice")';
+        e.preventDefault();
+        jQuery.ajax({
+            url: url,
+            type: 'POST',
+            data: {
+                BrandProductId: jQuery("#BrandProductId1").val(),
+                ProductName: jQuery("#ProductName2").val(),
+                SupplierId: jQuery("#SupplierId2").val(),
+                TypeProductId: jQuery("#TypeProductId2").val()
+            },
+            cache: false,
+            success: function (data) {
+                jQuery("#ListContainerProduct").html(data);
+            }
+        });
+
+    });
+</script>
+
+

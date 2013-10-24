@@ -1,0 +1,233 @@
+﻿<#@ assembly name="System.Data" #>
+<#@ import namespace="System" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Data" #>
+<#@ import namespace="System.Data.Common" #>
+<#@ import namespace="System.Data.SqlClient" #>
+<#@ import namespace="System.Text.RegularExpressions" #>
+<#+
+public class EntityTemplate : Template
+{
+	public string ConnectionString = @"Data Source=GUALLART-PC;Integrated Security=SSPI;Initial Catalog=Motorlam";
+	public string ProviderName = "System.Data.SqlClient";
+	public string Namespace = "Motorlam.Entities";
+	public string EntityName;
+	public string BaseTable;
+	public bool UseSchema;
+	
+	public override string TransformText()
+	{
+		DbProviderFactory factory = DbProviderFactories.GetFactory(ProviderName);
+		DbConnection cn = factory.CreateConnection();
+		cn.ConnectionString = ConnectionString;
+		Regex regex = new Regex("^" + Regex.Escape(EntityName) + "_(Minimal|Basic|Detailed|Extended|InProject)$");
+		cn.Open();
+		ViewHelper helper = new ViewHelper(cn, regex);
+		DataTable schema = helper.GetSchemaUnion(string.IsNullOrEmpty(BaseTable) ? null : "dbo." + BaseTable);
+		if (schema == null) return string.Empty;
+#>
+using System;
+using System.Data;
+using System.Runtime.Serialization;
+using inercya.ORMLite;
+
+namespace <#= Namespace #>
+{
+	
+	[Serializable]
+	[DataContract]
+	[SqlMetadata("<#= string.IsNullOrEmpty(BaseTable) ? string.Empty : BaseTable#>"<#= UseSchema ? ", UseSchema = true" : string.Empty #>)]
+	public partial class <#=EntityName #>
+	{
+<#+ 
+		foreach (DataRow row in schema.Rows)
+		{
+			Type dataType = (Type) row["DataType"];
+			bool isNullable = dataType.IsValueType && (bool) row["AllowDBNull"];
+			DbType dbType = DbTypeConverter.ToDbType( (int) row["ProviderType"], ProviderName);
+			bool IsAutoincrement = (bool) row["IsAutoincrement"];
+			bool IsReadOnly = (bool) row["IsReadOnly"];
+			bool IsKey = (bool) row["IsKey"];
+			bool AllowDBNull = isNullable;
+			byte precision = Convert.IsDBNull(row["NumericPrecision"]) ? (byte) 255 : Convert.ToByte(row["NumericPrecision"]);
+			byte scale = Convert.IsDBNull(row["NumericScale"]) ? (byte) 255 : Convert.ToByte(row["NumericScale"]);
+			string BaseColumnName = Convert.IsDBNull(row["BaseColumnName"]) ? string.Empty : (string) row["BaseColumnName"];
+			string BaseSchemaName = Convert.IsDBNull(row["BaseSchemaName"]) ? string.Empty : (string) row["BaseSchemaName"];
+			string BaseTableName = Convert.IsDBNull(row["BaseTableName"]) ? string.Empty : (string) row["BaseTableName"];
+			string fullTableName = BaseTableName;
+			if (!string.IsNullOrEmpty(fullTableName) && !string.IsNullOrEmpty(BaseSchemaName) && UseSchema)
+			{
+				fullTableName =  BaseSchemaName + "." + fullTableName;
+			}
+			bool IsHidden = (bool) row["IsHidden"];
+			if (!IsHidden)
+			{ 
+#>
+		[DataMember]
+		[SqlField(DbType.<#= dbType.ToString() #>, <#= row["ColumnSize"].ToString() #>, <#= precision #>, <#= scale #><#= IsKey ? ", IsKey=true": string.Empty #><#= IsAutoincrement ? ", IsAutoincrement=true": string.Empty #><#= AllowDBNull ? ", AllowNull = true" : string.Empty#><#= IsReadOnly ? ", IsReadOnly = true" : string.Empty  #>, BaseColumnName = "<#= BaseColumnName #>", BaseTableName="<#= fullTableName #>" )]
+		public <#= dataType.Name + (isNullable ? "?" : string.Empty) #> <#= (string) row["ColumnName"] #> { get; set; }
+		
+<#+
+			}
+		}
+#>
+	}
+	
+	public static partial class <#= EntityName #>Fields
+	{
+<#+ 
+		foreach (DataRow row in schema.Rows)
+		{
+			
+			bool IsHidden = (bool) row["IsHidden"];
+			if (!IsHidden)
+			{
+				string fieldName = (string) row["ColumnName"];
+#>
+		public const string <#= fieldName #> = "<#= fieldName #>";
+<#+ 			
+			}
+		}
+#>
+	}
+}
+<#+
+		cn.Close();
+		return this.GenerationEnvironment.ToString();
+	}
+}
+#>
+<#+ 
+public static class DbTypeConverter
+{
+   public static DbType ToDbType(int providerType, string providerName)
+   {
+       switch (providerName)
+       {
+           case "System.Data.SqlClient":
+               SqlParameter param = new SqlParameter();
+               param.SqlDbType = (SqlDbType)providerType;
+               return param.DbType;
+           case "System.Data.SQLite":
+               return (DbType)providerType;
+           default:
+               throw new NotSupportedException("provider " + providerName +" is not supported");
+       }
+   }
+}
+
+public class ViewHelper
+{
+    public List<string> Views;
+
+    public Regex Regex;
+
+    public ViewHelper()
+    {
+    }
+
+    public DbConnection Connection;
+
+    public ViewHelper(DbConnection cn)
+    {
+        this.Connection = cn;
+    }
+
+    public ViewHelper(DbConnection cn, Regex regex)
+    {
+        this.Connection = cn;
+        this.Regex = regex;
+    }
+
+    public void SetViewsFromRegex()
+    {
+        DataTable allViews = GetAllViews();
+        Views = new List<string>();
+        foreach (DataRow row in allViews.Rows)
+        {
+            string viewName = (string)row["TABLE_NAME"];
+            string schemaName = Convert.IsDBNull( row["TABLE_SCHEMA"]) ? null : (string) row["TABLE_SCHEMA"];
+
+            if (this.Regex.IsMatch(viewName))
+            {
+                string fullViewName = schemaName == null ? viewName : schemaName + "." + viewName;
+                this.Views.Add(fullViewName);
+            }
+        }
+    }
+
+    public DataTable GetAllViews()
+    {
+        return this.Connection.GetSchema("Views");
+    }
+
+    public DataTable GetSchemaUnion(string baseTable)
+    {
+        DataTable schemaUnion = null;
+        if (Views == null || Views.Count == 0)
+        {
+            SetViewsFromRegex();
+        }
+        DataTable baseTableSchema = null;
+        if (!string.IsNullOrEmpty(baseTable))
+        {
+            using (DbCommand selectCommand = this.Connection.CreateCommand())
+            {
+                selectCommand.CommandText = "SELECT * FROM " + baseTable;
+                using (DbDataReader reader = selectCommand.ExecuteReader(CommandBehavior.KeyInfo | CommandBehavior.SchemaOnly))
+                {
+                    baseTableSchema = reader.GetSchemaTable();
+                    baseTableSchema.Constraints.Add("PK_Schema", baseTableSchema.Columns["ColumnName"], true);
+                }
+            }
+        }
+       
+
+        foreach (string viewName in this.Views)
+        {
+            using (DbCommand selectCommand = this.Connection.CreateCommand())
+            {
+                selectCommand.CommandText = "SELECT * FROM " + viewName;
+                using (DbDataReader reader = selectCommand.ExecuteReader(CommandBehavior.SchemaOnly | CommandBehavior.KeyInfo))
+                {
+                    DataTable schema = reader.GetSchemaTable();
+                    schema.Columns["IsAutoIncrement"].ReadOnly = false;
+                    if (schemaUnion == null)
+                    {
+                        schemaUnion = schema.Clone();
+                        schemaUnion.Constraints.Add("PK_Schema", schemaUnion.Columns["ColumnName"], true);
+                    }
+                    foreach (DataRow row in schema.Rows)
+                    {
+
+                        if (schemaUnion.Rows.Find(row["ColumnName"]) == null)
+                        {
+                            if (baseTable != null)
+                            {
+                                string baseColumnName = Convert.IsDBNull(row["BaseColumnName"]) ? null : (string)row["BaseColumnName"];
+                                string columnBaseSchemaName = Convert.IsDBNull(row["BaseSchemaName"]) ? null : (string)row["BaseSchemaName"];
+                                string columnBaseTableName = Convert.IsDBNull(row["BaseTableName"]) ? string.Empty : (string)row["BaseTableName"];
+                                string fullTableName = columnBaseTableName;
+                                if (columnBaseSchemaName != null && fullTableName != null)
+                                {
+                                    fullTableName = columnBaseSchemaName + '.' + fullTableName;
+                                }
+                                if (string.Equals(fullTableName, baseTable, StringComparison.InvariantCultureIgnoreCase))
+                                {
+                                    DataRow baseTableRow = baseTableSchema.Rows.Find( baseColumnName);
+                                    row["IsAutoIncrement"] = baseTableRow["IsAutoIncrement"];
+                                }
+                            }
+                            schemaUnion.ImportRow(row);
+                        }
+                    }
+
+                }
+            }
+        }
+        return schemaUnion;
+    }
+}
+#>
+
+

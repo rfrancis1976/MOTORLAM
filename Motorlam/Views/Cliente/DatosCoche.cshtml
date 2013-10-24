@@ -1,0 +1,216 @@
+﻿@model Motorlam.Entities.Car
+@using Motorlam.Entities
+
+@{
+    var brands = (IList<Brand>)ViewBag.Brands;
+    var models = (IList<Model>)ViewBag.Models;
+    var motors = (IList<ModelMotor>)ViewBag.Motors;
+    var typemotors = (IList<Motor>)ViewBag.TypeMotors;
+}
+
+@using (Html.BeginForm("SalvarCoche", "Cliente", FormMethod.Post, new { id = "CocheClienteForm" }))
+{
+
+    @Html.Hidden(CarFields.CarId,Model.CarId)
+    @Html.Hidden(CarFields.CarITVId, Model.CarITVId)
+    <div id="tabs" class="ui-tabs ui-widget ui-widget-content ui-corner-all">                           
+                <div class="tabsContent">           
+                <div class="infoAdminContent"> 
+                    <div class="rowForm">
+                        <label class="fieldName" style="width: 180px;">Marca:</label>
+                        @Html.DropDownList("BrandId", new SelectList(brands, "BrandId",
+                                 "BrandName"), "<< seleccione >>", new { style = "width:208px" })     
+                    </div>
+                    <div class="rowForm">
+                        <label class="fieldName" style="width: 180px;">Modelo:</label>
+                        @Html.DropDownList("ModelId", new SelectList(models, "ModelId",
+                                 "ModelName"), "<< seleccione >>", new { style = "width:208px" })
+                    </div> 
+                    <div class="rowForm">   
+                        <label class="fieldName" style="width: 180px;">Motor:</label>
+                        @Html.DropDownList("ModelMotorId", new SelectList(motors, "ModelMotorId",
+                                 "MotorName"), "<< seleccione >>", new { style = "width:208px" })
+                    </div>   
+                    <div class="rowForm">
+                        <label class="fieldName" style="width: 180px;">Tipo Motor:</label>
+                        @Html.DropDownList("MotorId", new SelectList(typemotors, "MotorId",
+                                 "MotorType"), "<< seleccione >>", new { style = "width:208px" })
+                    </div>
+                    <div class="rowForm">
+                        <label class="fieldName" style="width: 180px;">Matricula:</label>
+                        <input type="text" style="width: 90px;" id="CarRack" name="CarRack" value="@Model.CarRack" />
+                    </div>
+                    <div class="rowForm">
+                        <label class="fieldName" style="width: 180px;">Nº Bastidor:</label>
+                        <input type="text" style="width: 200px;" id="CarRegistration" name="CarRegistration" value="@Model.CarRegistration" />
+                    </div>
+                    <div class="rowForm">
+                        <label class="fieldName" style="width: 180px;">Tipo Vehiculo:</label>
+                        <select id="CarType" name="CarType" >
+                            <option value=""><< seleccione >></option>
+                            <option value="@Model.CarType" selected="selected">@Model.CarType</option>
+                            <option value="Camión">Camión</option>
+                            <option value="Furgoneta">Furgoneta</option>
+                            <option value="Motocicleta">Motocicleta</option>
+                            <option value="Turismo">Turismo</option>
+                        </select>
+                    </div>
+                     @if (Model.CarITVName != null && Model.CarITVName != "")
+                     {
+                            <div class="rowForm">
+                                <label style="width: 180px;">Tarjeta de Inspección Técnica:</label>
+                                <input type="text" style="width: 400px;" name="@CarFields.CarITVName" id="@CarFields.CarITVName" value="@Model.CarITVName" /> 
+                               @if (Model.CarITVName != "" && Model.CarITVName != null)
+                               {
+                                    <a class="btnView" href="@Url.Action("OpenFile", "Cliente", new { fileId = Model.CarITVId })" id="File" style="text-decoration:none;"></a> 
+                                    <a href="#" id="@(Model.CarId)" class="btnDelete deleteITV"></a>
+                               }
+                            </div>
+                     }
+                       
+                </div>
+                <div class="buttonBarCriteria buttonBarAdmin">
+                        <div class="leftContent">
+                            @if (Model.CarId != null && Model.CarId > 0)
+                            {
+                                <a href='#' id="upload" class="submitButton" style="text-decoration:none;">Subir ITV</a>
+                            }
+                        </div>
+                </div>
+            </div>
+  
+        
+    </div>
+}
+
+<div id="AddedFileDialog" style="display:none;text-align:center;" title="Subida de Tarjeta Inspección Técnica">
+    @Html.Partial("~/Views/Cliente/UploadFile.cshtml")
+</div> 
+
+<div id="DeleteFileDialog" style="display:none;text-align:center;">¿Está seguro que desea eliminar el fichero?</div> 
+
+<div id="SuccessDeleteFile" class="popup validationDiv">
+        <div class="main">
+            <a href="#" class="btnClose validationClose">Cerrar </a>
+            <label class="succesSave">El fichero se ha eliminado</label>
+        </div>
+        <div class="footer"></div>       
+</div>
+
+
+
+<script type="text/javascript">
+
+    var LoadModelUrl = '@Url.Action("LoadModelByBrand", "Cliente")';
+    var LoadMotorUrl = '@Url.Action("LoadMotorByModel", "Cliente")';
+    var LoadTypeUrl = '@Url.Action("LoadMotorTypeByMotor", "Cliente")';
+ 
+    jQuery("#BrandId").ReloadCascadeDropDown({
+        fatherFieldName: "BrandId",
+        childFieldName: "ModelId",
+        loadChildUrl: LoadModelUrl
+    });
+
+    jQuery("#ModelId").ReloadCascadeDropDown({
+        fatherFieldName: "ModelId",
+        childFieldName: "ModelMotorId",
+        loadChildUrl: LoadMotorUrl
+    });
+
+    jQuery("#ModelMotorId").ReloadCascadeDropDown({
+        fatherFieldName: "ModelMotorId",
+        childFieldName: "MotorId",
+        loadChildUrl: LoadTypeUrl
+    });
+
+    var savePostBackUrl = '@Url.Action("EditarCoche", "Cliente")';
+
+    jQuery("#upload").click(function () {
+
+        jQuery("#AddedFileDialog").dialog({
+            autoOpen: true,
+            modal: true,
+            show: 'blind',
+            hide: 'blind',
+            width: 700,
+            height: 140,
+            buttons: { "Cerrar": function () {
+                jQuery("#AddedFileDialog").dialog("close");
+                jQuery("#DialogCar").dialog("destroy");
+            }, "Subir": function () {
+                var id = jQuery("#@CarFields.CarId").val();
+                jQuery("#UploadForm").ajaxSubmit({
+                    dataType: "text",
+                    async: false,
+                    cache: false,
+                    data: {
+                        Id: id
+                    },
+                    success: function () {
+                        jQuery("#SuccessUpload").show();
+                        jQuery(".validationClose").click(function (e) {
+                            e.preventDefault();
+                            jQuery(".validationDiv, .validationDivError").hide("slow");
+                            jQuery("#DialogCar").dialog("destroy");
+                            jQuery("#AddedFileDialog").dialog("close");
+                        });
+                    }
+                });
+            }
+            }
+        });
+    });
+
+    jQuery(".deleteITV").click(function () {
+
+        var DeleteFileUrl = '@Url.Action("DeleteFile", "Cliente")';
+        var ReloadUrl = '@Url.Action("EditarCoche", "Cliente")';
+        var id = this.id;
+
+        var buttons = {};
+        buttons["Cancelar"] = function () {
+            jQuery(this).dialog('close');
+        }
+        buttons["Aceptar"] = function () {
+            jQuery(this).dialog('close');
+
+            $.ajax({
+                type: "POST",
+                url: DeleteFileUrl,
+                data: { Id: id },
+                success: function (event) {
+                    if (event.result == "success") {
+                        jQuery("#SuccessDeleteFile").show();
+                        jQuery(".validationClose").click(function (e) {
+                            e.preventDefault();
+                            jQuery(".validationDiv, .validationDivError").hide("slow");
+                            jQuery("#DialogCar").dialog("destroy");
+                        });
+                    }
+                    else {
+                        jQuery("#DeleteFileDialog").dialog({
+                            autoOpen: true,
+                            modal: true,
+                            show: 'blind',
+                            hide: 'blind',
+                            width: 350,
+                            buttons: { "Aceptar": function () { jQuery("#DeleteFileDialog").dialog("close"); }
+                            }
+                        });
+                    }
+                },
+                dataType: "json",
+                cache: false
+            });
+        }
+        jQuery("#DeleteFileDialog").dialog({
+            autoOpen: true,
+            modal: true,
+            show: 'blind',
+            hide: 'blind',
+            width: 350,
+            buttons: buttons
+        });
+    });
+
+</script>

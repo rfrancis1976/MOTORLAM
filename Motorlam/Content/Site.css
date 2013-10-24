@@ -1,0 +1,559 @@
+﻿/*----------------------------------------------------------
+The base color for this template is #5c87b2. If you'd like
+to use a different color start by replacing all instances of
+#5c87b2 with your new color.
+----------------------------------------------------------*/
+body {
+    background-color: #5c87b2;
+    font-size: .85em;
+    font-family: "Trebuchet MS", Verdana, Helvetica, Sans-Serif;
+    margin: 0;
+    padding: 0;
+    color: #696969;
+}
+
+a:link {
+    color: #034af3;
+    text-decoration: underline;
+}
+
+a:visited {
+    color: #505abc;
+}
+
+a:hover {
+    color: #1d60ff;
+    text-decoration: none;
+}
+
+a:active {
+    color: #12eb87;
+}
+
+p, ul {
+    margin-bottom: 20px;
+    line-height: 1.6em;
+}
+
+header,
+footer,
+nav,
+section {
+    display: block;
+}
+
+/* HEADINGS   
+----------------------------------------------------------*/
+h1, h2, h3, h4, h5, h6 {
+    font-size: 1.5em;
+    color: black;
+}
+
+h1 {
+    font-size: 2em;
+    padding-bottom: 0;
+    margin-bottom: 0;
+}
+
+h2 {
+    padding: 0 5px 10px 0;
+}
+
+h3 
+{
+    
+    font-size: 1.2em;
+    padding: 2px 5px 8px 5px !important;
+    color: #FFF;    
+}
+
+h4 {
+    font-size: 1.1em;
+}
+
+h5, h6 {
+    font-size: 1em;
+}
+
+/* PRIMARY LAYOUT ELEMENTS   
+----------------------------------------------------------*/
+
+/* you can specify a greater or lesser percentage for the 
+page width. Or, you can specify an exact pixel width. */
+.page {
+    width: 1024px;
+    margin-left: auto;
+    margin-right: auto;
+    background-color:#5FB404;
+}
+
+header, #header {
+    position: relative;
+    margin-bottom: 0px;
+    color: #000;
+    padding: 0;
+}
+
+header h1, #header h1 {
+    font-weight: bold;
+    padding: 5px 5px;
+    margin: 0;
+    color: green;
+    border: none;
+    line-height: 2em;
+    font-size: 32px !important;
+    text-shadow: 1px 1px 2px #111;
+}
+
+footer, 
+#footer {
+    background-color: #fff;
+    color: #999;
+    padding: 10px 0;
+    text-align: center;
+    line-height: normal;
+    margin: 0 0 30px 0;
+    font-size: .9em;
+    border-radius: 0 0 4px 4px;
+    -webkit-border-radius: 0 0 4px 4px;
+    -moz-border-radius: 0 0 4px 4px;
+}
+
+#menucontainer img  {
+    margin: -14px !important;
+
+}
+
+/* TAB MENU   
+----------------------------------------------------------*/
+ul#menu {
+    border-bottom: 1px #5C87B2 solid;
+    padding: 2px 0px 2px;
+    position: relative;
+    width:1024px;
+    margin: 0;
+    text-align: right;
+}
+
+ul#menu li {
+    display: inline;
+    list-style: none;
+}
+
+ul#menu li#greeting {
+    padding: 10px 20px;
+    font-weight: bold;
+    text-decoration: none;
+    line-height: 2.8em;
+    color: green;
+}
+
+ul#menu li a {
+    padding: 10px 20px;
+    font-weight: bold;
+    text-decoration: none;
+    line-height: 2.8em;
+    background-color: #BCF5A9;
+    color: green;
+    -webkit-border-radius: 4px 4px 0 0;
+    -moz-border-radius: 4px 4px 0 0;
+}
+
+ul#menu li a:hover {
+    background-color: #fff;
+    text-decoration: none;
+}
+
+ul#menu li a:active {
+    background-color: #a6e2a6;
+    text-decoration: none;
+}
+
+ul#menu li.selected a {
+    background-color: #fff;
+    color: #000;
+}
+
+ul li.selected a {
+    background-color: #fff;
+    color: #000;
+}
+
+ul li a {
+    padding: 1px 1px;
+    font-weight: bold;
+    font-size: 12px;
+    text-decoration: none;
+    line-height: 1em;
+    color: #034af3;
+   
+}
+
+/* FORM LAYOUT ELEMENTS   
+----------------------------------------------------------*/
+
+fieldset {
+    border: 1px solid #ddd;
+    padding: 0 1.4em 1.4em 1.4em;
+    margin: 0 0 1.5em 0;
+}
+
+legend {
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+
+input[type="text"], 
+input[type="password"] {
+    border: 1px solid #ccc;
+    padding: 2px;
+    font-size: 1.2em;
+    color: #444;
+    width: 200px;
+}
+
+select {
+    border: 1px solid #ccc;
+    padding: 2px;
+    font-size: 1.2em;
+    color: #444;
+}
+
+input[type="submit"] {
+    font-size: 1.2em;
+    padding: 5px;
+}
+
+
+/* MISC  
+----------------------------------------------------------*/
+.clear {
+    clear: both;
+}
+
+.error {
+    color: Red;
+}
+
+nav, 
+#menucontainer {
+    margin-top: 40px;
+}
+
+div#title {
+    display: block;
+    float: left;
+    text-align: left;
+    padding-left: 5px;
+    
+}
+
+#logindisplay {
+    font-size: 1.1em;
+    display: block;
+    text-align: right;
+    margin: 10px;
+    color: White;
+}
+
+#logindisplay a:link {
+    color: white;
+    text-decoration: underline;
+}
+
+#logindisplay a:visited {
+    color: white;
+    text-decoration: underline;
+}
+
+#logindisplay a:hover {
+    color: white;
+    text-decoration: none;
+}
+
+/* Styles for validation helpers
+-----------------------------------------------------------*/
+.field-validation-error {
+    color: #ff0000;
+}
+
+.field-validation-valid {
+    display: none;
+}
+
+.input-validation-error {
+    border: 1px solid #ff0000;
+    background-color: #ffeeee;
+}
+
+.validation-summary-errors {
+    font-weight: bold;
+    color: #ff0000;
+}
+
+.validation-summary-valid {
+    display: none;
+}
+
+/* Styles for editor and display helpers
+----------------------------------------------------------*/
+.display-label, 
+.editor-label {
+    margin: 1em 0 0 0;
+}
+
+.display-field, 
+.editor-field {
+    margin: 0.5em 0 0 0;
+}
+
+.text-box {
+    width: 30em;
+}
+
+.text-box.multi-line {
+    height: 6.5em;
+}
+
+.tri-state {
+    width: 6em;
+}
+
+#main{background-color:White; width: 100%; display: table-row;}
+.mainContainer {width: 868px;}    
+.menuContainer, .mainContainer{padding: 1px; display: table-cell; vertical-align: top;}
+.menuContainer{background: green; height:auto; border-right: solid 1px #b5bac0; width: 150px;}
+ #header .menuContainer{background: #bcf5a9; height:auto; border-right: solid 1px #b5bac0; width: 150px;}
+.menuContainer h2{color: #FFF; height: 20px; padding: 5px 3px 0 3px; margin: 0 0 5px 0; font-size: 14px; width:144px;}
+.mainContainer h2{color: #FFF; height: 20px; padding: 5px 3px 0 3px; margin: 0 0 5px 0; font-size: 14px; width:864px;}
+.mainContainer h2{background:black; text-transform: uppercase;}
+.menuContainer ul{font-size: 10px; margin: 0 0 0 0px;}
+.menuContainer ul li{padding: 2px 0px;}
+.menuContainer ul li a img,
+.menuContainer ul li a span{vertical-align: middle;}
+.menuContainer ul li a{color: #bcf5a9; text-decoration: none; display: inline-block; width: 90%; font-size:14px;}
+.menuContainer ul li a:hover{color: #666666;}
+.menuContainer ul li span.number{float: right; padding: 0 0 0 0;}
+.menuContainer ul li:hover,
+.menuContainer ul li.selected{background: #E3F6CE;}
+
+
+/*tamaños*/
+.TH17{width: 17px;}
+.TH25{width: 25px;}
+.TH30{width: 30px;}
+.TH35{width: 35px;}
+.TH50{width: 50px;}
+.TH52{width: 52px;}
+.TH54{width: 54px;}
+.TH59{width: 59px;}
+.TH60{width: 60px;}
+.TH33{width: 25px;}
+.TH80{width: 80px;}
+.TH87{width: 87px;}
+.TH90{width: 90px;}
+.TH95{width: 95px;}
+.TH100{width: 100px;}
+.TH110{width: 110px;}
+.TH120{width: 120px;}
+.TH130{width: 130px;}
+.TH140{width: 140px;}
+.TH150{width: 150px;}
+.TH160{width: 160px;}
+.TH170{width: 170px;}
+.TH175{width: 175px;}
+.TH177{width: 177px;}
+.TH178{width: 178px;}
+.TH180{width: 180px;}
+.TH183{width: 183px;}
+.TH190{width: 190px;}
+.TH200{width: 200px;}
+.TH210{width: 210px;}
+.TH220{width: 220px;}
+.TH230{width: 230px;}
+.TH240{width: 240px;}
+.TH245{width: 245px;}
+.TH248{width: 248px;}
+.TH250{width: 250px;}
+.TH253{width: 253px;}
+.TH255{width: 255px;}
+.TH259{width: 259px;}
+.TH260{width: 260px;}
+.TH270{width: 270px;}
+.TH290{width: 290px;}
+.TH300{width: 300px;}
+.TH315{width: 315px;}
+.TH320{width: 320px;}
+.TH330{width: 330px;}
+.TH340{width: 340px;}
+.TH350{width: 350px;}
+.TH360{width: 360px;}
+.TH370{width: 370px;}
+.TH380{width: 380px;}
+.TH390{width: 390px;}
+.TH397{width: 397px;}
+.TH400{width: 400px;}
+.TH404{width: 404px;}
+.TH500{width: 500px;}
+.TH505{width: 505px;}
+.TH506{width: 506px;}
+.TH510{width: 510px;}
+.left{text-align: left !important;}
+.center{text-align: center !important;}
+.right{text-align: right !important;}
+
+
+.rowForm{clear: both; min-height: 18px; vertical-align: top; padding: 1px 0; font-size:10px;}
+.rowForm span{width: 49%; display: inline-block; float: left;}
+
+.rowForm span span label{background: none;}
+.rowForm span span {width: 60px; margin: 0px;}
+
+.rowForm label{padding: 4px 0 4px 8px; display: inline-block; float: left;}
+
+input[type="text"],
+input[type="password"],
+textarea,
+select{border: solid 1px #9ea3a7; font-size: 11px; font-family: Verdana, Geneva, sans-serif;}
+
+input[type="text"], input[type="password"], textarea{padding: 1px 2px 1px 4px;}
+
+input[type="submit"], .submitButton{
+    border: solid 1px #727272; font-size: 10px; height: 17px; text-decoration:none; background: #e8e8e8 url(../img/bckgrSubmitButton.gif) left top repeat-x; cursor: pointer;}
+
+input[type="submit"]:hover,
+.submitButton:hover{color: #666;}
+.submitButton{display: inline-block; text-decoration: none; height: 11px; text-align: center; padding: 2px 10px 2px 5px; font-size: 1.2 em;margin-top:3px;}
+
+.leftContent, .rightContent{width: 25%;}
+.leftContent{float: left;text-align: left;padding-left:2px;}
+.rightContent{float: right;text-align: right;padding-right:5px;}
+.leftContent input, .rightContent input{margin: 3px 0 0 0;}
+
+.buttonBarCriteria{position: relative; background: green; margin: 0px 0px 0px 1px; height: 23px;font-size:10px;}
+.buttonBarCriteria input{height: 17px;background: url(../img/bg_button.png) repeat-x 0 0; border: none; border-left: 1px solid #727272; border-right: 1px solid #727272; cursor: pointer;}
+.buttonBarCriteria input:hover,
+.buttonBarCriteria a:hover{filter: alpha(opacity=70) !important;}
+
+
+
+.infoAdminContent{padding: 4px; background: #F5FBEF; border: solid 1px #d9e3ed; overflow: hidden;}
+.infoAdminContent div.rowForm label{
+	background: #E6F8E0 url(../img/listStyleSquareBlue.png) no-repeat 3px 10px;
+	margin-right: 2px;
+	padding: 6px 0 6px 10px;
+}
+.infoAdminContent h2 {color: #FFF; height: 15px; padding: 5px 3px 0 3px; margin: 0 0 5px 0; font-size: 12px; width:838px;}
+.infoAdminContent div.rowForm input,
+.infoAdminContent div.rowForm textarea, 
+.infoAdminContent div.rowForm select{margin-top: 2px;}
+.infoAdminContent div.texareaContent label{height: 65px;}
+.infoAdminContent div.texareaContent textarea{width: 600px; height: 70px;}
+.infoAdminContent div.textareaBodyemail label{height: 201px;}
+.infoAdminContent div.textareaBodyemail textarea{width: 600px; height: 200px;}
+.infoAdminContent div.texareaBox label{height: 208px;}
+.infoAdminContent div.texareaBox textarea{width: 600px; height: 100px;}
+
+.criteriaContainer{margin: 7px 7px 0 7px; border: 1px solid #a4a4a4; background: #f4f7fa; padding: 5px 0 8px 20px; overflow: hidden;}
+
+.criteriaContainer h2{
+	min-width: 300px;
+	max-width: 700px;
+	border-bottom: 1px solid green;
+	padding: 0 0 5px 0;
+	margin: 10px 0 15px 0;
+	background-color: transparent;
+	color: #333 !important;
+}
+.mainContainer .criteriaContainer{margin: 0;}
+.mainContainer .buttonBarCriteria{margin: 0 0 7px 0;}
+.mainContainer .infoAdminContent .buttonBarCriteria{margin: 4px 0 0 0;}
+
+#FooterSection{clear: both; background: #d9dfeb; padding: 5px; font-size: 10px; color: #848383; border-top: solid 1px #738da8;}
+#FooterSection p{width: 470px; line-height: 18px;}
+#FooterSection a{color: #0072bc;}
+#FooterSection a:link,
+#FooterSection a:active,
+#FooterSection a:visited{color: #0072bc;}
+#FooterSection a:hover{color: #b23a36;}
+
+input[type="checkbox"]{background: #FFFFFF; padding: 3px; margin: 0px;}
+input[type="radio"]{margin: 2px 10px 0 0; padding: 3px 0 0 3px;}
+span.radio{vertical-align: middle; width: auto !important;}
+span.radio label{padding: 4px 0 0 0; background: none !important; display: inline-block;}
+
+.rightCriteria{float: right;width: 180px;border:1px solid #bfccd4;background:#c5d8e5;margin:0 20px 0 0;padding:10px 0 14px 23px;}
+.leftCriteria{float: left;width: 700px;}
+.bold{font-weight: bold;}
+
+
+
+/*POPUP*/
+.popup{	
+	display: none;
+	text-align: left;	
+	width: 442px;
+	position: absolute;
+	font-size: 12px;
+	z-index: 10000;
+	top: 250px;
+	left: 50%;
+	margin-left: -221px;
+}
+.ui-dialog-content .popup{top: 15px;}
+.popup .main{background: url(../img/bckgrPopup.png) 0px 0px no-repeat; position: relative; padding-bottom: 10px;}
+.popup .buttons{
+	overflow: hidden;
+	text-align: right;
+	padding: 3px 5px 3px 0;
+	background-color: #c6d3dc;
+	border-top: solid 1px #fff;
+	margin: 0px 7px -15px 7px;
+}
+.popup .buttons input{
+	border: solid 1px #b7b7b7;
+	background-color: #f8f8f8;
+	text-transform: uppercase;
+	font-size: 10px;
+	cursor: pointer;
+}
+.popup .buttons input:hover{background-color: #7d95b0; color: #FFF;}
+.popup .footer{background: url(../img/bckgrPopup.png) 0px -495px no-repeat; height: 12px;}
+
+.popup .main label{display: inline-block;  min-height: 45px;}
+.invalidUrl{background:  url(../img/Error.png) 15px 20px no-repeat; padding: 30px 30px 0 65px;}
+.succesSave{background: url(../img/OK.png) 20px 35px no-repeat; padding: 45px 30px 0 65px;}
+.youSure{padding: 30px 0 0 30px !important;}
+.errorMessageContent{
+	overflow: auto;
+	margin: 0 0 0 50px;
+	width: 350px;
+	background-color: #fefefe;
+	border: solid 1px #cecece;
+	max-height: 150px;
+	padding: 5px;
+}
+.errorMessageContent li{
+	background: transparent url(../img/icoLoginLabelFieldgroup.gif) 2px 8px no-repeat;
+	padding: 4px 4px 4px 10px;
+	font-size: 11px;
+}
+
+.btnClose{
+	position: absolute;
+	top: 10px;
+	right: 12px;
+	width: 15px;
+	height: 14px;
+	background: url(../img/Buttons/btnClose.png) right top no-repeat !important;
+	display: inline-block;
+	vertical-align: middle;
+	cursor: pointer;
+	padding: 2px 40px 0 0;
+	font-size: 10px;
+	color: #666;
+	font-weight: bold;
+	text-decoration: none;
+}
+.btnClose:hover{color: #930; opacity: 07; filter: alpha(opacity=70); -moz-opacity: 0.7;}

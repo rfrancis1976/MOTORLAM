@@ -1,0 +1,104 @@
+﻿@using Motorlam.Entities
+
+@model IList<Product>
+
+@{           
+    string rowClass = string.Empty;
+    int cont = 1;   
+}
+
+
+<table class="Grid evaluationTable" border="0" cellpadding="0" cellspacing="0">
+    <thead>
+        <tr>
+        <th colspan="100" class="nRegisters">
+                <div class="fullTableSearchDocs">            
+	                <span class="textNRegister">
+                        @Model.Count registro/s encontrados
+                    </span>
+                </div>
+            </th>
+           
+        </tr>
+        <tr> 
+            <th>Referencia</th> 
+            <th>Nombre</th>
+            <th>Proveedor</th>
+            <th>Tipo Producto</th>
+            <th>Precio Coste</th>                   
+            <th class="separator TH52"></th>
+        </tr>        
+    </thead>
+    <tbody>
+         @foreach (var product in Model)
+         {
+            rowClass = cont % 2 != 0 ? "odd" : string.Empty;
+            
+            <tr class="@rowClass">                                
+                <td class="center TH90">@product.ProductReference</td>
+                <td class="left">@product.ProductName</td>
+                <td class="left TH200">@product.SupplierName</td>
+                <td class="center TH100">@product.TypeProductName</td>
+                <td class="right TH100">@String.Format("{0:#.##}",@product.ProductCost) €</td>
+                <td class="TH67 center">
+                    <a href='#' id="custom_@(product.ProductId)" class="btnEdit selectProduct"></a> 
+                </td>
+            </tr>
+            cont++;
+         }    
+
+         @for (int i = Model.Count; i <= 10; i++)
+         {
+            rowClass = cont % 2 != 0 ? "odd" : string.Empty;
+            <tr class="@rowClass">
+                <td class="TH90"></td>
+                <td></td>
+                <td class="TH200"></td>
+                <td class="TH100"></td>
+                <td class="TH100"></td>
+                <td class="TH67 center"></td>
+            </tr>
+            cont++;
+        }
+    </tbody>
+    <tfoot>
+        <td colspan="7"></td>
+    </tfoot>
+</table>
+
+<script type="text/javascript">
+
+jQuery(".selectProduct").click(function () {
+        var dataURL = '@Url.Action("LoadProduct","Invoice")';
+        var productID = this.id.split('_')[1];
+        jQuery.ajax({
+            type: "POST",
+            url: dataURL,
+            data: { ProductID: productID },
+            cache: false,
+            success: function (event) {
+                if (event.result == "success") {
+                    jQuery("#ProductReference").val(event.Product.ProductReference);
+                    jQuery("#ProductName1").val(event.Product.ProductName);
+                    jQuery("#ProductId1").val(event.Product.ProductId);
+                    jQuery("#SupplierId").val(event.Product.SupplierId);
+                    jQuery("#BrandProductId").val(event.Product.BrandProductId);
+                    jQuery("#TypeProductId").val(event.Product.TypeProductId);
+                    jQuery("#ProductCost").val(event.Product.ProductCost);
+
+                    var newValue = jQuery("#ProductCost").val().replace(".", ",");
+                    jQuery("#ProductCost").val(newValue);
+
+
+                    jQuery("#supplier").css("display", "block");
+                    jQuery("#brand").css("display", "block");
+                    jQuery("#typeproduct").css("display", "block");
+                    jQuery("#DialogSearchProduct").dialog("destroy");
+                }
+            }
+        });
+
+    });
+
+</script>
+

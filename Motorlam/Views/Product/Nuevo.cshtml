@@ -1,0 +1,183 @@
+﻿@model Motorlam.Entities.Product
+@using Motorlam.Entities                  
+
+
+@{
+    Layout = "~/Views/Shared/AdministrationLayout.cshtml";
+
+    var typesProduct = (IList<TypeProduct>)ViewBag.TypesProduct;
+    var brandsProduct = (IList<BrandProduct>)ViewBag.BrandsProduct;
+    var suppliers = (IList<Supplier>)ViewBag.Suppliers;
+}
+<h2>Datos Producto</h2>
+
+@using (Html.BeginForm("SalvarProducto", "Product", FormMethod.Post, new { id = "AltaProductoForm" }))
+{
+
+    @Html.Hidden("ProductId",Model.ProductId)
+     
+<div id="tabs" class="ui-tabs ui-widget ui-widget-content ui-corner-all">                           
+    <div id="tabs-1" class="contentTab ui-tabs-panel ui-widget-content ui-corner-bottom">
+        <div class="tabsContent">           
+            <div class="infoAdminContent">
+                <div class="rowForm">
+                   <label class="fieldName" style="width: 100px;">Referencia:</label>
+                    <input type="text" style="width: 120px;" id="@ProductFields.ProductReference" name="@ProductFields.ProductReference" value="@Model.ProductReference" />
+                  
+                </div>
+                <div class="rowForm">
+                   <label class="fieldName" style="width: 100px;">Nombre:</label>
+                    <input type="text" style="width: 250px;" id="@ProductFields.ProductName" name="@ProductFields.ProductName" value="@Model.ProductName" />                    
+                </div>
+                <div class="rowForm">
+                    <label class="fieldName" style="width: 100px;">Tipo de Producto:</label>
+                    @Html.DropDownList(ProductFields.TypeProductId, new SelectList(typesProduct, TypeProductFields.TypeProductId, TypeProductFields.TypeProductName),
+                                            "<< seleccione >>", new { style = "width:208px" })
+                </div>
+                <div class="rowForm">
+                    <label class="fieldName" style="width: 100px;">Marca:</label>
+                    @Html.DropDownList(ProductFields.BrandProductId, new SelectList(brandsProduct, BrandProductFields.BrandProductId, BrandProductFields.BrandProductName),
+                                            "<< seleccione >>", new { style = "width:208px" })
+                </div>
+                <div class="rowForm">
+                    <label class="fieldName" style="width: 100px;">Proveedor:</label>
+                    @Html.DropDownList(ProductFields.SupplierId, new SelectList(suppliers, SupplierFields.SupplierId, SupplierFields.SupplierName),
+                                            "<< seleccione >>", new { style = "width:208px" })  
+                </div>
+                <div class="rowForm">
+                    <label class="fieldName" style="width: 100px;">Coste Unitario:</label>
+                    <input type="text" style="width: 80px;" id="@ProductFields.ProductCost" name="@ProductFields.ProductCost" value=" @String.Format("{0:#.##}",@Model.ProductCost)" />&nbsp;€
+                </div>
+                <div class="rowForm">   
+                    <label class="fieldName" style="width: 100px;">Precio de Venta:</label>
+                    <input type="text" style="width: 80px;" id="@ProductFields.ProductSellingPrice" name="@ProductFields.ProductSellingPrice" value=" @String.Format("{0:#.##}",@Model.ProductSellingPrice)" />&nbsp;€
+                </div>
+                <div class="rowForm texareaContent">    
+                    <label class="fieldName" style="width: 100px;">Descripcion:</label>
+                        <textarea style="width:600px;" id="@ProductFields.ProductDescription" name="@ProductFields.ProductDescription">@Model.ProductDescription</textarea>                        
+                 </div>                          
+                 <div class="buttonBarCriteria">
+                        <div class="leftContent">
+                           <a href='@(Url.Action("Index", "Product", null))' class="submitButton" style="text-decoration:none;">Volver</a>
+                        </div>    
+                        <div class="rightContent">
+                            <input type="submit" id="SalvarProducto" value="Guardar" />
+                        </div>
+                 </div>
+          </div>
+      </div>
+     </div>
+</div> 
+    
+<div id="SaveProductCorrect" style="display:none" class="popup validationDiv">
+        <div class="main">
+            <a href="#" class="btnClose validationClose">Cerrar </a>
+            <label class="succesSave">Producto Guardado Correctamente</label>
+        </div>
+        <div class="footer"></div>       
+</div>  
+}
+
+<script type="text/javascript">
+
+
+    jQuery("#SalvarProducto").click(function (e) {
+        e.preventDefault();
+        jQuery("#AltaProductoForm").ajaxSubmit({
+            type: "POST",
+            success: function (event) {
+                if (event.result == "success") {
+                    jQuery("#SaveProductCorrect").show();
+                    jQuery(".validationClose").click(function (e) {
+                        e.preventDefault();
+                        jQuery(".validationDiv, .validationDivError").hide("slow");
+                    });
+                } else {
+                    debugger;
+                    jQuery("#General_Notify").show();
+                    jQuery("#General_Success").hide();
+                    jQuery("#General_Notify .validationClose").remove();
+                    if (event.validationErrors) {
+                        jQuery("#General_Notify ul").fromTemplate('templateErrors', event);
+                        ShowValidationErrors("#AltaProductoForm", event.validationErrors, "errorListTemplate");
+                    }
+                    jQuery(".validationClose").click(function (e) {
+                        e.preventDefault();
+                        jQuery(".validationDiv, .validationDivError").hide("slow");
+
+                    });
+                }
+            }
+        });
+    });
+
+
+    jQuery("#@ProductFields.ProductReference").change(function () {
+
+        var LoadProductByReference = '@Url.Action("LoadProductByReference", "Invoice")';
+        var product = jQuery(this).val();
+
+        jQuery.ajax({
+            url: LoadProductByReference,
+            type: "POST",
+            data: { ProductReference: product },
+            cache: false,
+            async: false,
+            success: function (event) {
+                if (event.result == "success") {
+                    jQuery("#ProductName").val(event.Product.ProductName);
+                    jQuery("#ProductId").val(event.Product.ProductId);
+                    jQuery("#SupplierId").val(event.Product.SupplierId);
+                    jQuery("#BrandProductId").val(event.Product.BrandProductId);
+                    jQuery("#TypeProductId").val(event.Product.TypeProductId);
+                    jQuery("#ProductCost").val(event.Product.ProductCost);
+
+                    var newValue = jQuery("#ProductCost").val().replace(".", ",");
+                    jQuery("#ProductCost").val(newValue);
+                }
+                else {
+                    jQuery("#ProductName").val("");
+                    jQuery("#ProductId").val("");
+                    jQuery("#SupplierId").val("");
+                    jQuery("#BrandProductId").val("");
+                    jQuery("#TypeProductId").val("");
+                    jQuery("#ProductCost").val("");
+                }
+            }
+        });
+
+        jQuery("#supplier").css("display", "block");
+        jQuery("#brand").css("display", "block");
+        jQuery("#typeproduct").css("display", "block");
+    });
+
+
+
+    jQuery("#TypeName").change(function () {
+        if (jQuery(this).val() != "") {
+            jQuery("#@ProductFields.TypeProductId").attr("disabled", "disabled");
+        } else {
+            jQuery("#@ProductFields.TypeProductId").attr("disabled", "");
+        }
+    });
+
+    jQuery("#BrandName").change(function () {
+        if (jQuery(this).val() != "") {
+            jQuery("#@ProductFields.BrandProductId").attr("disabled", "disabled");
+        } else {
+            jQuery("#@ProductFields.BrandProductId").attr("disabled", "");
+        }
+    });
+
+    jQuery("#@ProductFields.ProductCost").change(function () {
+        var value = jQuery(this).val();
+        var newValue = value.replace(".", ",");
+        jQuery(this).val(newValue);
+    });
+
+    jQuery("#@ProductFields.ProductSellingPrice").change(function () {
+        var value = jQuery(this).val();
+        var newValue = value.replace(".", ",");
+        jQuery(this).val(newValue);
+    });
+</script>

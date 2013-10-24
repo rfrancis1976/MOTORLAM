@@ -1,0 +1,36 @@
+﻿@using Motorlam.Entities
+<h2 class="titleTabs" style="margin:10px 0 10px 0;">Buscador</h2>      
+ <div id="tabs" class="ui-tabs ui-widget ui-widget-content ui-corner-all">                           
+     <div class="tabsContent">           
+       <div class="infoAdminContent">                   
+            <div class="rowForm">
+                <span>
+                <label class="fieldName" style="width: 100px;">Nº Factura:</label>
+                <input name="@InvoiceFields.InvoiceNumber " id="@InvoiceFields.InvoiceNumber" type="text" style="width: 120px;" />              
+                </span><span>
+                <label class="fieldName" style="width: 100px;">Fecha:</label>
+                <input name="@InvoiceFields.InvoiceDate" id="@InvoiceFields.InvoiceDate" class="datepicker" type="text" style="width: 100px;" />        
+                </span>
+            </div>
+            <div class="rowForm">
+            <span>
+                <label class="fieldName" style="width: 100px;">Cliente:</label>
+                <input name="@InvoiceFields.CustomerName" id="@InvoiceFields.CustomerName" type="text" style="width: 250px;" />           
+            </span><span>
+                <label class="fieldName" style="width: 100px;">Matricula:</label>
+                <input name="CarRack" id="CarRack" type="text" style="width: 100px;" />        
+            </span>
+            </div>
+            <div class="rowForm">
+                <label class="fieldName" style="width: 100px;">NIF / CIF:</label>
+                <input name="@InvoiceFields.InvoiceCustomerNIF" id="@InvoiceFields.InvoiceCustomerNIF" type="text" style="width: 120px;" />           
+            </div>
+            <div class="rowForm">
+                <label class="fieldName" style="width: 100px;">Estado:</label>
+                <span class="radio" style="float:none;"><label>Todas</label><input name="@InvoiceFields.IsInvoicePaid" id="@InvoiceFields.IsInvoicePaid" type="radio" value="0"/></span> 
+                <span class="radio" style="float:none;"><label>Pagadas</label><input name="@InvoiceFields.IsInvoicePaid" id="@InvoiceFields.IsInvoicePaid" type="radio" value="1"/></span> 
+                <span class="radio" style="float:none;"><label>Pendiente de Pago</label><input name="@InvoiceFields.IsInvoicePaid" id="@InvoiceFields.IsInvoicePaid" type="radio" value="2" checked="checked"/></span> 
+            </div>
+        </div>
+    </div>
+</div>

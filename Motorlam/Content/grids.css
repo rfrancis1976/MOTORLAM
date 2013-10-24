@@ -1,0 +1,69 @@
+table{font-size: 9px; border-collapse: separate;}
+td{vertical-align: middle;}
+td a:hover, td img:hover{opacity: 0.5; filter: alpha(opacity=50); -moz-opacity: 0.5;}
+
+
+/*Tabla pestaña Evaluacion*/
+.evaluationTable{width: 869px; border-bottom: solid 1px #a7a7a7;border-right: solid 1px #a7a7a7;margin-bottom:10px;}
+.evaluationTable th{background: #E3F6CE; border-left: solid 1px #a7a7a7; border-top: solid 1px #a7a7a7; padding: 3px; vertical-align: middle;font-size:10px;}
+.evaluationTable td{padding: 3px 4px; text-align: right; border-left: solid 1px #a7a7a7; border-top: solid 1px #a7a7a7;font-size:10px;}
+.evaluationTable td.rowName{background-color: #E3F6CE;}
+.evaluationTable td.rowName a{float: right; margin-left: 5px; vertical-align: middle;}
+
+
+/*Tabla genérica*/
+.Grid{border: solid #6c88ad 1px; background: #FFFFFF; empty-cells: show; border-collapse: separate;}
+.GenericAdmin{width: 840px; margin: 7px auto 8px auto;}
+.GenericAdmin a:hover{text-decoration:underline;color:#0066cc;}
+.InternalAdmin{width:840px; margin: 7px auto 0px auto;}
+.Grid th{background: #E3F6CE; padding: 6px 3px;}
+
+.Grid th.separator{background: #E3F6CE url(../img/grids/icoSeparatorHeaderTable.gif) left no-repeat;}
+.Grid tbody tr{height:22px;}
+.Grid tbody td{padding: 3px;vertical-align: middle;border-top: solid 1px #c6c6c6;}
+.Grid tr.odd td{background: #f8faff !important;}
+.Grid tfoot{background: #dfe5ea;}
+.mainContainer .Grid{margin: 1px; width: 869px;}
+#ContainerInvoiceLines .Grid{margin: 1px; width: 857px; font-size:10px;}
+#ContainerDeliveryLines .Grid{margin: 1px; width: 855px; font-size:10px;}
+
+.ui-dialog-content .Grid{width:100%;}
+.ui-dialog-content .criteriaContainer{margin:2px 0 0 0;}
+.ui-dialog-content .buttonBarCriteria{margin:1px 0 0 0;}
+
+
+
+/*BUTTONS*/
+td.buttons span a,
+th.buttons span a{display: inline-block; height: 16px; vertical-align: middle;}
+
+.btnView, .btnInfo, .btnDelete, .btnConfirmURL, .btnEdit, .btnComments, .btnNewComments,
+.btnComplete{display: inline-block; height: 16px; vertical-align: middle; cursor: pointer;}
+.btnView{width: 29px; background: url(../img/Buttons/btnView.gif) left top no-repeat;}
+.btnSelect{width: 40px; background: url(../img/Buttons/btnSelect.gif) left top no-repeat;}
+.btnInfo{width: 12px; background: url(../img/Buttons/botInfo.gif) left top no-repeat; height: 13px !important; margin-top: 1px;}
+.btnDelete{width: 15px; background: url(../img/Buttons/btnDelete.gif) left top no-repeat;}
+.btnEdit{width: 29px; background: url(../img/Buttons/btnEdit.gif) left top no-repeat;}
+
+
+td.color{background: #eaeff4 !important;}
+td.last{border-bottom: none !important;}
+td.borderight{border-right: 1px solid #a4bbd8;}
+
+
+th.nRegisters div.rightButton{float: right; text-align: right;}
+th.nRegisters div.rightButton a{display: inline-block;}
+th.nRegisters div.rightButton a:link,
+th.nRegisters div.rightButton a:active,
+th.nRegisters div.rightButton a:visited{padding: 2px 5px 2px 5px; background: black; color: #FFF; text-decoration: none; margin-left:3px;}
+th.nRegisters div.rightButton a:hover{background: green; color: #000;}
+th.nRegisters span.textNRegister{margin: 0 !important; float:left; padding-top: 3px; display: inline-block;}
+	background: #b6c2ce url(../img/grids/fndNRegisters.gif) left top repeat-x;
+
+
+
+
+
+
+
+

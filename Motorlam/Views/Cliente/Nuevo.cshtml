@@ -1,0 +1,123 @@
+﻿@model Motorlam.Entities.Customer
+@using Motorlam.Entities                  
+
+
+@{
+    Layout = "~/Views/Shared/AdministrationLayout.cshtml";
+
+    var Provinces = (IList<Province>)ViewBag.Provinces;
+    var Cities = (IList<City>)ViewBag.Cities;
+    var Cars = (IList<Car>)ViewBag.Cars;
+}
+<h2>Datos Cliente</h2>
+
+@using (Html.BeginForm("SalvarCliente", "Cliente", FormMethod.Post, new { id = "AltaClienteForm" }))
+{
+
+    @Html.Hidden("CustomerId",Model.CustomerId)
+     
+<div id="tabs" class="ui-tabs ui-widget ui-widget-content ui-corner-all">                           
+        <div class="tabsContent">           
+            <div class="infoAdminContent">
+                <div class="rowForm">
+                    <span><label class="fieldName" style="width: 100px;">Nombre:</label>
+                    <input type="text" style="width: 200px;" id="CustomerName" name="CustomerName" value="@Model.CustomerName" />
+                </span><span>
+                    <label class="fieldName" style="width: 100px;">Apellidos:</label>
+                    <input type="text" style="width: 250px;" id="CustomerSurName" name="CustomerSurName" value="@Model.CustomerSurName" />
+                    </span>
+                </div>
+                 <div class="rowForm">
+                    <label class="fieldName" style="width: 100px;">DNI / NIF:</label>
+                    <input type="text" style="width: 100px;" id="CustomerNIF" name="CustomerNIF" value="@Model.CustomerNIF" />
+                </div>
+                 <div class="rowForm">
+                    <span><label class="fieldName" style="width: 100px;">Dirección:</label>
+                    <input type="text" style="width: 250px;" id="CustomerAddress" name="CustomerAddress" value="@Model.CustomerAddress" />
+                    </span><span>
+                    <label class="fieldName" style="width: 100px;">Provincia:</label>
+                        @Html.DropDownList("ProvinceId", new SelectList(Provinces, "ProvinceId",
+                             "ProvinceName"), "<< seleccione >>", new { style = "width:208px" })     
+                    </span> 
+       
+                 </div>
+                 <div class="rowForm">
+                    <span>
+                    <label class="fieldName" style="width: 100px;">Codigo Postal:</label>
+                    <input type="text" style="width: 100px;" id="CustomerCodPostal" name="CustomerCodPostal" value="@Model.CustomerCodPostal" />
+                    </span><span>
+                    <label style="width: 100px;">Localidad:</label>
+                         @Html.DropDownList("CityId", new SelectList(Cities, "CityId",
+                             "CityName"), "<< seleccione >>", new { style = "width:208px" })     
+                    </span>
+                 </div>
+                 <div class="rowForm">
+                    <span>
+                    <label class="fieldName" style="width: 100px;">Telefono:</label>
+                    <input type="text" style="width: 100px;" id="CustomerPhone1" name="CustomerPhone1" value="@Model.CustomerPhone1" />
+                    </span><span>
+                    <label class="fieldName" style="width: 100px;">Movil:</label>
+                    <input type="text" style="width: 100px;" id="CustomerPhone2" name="CustomerPhone2" value="@Model.CustomerPhone2" />
+                    </span>
+                </div>
+                 <div class="rowForm">
+                    <span>
+                    <label class="fieldName" style="width: 100px;">Email:</label>
+                    <input type="text" style="width: 200px;" id="CustomerEmail" name="CustomerEmail" value="@Model.CustomerEmail" />
+                </span><span>
+                    <label class="fieldName" style="width: 100px;">Fax:</label>
+                    <input type="text" style="width: 100px;" id="CustomerFax" name="CustomerFax" value="@Model.CustomerFax" />
+                </span>
+                </div>
+                <div class="buttonBarCriteria">
+                        <div class="leftContent">
+                           <a href='@(Url.Action("Index", "Cliente", null))' class="submitButton" style="text-decoration:none;">Volver</a>
+                        </div>    
+                        <div class="rightContent">
+                            <input type="submit" id="SalvarCliente" value="Guardar" />
+                        </div>
+               </div>
+          </div>
+      </div>
+</div>
+<div id="SaveCustomerCorrect" style="display:none" class="popup validationDiv">
+    <div class="main">
+        <a href="#" class="btnClose validationClose">Cerrar </a>
+        <label class="succesSave">Cliente Guardado Correctamente</label>
+    </div>
+    <div class="footer"></div>       
+</div>
+   
+}
+@if (Model.CustomerId > 0)
+{
+     <div id="ListContainer2">
+          @Html.Partial("~/Views/Cliente/ListCars.cshtml", Cars)
+     </div>
+}
+
+<script type="text/javascript">
+ var LoadCityUrl = '@Url.Action("LoadCityByProvince", "Cliente")';
+ 
+    jQuery("#ProvinceId").ReloadCascadeDropDown({
+            fatherFieldName: "ProvinceId",
+            childFieldName: "CityId",
+            loadChildUrl: LoadCityUrl
+    });
+
+        jQuery("#SalvarCliente").click(function (e) {
+            e.preventDefault();
+            jQuery("#AltaClienteForm").ajaxSubmit({
+                type: "POST",
+                success: function () {
+                    jQuery("#SaveCustomerCorrect").show();
+                    jQuery(".validationClose").click(function (e) {
+                        e.preventDefault();
+                        jQuery(".validationDiv, .validationDivError").hide("slow");
+                    });
+                }
+            });
+
+        });
+ 
+</script>

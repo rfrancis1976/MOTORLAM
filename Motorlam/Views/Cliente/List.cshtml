@@ -1,0 +1,97 @@
+﻿@using Motorlam.Entities
+
+@model IList<Customer>
+
+@{           
+    string rowClass = string.Empty;
+    int cont = 1;   
+}
+
+
+<table class="Grid evaluationTable" border="0" cellpadding="0" cellspacing="0">
+    <thead>
+        <tr>
+        <th colspan="100" class="nRegisters">
+                <div class="fullTableSearchDocs">            
+	                <div class="rightButton">
+                       <a href='@(Url.Action("Nuevo", "Cliente", null))' class="submitButton">Nuevo</a>
+
+                    </div>
+                    <span class="textNRegister">
+                        @Model.Count registro/s encontrados
+                    </span>
+                </div>
+            </th>
+           
+        </tr>
+        <tr> 
+            <th>Nombre</th>
+            <th>Apellidos</th>
+            <th>Telefono</th>
+            <th>Movil</th>
+            <th>Email</th>              
+            <th class="separator TH52"></th>
+        </tr>        
+    </thead>
+    <tbody>
+         @foreach (var customer in Model)
+         {
+            rowClass = cont % 2 != 0 ? "odd" : string.Empty;
+            
+            <tr class="@rowClass">                                
+                <td class="left TH120">@customer.CustomerName</td>
+                <td class="left TH240">@customer.CustomerSurName</td>
+                <td class="center TH100">@customer.CustomerPhone1</td>
+                <td class="center TH100">@customer.CustomerPhone2</td>
+                <td class="left TH220">@customer.CustomerEmail</td>
+                <td class="TH67 center">
+                    <a href='@(Url.Action("Editar", "Cliente", new { CustomerID = customer.CustomerId }))' class="btnView"></a>
+                    <a href="#" class="btnDelete" id="delete_@(customer.CustomerId)"></a>
+                </td>
+            </tr>
+            cont++;
+         }    
+
+         @for (int i = Model.Count; i <= 10; i++)
+         {
+            rowClass = cont % 2 != 0 ? "odd" : string.Empty;
+            <tr class="@rowClass">
+                <td class="TH120"></td>
+                <td class="TH240"></td>
+                <td class="TH100"></td>
+                <td class="TH100"></td>
+                <td class="TH220"></td>
+                <td class="TH67 center"></td>
+            </tr>
+            cont++;
+        }
+    </tbody>
+    <tfoot>
+        <td colspan="8"></td>
+    </tfoot>
+</table>
+<div id="DeleteDialog" style="display:none" ><center><br />¿Está seguro que desea eliminar este Cliente?</center></div>
+
+<script type="text/javascript">
+
+    var DeleteEntityUrl = '@Url.Action("DeleteCustomer", "Cliente")';
+    var ReloadListUrl = '@Url.Action("LoadCustomers", "Cliente")';
+
+    jQuery(function () {
+        jQuery(".btnDelete").DeleteItem({
+            deleteUrl: DeleteEntityUrl,
+            listContainer: "ListContainer",
+            reloadUrl: ReloadListUrl,
+            params: {
+                CustomerName: jQuery("#CustomerName").val(),
+                CustomerSurName: jQuery("#CustomerSurName").val(),
+                NIF: jQuery("#NIF").val()
+            }
+        });
+    });       
+</script>
+
+
+
+
+

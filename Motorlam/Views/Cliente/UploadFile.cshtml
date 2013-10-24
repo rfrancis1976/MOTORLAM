@@ -1,0 +1,30 @@
+﻿@using Northwind.Entities
+@{
+    var file = (Northwind.Entities.File)ViewBag.File;
+}
+
+@using (Html.BeginForm("Upload", "Cliente", FormMethod.Post, new { id = "UploadForm" }))
+{
+
+<h3 class="apartTitle">Seleccionar Fichero</h3>
+                
+<div class="infoAdminContent">
+    <div class="rowForm">
+    <label style="width: 210px;">Tarjeta de Inspección Técnica: </label>
+    <span class="uploadDoc">
+       <input type="file" id="Upload" name="Upload" size="70"/>                     
+    </span>                   
+         
+    </div>
+</div>     
+
+<div id="SuccessUpload" class="popup validationDiv">
+    <div class="main">
+        <a href="#" class="btnClose validationClose">Cerrar </a>
+        <label class="succesSave">El fichero se a añadido correctamente</label>
+    </div>
+    <div class="footer"></div>       
+</div>
+    
+}
+

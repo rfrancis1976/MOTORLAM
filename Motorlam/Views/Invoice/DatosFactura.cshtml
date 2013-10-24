@@ -1,0 +1,167 @@
+﻿@model Motorlam.Entities.Invoice
+@using Motorlam.Entities   
+
+@{
+     var Provinces = (IList<Province>)ViewBag.Provinces;
+     var Cities = (IList<City>)ViewBag.Cities;
+     var cars = (IList<Car>)ViewBag.Cars;
+
+     var carName = (string)ViewBag.CarName;
+     var carRack = (string)ViewBag.CarRack;
+     var LastInvoice = (Invoice)ViewBag.LastInvoice;
+     var iva = (IList<Iva>)ViewBag.Iva;
+}
+
+@using (Html.BeginForm("SaveInvoice", "Invoice", FormMethod.Post, new { id = "AltaFacturaForm" }))
+{
+
+    @Html.Hidden("InvoiceId", Model.InvoiceId)
+    @Html.Hidden("CustomerId", Model.CustomerId)
+    @Html.Hidden("InvoiceNetTotal", Model.InvoiceNetTotal)
+    @Html.Hidden("InvoiceTotal", Model.InvoiceTotal)
+    @Html.Hidden("CarId", Model.CarId)
+
+     
+<div id="tabs" class="ui-tabs ui-widget ui-widget-content ui-corner-all">                           
+        <div class="tabsContent">           
+            <div class="infoAdminContent">
+                <h2>Datos Factura</h2>
+                <div class="rowForm">
+                    <label class="fieldName" style="width: 120px;" title="Ultima Nº Factura: @LastInvoice.InvoiceNumber">Nº Factura:</label>
+                    <input type="text" style="width: 100px;" id="@InvoiceFields.InvoiceNumber" name="@InvoiceFields.InvoiceNumber" value="@Model.InvoiceNumber" />
+                </div>
+                <div class="rowForm">
+                    <span>
+                       <label class="fieldName" style="width: 120px;">Fecha:</label>
+                       <input type="text" style="width: 100px;" class="datepicker" id="@InvoiceFields.InvoiceDate" name="@InvoiceFields.InvoiceDate" 
+                                                        value="@if (Model.InvoiceDate.HasValue)
+                                                               {@Model.InvoiceDate.Value.ToShortDateString()}" />
+                     </span><span style="text-align:right;">
+                     @if (Model.InvoiceId > 0)
+                     {
+                         //<a href="../../Facturas/Factura nº @(Model.InvoiceNumber) - @(Model.InvoiceCustomerName).xls" title="Imprimir Factura" id="FileOpen_@(Model.InvoiceId)" class="FileOpen" target="_blank">
+                         <a href="#" title="Imprimir Factura" id="FileOpen_@(Model.InvoiceId)" class="FileOpen">
+                         <img src="../../img/impresion_ico.png" alt="" /></a>}
+                     else
+                     {
+                         <b>Guardar, antes de imprimir</b>
+                     }
+                     </span>
+                </div>
+                <div class="rowForm">
+                    <span style="width:55%"><label class="fieldName" style="width: 120px;">Cliente:</label>
+                    <input type="text" style="width: 150px;" id="@InvoiceFields.CustomerName" name="@InvoiceFields.CustomerName" readonly="readonly" value="@Model.CustomerName" /> 
+                    <input type="text" style="width: 150px;" id="@InvoiceFields.CustomerSurName" name="@InvoiceFields.CustomerSurName" readonly="readonly" value="@Model.CustomerSurName" />
+                    </span>
+                    <span style="width:45%">
+                    <a href="#" id="Buscar"><img src="../../img/seleccionarcliente.png" alt="" /> </a></span>
+                </div>
+                <div class="rowForm">
+                    <label class="fieldName" style="width: 120px;">Facturar a:</label>
+                    <span class="radio" style="float:none;"><label>Cliente</label>@Html.RadioButton(@InvoiceFields.InvoiceBy, "1", Model.InvoiceBy)</span>
+                    <span class="radio" style="float:none;"><label>A otra</label>@Html.RadioButton(@InvoiceFields.InvoiceBy, "2", Model.InvoiceBy)</span>                     
+                </div>
+                <div class="rowForm">
+                    <label class="fieldName" style="width: 120px;">NIF:</label>
+                    <input type="text" style="width: 100px;" id="@InvoiceFields.InvoiceCustomerNIF" name="@InvoiceFields.InvoiceCustomerNIF" value="@Model.InvoiceCustomerNIF" />
+                </div>
+                <div class="rowForm">
+                    <label class="fieldName" style="width: 120px;">Nombre y Apellidos:</label>
+                    <input type="text" style="width: 250px;" id="@InvoiceFields.InvoiceCustomerName" name="@InvoiceFields.InvoiceCustomerName" value="@Model.InvoiceCustomerName" />
+                </div>
+                <div class="rowForm">
+                    <label class="fieldName" style="width: 120px;">Dirección:</label>
+                    <input type="text" style="width: 250px;" id="@InvoiceFields.InvoiceCustomerAddress" name="@InvoiceFields.InvoiceCustomerAddress" value="@Model.InvoiceCustomerAddress" />
+                </div>
+                <div class="rowForm">    
+                    <label class="fieldName" style="width: 120px;">Provincia:</label>
+                        @Html.DropDownList(@InvoiceFields.ProvinceId, new SelectList(Provinces, @InvoiceFields.ProvinceId, @InvoiceFields.ProvinceName), "<< seleccione >>", new { style = "width:208px" })
+                </div>
+                <div class="rowForm">   
+                    <label style="width: 120px;">Localidad:</label>
+                        @Html.DropDownList(@InvoiceFields.CityId, new SelectList(Cities, @InvoiceFields.CityId, @InvoiceFields.CityName), "<< seleccione >>", new { style = "width:208px" })    
+                </div> 
+                <div class="rowForm">   
+                    <span>
+                    <label class="fieldName" style="width: 120px;">Codigo Postal:</label>
+                    <input type="text" style="width: 100px;" id="@InvoiceFields.InvoiceCustomerCodPostal" name="@InvoiceFields.InvoiceCustomerCodPostal" value="@Model.InvoiceCustomerCodPostal" /> 
+                </div>
+                <div class="rowForm">   
+                    <label class="fieldName" style="width: 120px;">Telefono:</label>
+                    <input type="text" style="width: 100px;" id="@InvoiceFields.InvoiceCustomerPhone" name="@InvoiceFields.InvoiceCustomerPhone" value="@Model.InvoiceCustomerPhone" />
+                </div>
+                <div class="rowForm">
+                    <label class="fieldName" style="width: 120px;">Pagada:</label>
+                     @Html.CheckBox(@InvoiceFields.IsInvoicePaid, @Model.IsInvoicePaid == true ? true : false)
+                     
+                </div>
+                <div class="rowForm">
+                    <label class="fieldName" style="width: 120px;">Fecha Pago:</label>
+                    <input type="text" style="width: 100px;" class="datepicker" id="@InvoiceFields.InvoicePaidDate" name="@InvoiceFields.InvoicePaidDate"
+                                                                 value="@if (Model.InvoicePaidDate.HasValue)
+                                                                        {@Model.InvoicePaidDate.Value.ToShortDateString()}" />
+                </div>
+                <div class="rowForm">
+                    <label class="fieldName" style="width: 120px;">Forma de Pago:</label>
+                    <span class="radio" style="float:none;"><label>Efectivo</label>@Html.RadioButton(@InvoiceFields.InvoiceTypePaid, "Efectivo", Model.InvoiceTypePaid)</span>
+                    <span class="radio" style="float:none;"><label>Tarjeta</label>@Html.RadioButton(@InvoiceFields.InvoiceTypePaid, "Tarjeta", Model.InvoiceTypePaid)</span>   
+                </div>
+                <div class="rowForm">   
+                    <label class="fieldName" style="width: 120px;">IVA (%):</label>
+                    @Html.DropDownList(@InvoiceFields.InvoiceIVAId, new SelectList(iva, @IvaFields.Id, @IvaFields.IvaValor), "<<seleccione>>", new { style = "width:115px" })
+                </div>
+                <div class="rowForm">   
+                    <span style="width:52%"><label class="fieldName" style="width: 120px;">Coche / Matricula:</label>
+                    <input type="text" style="width: 200px;" id="CarNameComplete" name="CarNameComplete" readonly="readonly" value="@carName" />
+                     <input type="text" style="width: 80px;" id="CarRack" name="CarRack" readonly="readonly" value="@carRack" /></span>
+                     <span style="width:48%">
+                     <a href="#" class="OpenListCar"><img src="../../img/seleccionarcoche.png" alt="" /> </a></span>
+                   
+                </div>
+                <div class="rowForm">   
+                    <label class="fieldName" style="width: 120px;">Kilometros:</label>
+                    <input type="text" style="width: 80px;" id="@InvoiceFields.InvoiceKilometres" name="@InvoiceFields.InvoiceKilometres" value="@Model.InvoiceKilometres" /> km.
+                </div>
+                <div class="rowForm texareaContent">    
+                    <label class="fieldName" style="width: 120px;">Comentarios:  <br /> <i>(Estos Comentarios salen en la Factura)</i></label>
+                        <textarea style="width:600px;" id="@InvoiceFields.InvoiceComments" name="@InvoiceFields.InvoiceComments">@Model.InvoiceComments</textarea>                        
+                 </div>                 
+                <div id="DialogSearchCar" style="display:none;" title="Seleccionar Coche">
+                    @Html.Partial("~/Views/Invoice/ListCar.cshtml", cars)
+                </div>                                
+                <div class="buttonBarCriteria">
+                    <div class="leftContent">
+                        <a href='@(Url.Action("Index", "Invoice", null))' style="text-decoration:none;" class="submitButton">Volver</a>
+                    </div>    
+                    <div class="rightContent">
+                        <input type="submit" class="SaveInvoice"value="Guardar" />
+                    </div>
+                </div>   
+          </div>
+      </div>
+     </div>
+}
+
+<script type="text/javascript">
+
+    var FileOpenUrl = '@Url.Action("OpenFileInvoice", "Invoice")';
+
+    jQuery(".FileOpen").click(function () {
+        var id = this.id.split("_")[1];
+        jQuery.ajax({
+            type: "POST",
+            url: FileOpenUrl,
+            dataType: "json",
+            data: {
+                Id: id
+            },
+            success: function (event) {
+                if (event.result == "success") {
+                    window.open(event.file);
+                }
+            }
+        });
+    });
+
+
+</script>

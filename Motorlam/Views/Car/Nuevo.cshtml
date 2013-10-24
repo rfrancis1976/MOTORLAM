@@ -1,0 +1,149 @@
+﻿@model Motorlam.Entities.ModelMotor
+@using Motorlam.Entities                  
+
+
+@{
+    Layout = "~/Views/Shared/AdministrationLayout.cshtml";
+    var brands = (IList<Brand>)ViewBag.Brands;
+    var models = (IList<Model>)ViewBag.Models;
+}
+<h2>Datos Coche</h2>
+
+@using (Html.BeginForm("SalvarModelo", "Car", FormMethod.Post, new { id = "AltaModeloForm" }))
+{
+
+    @Html.Hidden("MotorId", Model.MotorId)
+    @Html.Hidden("ModelMotorId", Model.ModelMotorId )
+    @Html.Hidden("BrandName", Model.BrandName)
+    @Html.Hidden("ModelName", Model.ModelName)
+     
+<div id="tabs" class="ui-tabs ui-widget ui-widget-content ui-corner-all">                           
+        <div class="tabsContent">           
+            <div class="infoAdminContent">
+                <div class="rowForm">
+                    <label class="fieldName" style="width: 100px;">Marca:</label>
+                    @Html.DropDownList("BrandId", new SelectList(brands, "BrandId",
+                             "BrandName"), "<< seleccione >>", new { style = "width:208px" })
+                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Para crear un Nuevo Modelo, seleccionar Marca y rellenar caja de 
+                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;texto.
+                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#" id="newmodel"><img src="../../img/newmodelo.png" alt="" /></a>
+                </div>
+                <div class="rowForm">
+                    <span>
+                    <label class="fieldName" style="width: 100px;">Modelo:</label>
+                    @Html.DropDownList("ModelId", new SelectList(models, "ModelId",
+                             "ModelName"), "<< seleccione >>", new { style = "width:208px" })
+                               </span><span>
+                    <label class="fieldName" style="width: 100px;">Nuevo Modelo:</label>
+                    <input type="text" style="width: 250px;" id="NewModelName" name="NewModelName" /> 
+                    </span>
+                </div>
+                <div class="rowForm">
+                    <label class="fieldName" style="width: 100px;">Motor:</label>
+                    <input type="text" style="width: 250px;" id="@ModelFields.MotorName" name="@ModelFields.MotorName" value="@Model.MotorName" />
+                </div>
+                <div class="rowForm">
+                    <label class="fieldName" style="width: 100px;">Tipo Motor:</label>
+                    <input type="text" style="width: 250px;" id="@ModelFields.MotorType" name="@ModelFields.MotorType" value="@Model.MotorType" />
+                </div>
+
+                <div class="buttonBarCriteria">
+                        <div class="leftContent">
+                           <a href='@(Url.Action("Index", "Car", null))' class="submitButton" style="text-decoration:none;">Volver</a>
+                        </div>    
+                        <div class="rightContent">
+                            <input type="submit" id="SalvarModelo" value="Guardar" />
+                        </div>
+               </div>
+          </div>
+      </div>
+</div>
+<div id="SaveModelMotorCorrect" style="display:none" class="popup validationDiv">
+        <div class="main">
+            <a href="#" class="btnClose validationClose">Cerrar </a>
+            <label class="succesSave">Coche Guardado Correctamente</label>
+        </div>
+        <div class="footer"></div>       
+</div>
+<div id="SaveModelCorrect" style="display:none" class="popup validationDiv">
+    <div class="main">
+        <a href="#" class="btnClose validationClose">Cerrar </a>
+        <label class="succesSave">Modelo Guardado Correctamente</label>
+    </div>
+    <div class="footer"></div>       
+</div>
+<div id="ErrorModelo" style="display:none" class="popup validationDivError">
+    <div class="main">
+        <a href="#" class="btnClose validationClose">Cerrar </a>
+        <label class="invalidUrl">Advertencia</label>
+        <ul class="errorMessageContent">
+            <li>Marca y Nombre de Modelo Obligatorio</li>
+        </ul>
+    </div>
+    <div class="footer"></div>       
+</div>
+
+}
+
+<script type="text/javascript">
+
+    jQuery("#SalvarModelo").click(function (e) {
+         e.preventDefault();
+        jQuery("#AltaModeloForm").ajaxSubmit({
+            type: "POST",
+            success: function(){
+                jQuery("#SaveModelMotorCorrect").show();
+                jQuery(".validationClose").click(function (e) {
+                    e.preventDefault();
+                    jQuery(".validationDiv, .validationDivError").hide("slow");
+                });
+            }
+        });
+    });
+
+    var LoadModelUrl = '@Url.Action("LoadModelByBrand", "Car")';
+
+    jQuery("#BrandId").ReloadCascadeDropDown({
+        fatherFieldName: "BrandId",
+        childFieldName: "ModelId",
+        loadChildUrl: LoadModelUrl
+    });
+
+    jQuery("#newmodel").click(function () {
+        var savemodelUrl = '@Url.Action("SaveModel", "Car")';
+        var reloadUrl = '@Url.Action("Nuevo", "Car")';
+        if (jQuery("#BrandId").val() != 0 && jQuery("#NewModelName").val() != "") {
+            jQuery.ajax({
+                url: savemodelUrl,
+                data: {
+                    BrandId: jQuery("#BrandId").val(),
+                    NewModelName: jQuery("#NewModelName").val()
+                },
+                type: "POST",
+                async: false,
+                success: function () {
+                    jQuery("#SaveModelCorrect").show();
+                    jQuery(".validationClose").click(function (e) {
+                        e.preventDefault();
+                        jQuery(".validationDiv, .validationDivError").hide("slow");
+                        window.location = reloadUrl;
+                    });                    
+                }
+            });
+        } else {
+            jQuery("#ErrorModelo").show();
+            jQuery("#General_Success").hide();
+            jQuery(".validationClose").click(function (e) {
+                e.preventDefault();
+                jQuery(".validationDiv, .validationDivError").hide("slow");
+                window.location = reloadUrl;
+            }); 
+        }
+
+    });
+</script>

@@ -1,0 +1,98 @@
+﻿@using Motorlam.Entities
+
+@model IList<Delivery>
+
+@{           
+    string rowClass = string.Empty;
+    int cont = 1;   
+}
+
+
+<table class="Grid evaluationTable" border="0" cellpadding="0" cellspacing="0">
+    <thead>
+        <tr>
+        <th colspan="100" class="nRegisters">
+                <div class="fullTableSearchDocs">            
+	                <div class="rightButton">
+                       <a href='@(Url.Action("Nuevo", "Delivery", null))' class="submitButton">Entrada Albaran</a>
+                    </div>
+                    <span class="textNRegister">
+                        @Model.Count registro/s encontrados
+                    </span>
+                </div>
+            </th>
+           
+        </tr>
+        <tr> 
+            <th>Ref. Albaran</th> 
+            <th>Fecha</th>
+            <th>Proveedor</th>
+            <th>Total sin IVA</th>
+            <th>Total con IVA</th>
+            <th>Pagado</th>
+            <th class="TH52"></th>
+        </tr>        
+    </thead>
+    <tbody>
+         @foreach (var delivery in Model)
+         {
+            rowClass = cont % 2 != 0 ? "odd" : string.Empty;
+            
+            <tr class="@rowClass">                                
+                <td class="center TH100">@delivery.RefDelivery</td>
+                <td class="center TH180">@if(delivery.DeliveryDate.HasValue){ @delivery.DeliveryDate.Value.ToShortDateString()}</td>
+                <td class="left TH240">@delivery.SupplierName</td>
+                <td class="center TH90">@String.Format("{0:#.##}", @delivery.TotalDeliverySinIVA) €</td>
+                <td class="center TH90">@String.Format("{0:#.##}", @delivery.TotalDeliveryConIVA) €</td> 
+                <td class="center">@if (delivery.DeliveryIsPaid == false)
+                                   { <b></b>}
+                                   else {<img src="../../img/OK2.png" alt="Albaran Pagado" />} </td>              
+                <td class="TH67 center">
+                    <a href='@(Url.Action("Editar", "Delivery", new { DeliveryId = delivery.DeliveryId }))' class="btnView"></a>
+                    <a href="#" class="btnDelete" id="delete_@(delivery.DeliveryId)"></a>
+                </td>
+            </tr>
+            cont++;
+         }    
+
+         @for (int i = Model.Count; i <= 10; i++)
+         {
+            rowClass = cont % 2 != 0 ? "odd" : string.Empty;
+            <tr class="@rowClass">
+                <td class="TH100"></td>
+                <td class="TH180"></td>
+                <td class="TH240"></td>
+                <td class="TH90"></td>
+                <td class="TH90"></td>
+                <td></td>
+                <td class="TH67 center"></td>
+            </tr>
+            cont++;
+        }
+    </tbody>
+    <tfoot>
+        <td colspan="7"></td>
+    </tfoot>
+</table>
+<div id="DeleteDialog" style="display:none" ><center><br />¿Está seguro que desea eliminar este Albaran?</center></div>
+<script type="text/javascript">
+
+    var DeleteEntityUrl = '@Url.Action("DeleteDelivery", "Delivery")';
+    var ReloadListUrl = '@Url.Action("LoadDeliverys", "Delivery")';
+
+    jQuery(function () {
+        jQuery(".btnDelete").DeleteItem({
+            deleteUrl: DeleteEntityUrl,
+            listContainer: "ListContainer",
+            reloadUrl: ReloadListUrl,
+            params: {
+                RefDelivery2: jQuery("#RefDelivery2").val(),
+                DeliveryDate: jQuery("#DeliveryDate").val(),
+                SupplierId: jQuery("#SupplierId").val()
+            }
+        });
+    });
+   
+</script>
+
+

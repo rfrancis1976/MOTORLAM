@@ -1,0 +1,80 @@
+﻿@using Motorlam.Entities
+
+@model IList<TypeProduct>
+
+@{           
+    string rowClass = string.Empty;
+    int cont = 1;   
+}
+
+
+<table class="Grid evaluationTable" border="0" cellpadding="0" cellspacing="0">
+    <thead>
+        <tr>
+        <th colspan="100" class="nRegisters">
+                <div class="fullTableSearchDocs">            
+	                <div class="rightButton">
+                       <a href='@(Url.Action("Nuevo", "TypeProduct", null))' class="submitButton">Nuevo</a>
+
+                    </div>
+                    <span class="textNRegister">
+                        @Model.Count registro/s encontrados
+                    </span>
+                </div>
+            </th>
+           
+        </tr>
+        <tr> 
+            <th>Id</th>
+            <th>Tipo de Producto</th>              
+            <th class="separator TH52"></th>
+        </tr>        
+    </thead>
+    <tbody>
+         @foreach (var type in Model)
+         {
+            rowClass = cont % 2 != 0 ? "odd" : string.Empty;
+            
+            <tr class="@rowClass">                                
+                <td class="center TH120">@type.TypeProductId</td>
+                <td class="left">@type.TypeProductName</td>
+                <td class="TH67 center">
+                    <a href='@(Url.Action("Editar", "TypeProduct", new { TypeProductId = type.TypeProductId }))' class="btnView"></a>
+                    <a href="#" class="btnDelete" id="delete_@(type.TypeProductId)"></a>
+                </td>
+            </tr>
+            cont++;
+         }    
+
+         @for (int i = Model.Count; i <= 10; i++)
+         {
+            rowClass = cont % 2 != 0 ? "odd" : string.Empty;
+            <tr class="@rowClass">
+                <td></td>
+                <td></td>               
+                <td class="TH67 center"></td>
+            </tr>
+            cont++;
+        }
+    </tbody>
+    <tfoot>
+        <td colspan="3"></td>
+    </tfoot>
+</table>
+<div id="DeleteDialog" style="display:none" ><center><br />¿Está seguro que desea eliminar este Tipo?</center></div>
+
+<script type="text/javascript">
+
+    var DeleteEntityUrl = '@Url.Action("DeleteTypeProduct", "TypeProduct")';
+    var ReloadListUrl = '@Url.Action("LoadTypeProducts", "TypeProduct")';
+
+    jQuery(function () {
+        jQuery(".btnDelete").DeleteItem({
+            deleteUrl: DeleteEntityUrl,
+            listContainer: "ListContainer",
+            reloadUrl: ReloadListUrl
+        });
+    });       
+</script>
+
+

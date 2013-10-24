@@ -1,0 +1,287 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{17BC388D-3F44-4B8A-84E5-8AA5B24919D1}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Motorlam</RootNamespace>
+    <AssemblyName>Motorlam.Data</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="FluentValidation">
+      <HintPath>..\Bin\FluentValidation.dll</HintPath>
+    </Reference>
+    <Reference Include="FluentValidation.Mvc">
+      <HintPath>..\Bin\FluentValidation.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="inercya.ORMLite, Version=1.0.0.0, Culture=neutral, PublicKeyToken=9f4da00116c38ec5, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Bin\inercya.ORMLite.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\Bin\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="NVelocity">
+      <HintPath>..\Bin\NVelocity.dll</HintPath>
+    </Reference>
+    <Reference Include="SpreadsheetGear">
+      <HintPath>..\Bin\SpreadsheetGear.dll</HintPath>
+    </Reference>
+    <Reference Include="SqlRanger.StoredProcedures.StoredProcedure">
+      <HintPath>..\Bin\SqlRanger.StoredProcedures.StoredProcedure.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Trirand.Web.Mvc">
+      <HintPath>..\Bin\Trirand.Web.Mvc.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Entities\Car.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Car.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\City.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>City.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Brand.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Brand.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\BrandProduct.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>BrandProduct.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Iva.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Iva.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\DeliveryLine.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DeliveryLine.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Delivery.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Delivery.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Motor.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Motor.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ModelMotor.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ModelMotor.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\File.cs">
+      <DependentUpon>File.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Entities\MethodPayment.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MethodPayment.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\InvoiceLine.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>InvoiceLine.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Invoice.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Invoice.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\TypeProduct.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>TypeProduct.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Product.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Product.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Model.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Province.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Province.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Customer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Customer.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Supplier.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Supplier.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MotorlamRepository.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="StoredProcedures1.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>StoredProcedures.sps</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Entities\Car.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Car.cs</LastGenOutput>
+    </None>
+    <None Include="Entities\City.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>City.cs</LastGenOutput>
+    </None>
+    <None Include="Entities\Brand.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Brand.cs</LastGenOutput>
+    </None>
+    <None Include="Entities\BrandProduct.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>BrandProduct.cs</LastGenOutput>
+    </None>
+    <None Include="Entities\Iva.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Iva.cs</LastGenOutput>
+    </None>
+    <None Include="Entities\DeliveryLine.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>DeliveryLine.cs</LastGenOutput>
+    </None>
+    <None Include="Entities\Delivery.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Delivery.cs</LastGenOutput>
+    </None>
+    <None Include="Entities\Motor.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Motor.cs</LastGenOutput>
+    </None>
+    <None Include="Entities\ModelMotor.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ModelMotor.cs</LastGenOutput>
+    </None>
+    <None Include="Entities\File.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>File.cs</LastGenOutput>
+    </None>
+    <None Include="Entities\MethodPayment.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>MethodPayment.cs</LastGenOutput>
+    </None>
+    <None Include="Entities\Invoice.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Invoice.cs</LastGenOutput>
+    </None>
+    <None Include="Entities\InvoiceLine.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>InvoiceLine.cs</LastGenOutput>
+    </None>
+    <None Include="Entities\TypeProduct.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>TypeProduct.cs</LastGenOutput>
+    </None>
+    <None Include="Entities\Product.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Product.cs</LastGenOutput>
+    </None>
+    <None Include="Entities\Model.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Model.cs</LastGenOutput>
+    </None>
+    <None Include="Entities\Province.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Province.cs</LastGenOutput>
+    </None>
+    <None Include="Entities\Customer.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Customer.cs</LastGenOutput>
+    </None>
+    <None Include="Entities\EntityTemplate.tt" />
+    <None Include="Entities\Supplier.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Supplier.cs</LastGenOutput>
+    </None>
+    <None Include="StoredProcedures.sps">
+      <Generator>StoredProceduresGenerator</Generator>
+      <LastGenOutput>StoredProcedures1.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

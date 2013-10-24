@@ -1,0 +1,130 @@
+﻿@model Motorlam.Entities.Supplier
+@using Motorlam.Entities                  
+
+
+@{
+    Layout = "~/Views/Shared/AdministrationLayout.cshtml";
+
+    var Provinces = (IList<Province>)ViewBag.Provinces;
+    var Cities = (IList<City>)ViewBag.Cities;
+    var Cars = (IList<Car>)ViewBag.Cars;
+}
+<h2>Datos Proveedor</h2>
+
+@using (Html.BeginForm("SalvarProveedor", "Supplier", FormMethod.Post, new { id = "AltaProveedorForm" }))
+{
+
+    @Html.Hidden("SupplierId",Model.SupplierId)
+     
+<div id="tabs" class="ui-tabs ui-widget ui-widget-content ui-corner-all">                           
+   
+        <div class="tabsContent">           
+            <div class="infoAdminContent">
+                <div class="rowForm">
+                    <span><label class="fieldName" style="width: 100px;">Nombre:</label>
+                    <input type="text" style="width: 250px;" id="@SupplierFields.SupplierName" name="@SupplierFields.SupplierName" value="@Model.SupplierName" />
+                    </span><span>
+                    <label class="fieldName" style="width: 100px;">Contacto:</label>
+                    <input type="text" style="width: 250px;" id="@SupplierFields.SupplierContactName" name="@SupplierFields.SupplierContactName" value="@Model.SupplierContactName" />
+                    </span>
+                </div>
+                <div class="rowForm">
+                    <label class="fieldName" style="width: 100px;">CIF / NIF:</label>
+                    <input type="text" style="width: 100px;" id="@SupplierFields.SupplierNIF" name="@SupplierFields.SupplierNIF" value="@Model.SupplierNIF" />                    
+                </div>
+                <div class="rowForm">
+                    <span><label class="fieldName" style="width: 100px;">Dirección:</label>
+                    <input type="text" style="width: 250px;" id="@SupplierFields.SupplierAddress" name="@SupplierFields.SupplierAddress" value="@Model.SupplierAddress" />
+                    </span><span>
+                    <label class="fieldName" style="width: 100px;">Provincia:</label>
+                        @Html.DropDownList("ProvinceId", new SelectList(Provinces, "ProvinceId",
+                             "ProvinceName"), "<< seleccione >>", new { style = "width:208px" })     
+                    </span>       
+                 </div>
+                 <div class="rowForm">
+                    <span>
+                    <label class="fieldName" style="width: 100px;">Codigo Postal:</label>
+                    <input type="text" style="width: 100px;" id="@SupplierFields.SupplierCodPostal" name="@SupplierFields.SupplierCodPostal" value="@Model.SupplierCodPostal" />
+                    </span><span>
+                    <label style="width: 100px;">Localidad:</label>
+                         @Html.DropDownList("CityId", new SelectList(Cities, "CityId",
+                             "CityName"), "<< seleccione >>", new { style = "width:208px" })     
+                    </span>
+                 </div>
+                 <div class="rowForm">
+                    <span>
+                    <label class="fieldName" style="width: 100px;">Telefono:</label>
+                    <input type="text" style="width: 100px;" id="@SupplierFields.SupplierPhone1" name="@SupplierFields.SupplierPhone1" value="@Model.SupplierPhone1" />
+                    </span><span>
+                    <label class="fieldName" style="width: 100px;">Movil:</label>
+                    <input type="text" style="width: 100px;" id="@SupplierFields.SupplierPhone2" name="@SupplierFields.SupplierPhone2" value="@Model.SupplierPhone2" />
+                    </span>
+                 </div>
+                 <div class="rowForm">
+                    <span>
+                    <label class="fieldName" style="width: 100px;">Email:</label>
+                    <input type="text" style="width: 250px;" id="@SupplierFields.SupplierMail" name="@SupplierFields.SupplierMail" value="@Model.SupplierMail" />
+                    </span><span>
+                    <label class="fieldName" style="width: 100px;">Fax:</label>
+                    <input type="text" style="width: 100px;" id="@SupplierFields.SupplierFax1" name="@SupplierFields.SupplierFax1" value="@Model.SupplierFax1" />
+                    </span>
+                </div>
+                 <div class="rowForm">
+                    <span>
+                    <label class="fieldName" style="width: 100px;">Fax 2:</label>
+                    <input type="text" style="width: 100px;" id="@SupplierFields.SupplierFax2" name="@SupplierFields.SupplierFax2" value="@Model.SupplierFax2" />
+                    </span><span>
+                    <label class="fieldName" style="width: 100px;">Web:</label>
+                    <input type="text" style="width: 250px;" id="@SupplierFields.SupplierWeb" name="@SupplierFields.SupplierWeb" value="@Model.SupplierWeb" />
+                    </span>
+                </div>
+                <div class="buttonBarCriteria">
+                    <div class="leftContent">
+                        <a href='@(Url.Action("Index", "Supplier", null))' class="submitButton" style="text-decoration:none;">Volver</a>
+                    </div>    
+                    <div class="rightContent">
+                        <input type="submit" id="SalvarProveedor" value="Guardar" />
+                    </div>
+               </div>
+          </div>
+      </div>    
+</div>
+    
+<div id="SaveSupplierCorrect" style="display:none" class="popup validationDiv">
+        <div class="main">
+            <a href="#" class="btnClose validationClose">Cerrar </a>
+            <label class="succesSave">Proveedor Guardado Correctamente</label>
+        </div>
+        <div class="footer"></div>       
+</div>  
+   
+}
+
+
+<script type="text/javascript">
+
+    jQuery("#SalvarProveedor").click(function (e) {
+        e.preventDefault();
+        jQuery("#AltaProveedorForm").ajaxSubmit({
+            type: "POST",
+            success: function () {
+                jQuery("#SaveSupplierCorrect").show();
+                jQuery(".validationClose").click(function (e) {
+                    e.preventDefault();
+                    jQuery(".validationDiv, .validationDivError").hide("slow");
+                });
+            }
+        });
+    });
+
+
+    var LoadCityUrl = '@Url.Action("LoadCityByProvince", "Cliente")';
+ 
+    jQuery("#ProvinceId").ReloadCascadeDropDown({
+            fatherFieldName: "ProvinceId",
+            childFieldName: "CityId",
+            loadChildUrl: LoadCityUrl
+    });
+
+ 
+</script>

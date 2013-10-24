@@ -1,0 +1,96 @@
+﻿@using Motorlam.Entities
+
+@model IList<Supplier>
+
+@{           
+    string rowClass = string.Empty;
+    int cont = 1;   
+}
+
+
+<table class="Grid evaluationTable" border="0" cellpadding="0" cellspacing="0">
+    <thead>
+        <tr>
+        <th colspan="100" class="nRegisters">
+                <div class="fullTableSearchDocs">            
+	                <div class="rightButton">
+                       <a href='@(Url.Action("Nuevo", "Supplier", null))' class="submitButton">Nuevo</a>
+
+                    </div>
+                    <span class="textNRegister">
+                        @Model.Count registro/s encontrados
+                    </span>
+                </div>
+            </th>
+           
+        </tr>
+        <tr> 
+            <th>Proveedor</th>
+            <th>CIF</th>
+            <th>Contacto</th>
+            <th>Email</th>
+            <th>Telefono</th>
+            <th>Movil</th>              
+            <th class="separator TH52"></th>
+        </tr>        
+    </thead>
+    <tbody>
+         @foreach (var supplier in Model)
+         {
+            rowClass = cont % 2 != 0 ? "odd" : string.Empty;
+            
+            <tr class="@rowClass">                                
+                <td class="left TH200">@supplier.SupplierName</td>
+                <td class="center TH90">@supplier.SupplierNIF</td>
+                <td class="center TH160">@supplier.SupplierContactName</td>
+                <td class="center TH200">@supplier.SupplierMail</td>
+                <td class="center TH90">@supplier.SupplierPhone1</td>
+                <td class="center TH90">@supplier.SupplierPhone2</td>
+                <td class="TH67 center">
+                    <a href='@(Url.Action("Editar", "Supplier", new { SupplierId = supplier.SupplierId }))' class="btnView"></a>
+                    <a href="#" class="btnDelete" id="delete_@(supplier.SupplierId)"></a>
+                </td>
+            </tr>
+            cont++;
+         }    
+
+         @for (int i = Model.Count; i <= 10; i++)
+         {
+            rowClass = cont % 2 != 0 ? "odd" : string.Empty;
+            <tr class="@rowClass">
+                <td class="TH200"></td>
+                <td class="TH90"></td>
+                <td class="TH160"></td>
+                <td class="TH200"></td>
+                <td class="TH90"></td>
+                <td class="TH90"></td>
+                <td class="TH67 center"></td>
+            </tr>
+            cont++;
+        }
+    </tbody>
+    <tfoot>
+        <td colspan="8"></td>
+    </tfoot>
+</table>
+<div id="DeleteDialog" style="display:none" ><center><br />¿Está seguro que desea eliminar este Proveedor?</center></div>
+<script type="text/javascript">
+
+    var DeleteEntityUrl = '@Url.Action("DeleteSupplier", "Supplier")';
+    var ReloadListUrl = '@Url.Action("LoadSuppliers", "Supplier")';
+
+    jQuery(function () {
+        jQuery(".btnDelete").DeleteItem({
+            deleteUrl: DeleteEntityUrl,
+            listContainer: "ListContainer",
+            reloadUrl: ReloadListUrl,
+            params: {
+                SupplierName: jQuery("#@SupplierFields.SupplierName").val(),
+                SupplierNIF: jQuery("#@SupplierFields.SupplierNIF").val()
+            }
+        });
+    });  
+    
+</script>
+
+

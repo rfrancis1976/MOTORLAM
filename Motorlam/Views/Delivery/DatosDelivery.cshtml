@@ -1,0 +1,66 @@
+﻿@model Motorlam.Entities.Delivery
+@using Motorlam.Entities   
+
+@{
+    var suppliers = (IList<Supplier>)ViewBag.Suppliers;    
+}
+
+@using (Html.BeginForm("SaveDelivery", "Delivery", FormMethod.Post, new { id = "AltaDeliveryForm" }))
+{
+
+@Html.Hidden(@DeliveryFields.DeliveryId, Model.DeliveryId) 
+@Html.Hidden(@DeliveryFields.TotalDeliveryConIVA, Model.TotalDeliveryConIVA) 
+@Html.Hidden(@DeliveryFields.TotalDeliverySinIVA, Model.TotalDeliverySinIVA) 
+   
+<div id="tabs" class="ui-tabs ui-widget ui-widget-content ui-corner-all">                           
+        <div class="tabsContent">           
+            <div class="infoAdminContent">
+                <h2>Datos Albaran</h2>
+                <div class="rowForm">   
+                    <label class="fieldName" style="width: 120px;">Nº Albaran:</label>
+                    <input type="text" style="width: 100px;" id="@DeliveryFields.RefDelivery" name="@DeliveryFields.RefDelivery" value="@Model.RefDelivery" />
+                </div>
+                <div class="rowForm">
+                      <label class="fieldName" style="width: 120px;">Fecha Albaran:</label>
+                       <input type="text" style="width: 100px;" class="datepicker" id="@DeliveryFields.DeliveryDate" name="@DeliveryFields.DeliveryDate" 
+                                                        value="@if (Model.DeliveryDate.HasValue)
+                                                               {@Model.DeliveryDate.Value.ToShortDateString()}" />                   
+                </div>
+                <div class="rowForm">
+                    <label class="fieldName" style="width: 120px;">Proveedor:</label>
+                    @Html.DropDownList(@SupplierFields.SupplierId, new SelectList(suppliers, @SupplierFields.SupplierId, @SupplierFields.SupplierName), "<< seleccione >>", new { style = "width:208px" })
+                </div>
+                                
+                        
+                <div class="rowForm">
+                    <label class="fieldName" style="width: 120px;">Pagado:</label>
+                     @Html.CheckBox(@DeliveryFields.DeliveryIsPaid, @Model.DeliveryIsPaid == true ? true : false)                     
+                </div>       
+                <div class="rowForm">
+                    <label class="fieldName" style="width: 120px;">Fecha Pago:</label>
+                    <input type="text" style="width: 100px;" class="datepicker" id="@DeliveryFields.DeliveryPaidDate" name="@DeliveryFields.DeliveryPaidDate"
+                                                                 value="@if (Model.DeliveryPaidDate.HasValue)
+                                                                        {@Model.DeliveryPaidDate.Value.ToShortDateString()}" />
+                </div>
+                <div class="rowForm">
+                    <label class="fieldName" style="width: 120px;">Forma de Pago:</label>
+                    <span class="radio" style="float:none;"><label>Efectivo</label>@Html.RadioButton(@DeliveryFields.DeliveryTypePaid, "Efectivo", Model.DeliveryTypePaid)</span>
+                    <span class="radio" style="float:none;"><label>Tarjeta</label>@Html.RadioButton(@DeliveryFields.DeliveryTypePaid, "Tarjeta", Model.DeliveryTypePaid)</span>
+                    <span class="radio" style="float:none;"><label>Transferencia</label>@Html.RadioButton(@DeliveryFields.DeliveryTypePaid, "Transferencia", Model.DeliveryTypePaid)</span>   
+                </div> 
+                <div class="rowForm texareaContent">    
+                    <label class="fieldName" style="width: 120px;">Comentarios:</label>
+                        <textarea style="width:600px;" id="@DeliveryFields.DeliveryComments" name="@DeliveryFields.DeliveryComments">@Model.DeliveryComments</textarea>                        
+                 </div>                               
+                <div class="buttonBarCriteria">
+                    <div class="leftContent">
+                        <a href='@(Url.Action("Index", "Delivery", null))' style="text-decoration:none;" class="submitButton">Volver</a>
+                    </div>    
+                    <div class="rightContent">
+                        <input type="submit" class="SaveDelivery"value="Guardar" />
+                    </div>
+                </div>
+           </div>
+      </div>
+     </div>
+}

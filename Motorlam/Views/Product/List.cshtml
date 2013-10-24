@@ -1,0 +1,94 @@
+﻿@using Motorlam.Entities
+
+@model IList<Product>
+
+@{           
+    string rowClass = string.Empty;
+    int cont = 1;   
+}
+
+
+<table class="Grid evaluationTable" border="0" cellpadding="0" cellspacing="0">
+    <thead>
+        <tr>
+        <th colspan="100" class="nRegisters">
+                <div class="fullTableSearchDocs">            
+	                <div class="rightButton">
+                       <a href='@(Url.Action("Nuevo", "Product", null))' class="submitButton">Nuevo</a>
+
+                    </div>
+                    <span class="textNRegister">
+                        @Model.Count registro/s encontrados
+                    </span>
+                </div>
+            </th>
+           
+        </tr>
+        <tr> 
+            <th>Referencia</th> 
+            <th>Nombre</th>
+            <th>Proveedor</th>
+            <th>Tipo Producto</th>
+            <th>Precio Coste</th>                   
+            <th class="separator TH52"></th>
+        </tr>        
+    </thead>
+    <tbody>
+         @foreach (var product in Model)
+         {
+            rowClass = cont % 2 != 0 ? "odd" : string.Empty;
+            
+            <tr class="@rowClass">                                
+                <td class="center TH90">@product.ProductReference</td>
+                <td class="left">@product.ProductName</td>
+                <td class="left TH200">@product.SupplierName</td>
+                <td class="center TH100">@product.TypeProductName</td>
+                <td class="right TH100">@String.Format("{0:#.##}",@product.ProductCost) €</td>
+                <td class="TH67 center">
+                    <a href='@(Url.Action("Editar", "Product", new { ProductId = product.ProductId }))' class="btnView"></a>
+                    <a href="#" class="btnDelete" id="delete_@(product.ProductId)"></a>
+                </td>
+            </tr>
+            cont++;
+         }    
+
+         @for (int i = Model.Count; i <= 10; i++)
+         {
+            rowClass = cont % 2 != 0 ? "odd" : string.Empty;
+            <tr class="@rowClass">
+                <td class="TH90"></td>
+                <td></td>
+                <td class="TH200"></td>
+                <td class="TH100"></td>
+                <td class="TH100"></td>
+                <td class="TH67 center"></td>
+            </tr>
+            cont++;
+        }
+    </tbody>
+    <tfoot>
+        <td colspan="7"></td>
+    </tfoot>
+</table>
+<div id="DeleteDialog" style="display:none" ><center><br />¿Está seguro que desea eliminar este Producto?</center></div>
+<script type="text/javascript">
+
+    var DeleteEntityUrl = '@Url.Action("DeleteProduct", "Product")';
+    var ReloadListUrl = '@Url.Action("LoadProducts", "Product")';
+
+    jQuery(function () {
+        jQuery(".btnDelete").DeleteItem({
+            deleteUrl: DeleteEntityUrl,
+            listContainer: "ListContainer",
+            reloadUrl: ReloadListUrl,
+            params: {
+                ProductId: jQuery("#@ProductFields.ProductId").val(),
+                ProductName: jQuery("#@ProductFields.ProductName").val(),
+                SupplierName: jQuery("#@ProductFields.SupplierName").val()
+            }
+        });
+    });  
+  
+</script>
+
+

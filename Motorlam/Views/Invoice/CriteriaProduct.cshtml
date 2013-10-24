@@ -1,0 +1,26 @@
+﻿@using Motorlam.Entities
+<h3 style="color:Black;">Buscador</h3>                        
+    
+@{
+    var Suppliers = (IList<Supplier>)ViewBag.Suppliers1;
+    var BrandsProduct = (IList<BrandProduct>)ViewBag.BrandsProduct1;
+    var TypeProducts = (IList<TypeProduct>)ViewBag.TypeProducts1;
+}
+
+
+<div class="rowForm">
+    <label class="fieldName" style="width: 100px;">Nombre:</label>
+    <input name="ProductName2" id="ProductName2" type="text" style="width: 242px;" />           
+</div>
+<div class="rowForm">
+    <label class="fieldName" style="width: 100px;">Proveedor:</label>
+    @Html.DropDownList("SupplierId2", new SelectList(Suppliers, @SupplierFields.SupplierId, @SupplierFields.SupplierName), "<< seleccione >>", new { style = "width:250px" })             
+   </div>
+<div class="rowForm">
+    <label class="fieldName" style="width: 100px;">Tipo Producto:</label>
+    @Html.DropDownList("TypeProductId2", new SelectList(TypeProducts, @TypeProductFields.TypeProductId, @TypeProductFields.TypeProductName), "<< seleccione >>", new { style = "width:250px" })             
+</div>
+<div class="rowForm">
+    <label class="fieldName" style="width: 100px;">Marca:</label>
+    @Html.DropDownList("BrandProductId1", new SelectList(BrandsProduct, @BrandProductFields.BrandProductId, @BrandProductFields.BrandProductName), "<< seleccione >>", new { style = "width:250px" })             
+</div>

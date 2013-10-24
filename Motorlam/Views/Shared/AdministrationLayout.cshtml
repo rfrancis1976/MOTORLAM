@@ -1,0 +1,12 @@
+﻿@{
+    ViewBag.Title = "ClienteLayout";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="menuContainer" id="LeftMenuSection">
+    @Html.Partial("~/Views/Shared/LateralMenuAdministration.cshtml")
+</div>
+<div class="mainContainer" id="MainSection">
+     @RenderBody()
+</div>

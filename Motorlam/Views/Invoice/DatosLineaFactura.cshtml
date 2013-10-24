@@ -1,0 +1,207 @@
+﻿@model Motorlam.Entities.InvoiceLine
+@using Motorlam.Entities
+@{
+    var Suppliers = (IList<Supplier>)ViewBag.Suppliers;
+    var BrandProducts = (IList<BrandProduct>)ViewBag.BrandProducts;
+    var TypeProducts = (IList<TypeProduct>)ViewBag.TypeProducts;
+}
+
+@Html.Hidden("InvoiceLineId",Model.InvoiceLineId)
+@Html.Hidden("ProductId1",Model.ProductId)
+<div id="tabs" class="ui-tabs ui-widget ui-widget-content ui-corner-all">                           
+   <div class="tabsContent">           
+            <div class="infoAdminContent"> 
+                <h2>Lineas Factura</h2> 
+                @if (Model.InvoiceLineId > 0)
+                {   
+                <h3 style="font-size:11px;color:Black;">Editar Linea</h3>     }
+                else {
+                    <h3 style="font-size:11px;color:Black;">Añadir Linea</h3>    
+                }
+                <div class="rowForm">
+                    <span>
+                        <label class="fieldName" style="width: 120px;">Referencia:</label>
+                         @if (Model.InvoiceLineId > 0)
+                         {   
+                            <input type="text" style="width: 100px;" readonly="readonly" id="@InvoiceLineFields.ProductReference" name="@InvoiceLineFields.ProductReference" value="@Model.ProductReference" />
+                         }
+                         else
+                         {
+                            <input type="text" style="width: 100px;" id="@InvoiceLineFields.ProductReference" name="@InvoiceLineFields.ProductReference" value="@Model.ProductReference" />
+                         }
+                         </span><span id="brand" style="display:none;">
+                        <label class="fieldName" style="width: 120px;">Marca:</label>
+                         @Html.DropDownList(@BrandProductFields.BrandProductId, new SelectList(BrandProducts, @BrandProductFields.BrandProductId, @BrandProductFields.BrandProductName), "<< seleccione >>", new { style = "width:250px" })
+                    </span>
+                </div>
+                <div class="rowForm">
+                    <span>
+                        <label class="fieldName" style="width: 120px;">Nombre Producto:</label>
+                         @if (Model.InvoiceLineId > 0)
+                         { 
+                            <input type="text" readonly="readonly" style="width: 250px;" id="ProductName1" name="ProductName1" value="@Model.ProductName" />
+                         }
+                         else
+                         {
+                             <input type="text" style="width: 250px;" id="ProductName1" name="ProductName1" value="@Model.ProductName" />
+                         }
+                    </span><span id="supplier" style="display:none;">
+                        <label class="fieldName" style="width: 120px;">Proveedor:</label>
+                         @Html.DropDownList(@SupplierFields.SupplierId, new SelectList(Suppliers, @SupplierFields.SupplierId, @SupplierFields.SupplierName), "<< seleccione >>", new { style = "width:250px" })
+                    </span>
+                </div>
+                <div class="rowForm">
+                    <span>
+                    <label class="fieldName" style="width: 120px;">PVP:</label>
+                    @Html.TextBox(@InvoiceLineFields.ProductCost, @Model.ProductCost, new { @style = "width: 70px;" })<b> €</b>
+                    </span><span id="typeproduct" style="display:none;">
+                        <label class="fieldName" style="width: 120px;">Tipo Producto:</label>
+                         @Html.DropDownList(@TypeProductFields.TypeProductId, new SelectList(TypeProducts, @TypeProductFields.TypeProductId, @TypeProductFields.TypeProductName), "<< seleccione >>", new { style = "width:250px" })
+                    </span>
+                </div>
+                <div class="rowForm">
+                    <label class="fieldName" style="width: 120px;">Cantidad:</label>
+                    <input type="text" style="width: 70px;" id="@InvoiceLineFields.InvoiceLineQuantity" name="@InvoiceLineFields.InvoiceLineQuantity" value="@Model.InvoiceLineQuantity" />
+                </div> 
+                <div class="rowForm">
+                    <label class="fieldName" style="width: 120px;">Descuento:</label>
+                    <input type="text" style="width: 70px;" id="@InvoiceLineFields.InvoiceLineDiscount" name="@InvoiceLineFields.InvoiceLineDiscount" value="@(Model.InvoiceLineDiscount*100)" /> <b> %</b>
+                </div>                           
+                <div class="buttonBarCriteria">
+                    <div class="leftContent">
+                        <a href='#' class="submitButton CancelInvoiceLine" style="text-decoration:none;">Cancelar</a>
+                        <a href='#' class="submitButton BuscarProducto" style="text-decoration:none;">Buscar Producto</a>
+                    </div>
+                    <div class="rightContent">
+                        @if (Model.InvoiceLineId > 0)
+                        {
+                            <input type="submit" class="SaveInvoiceLine"value="Editar Linea" />}
+                        else
+                        {
+                            <input type="submit" class="SaveInvoiceLine"value="Añadir Linea" />
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
+
+<div id="DialogSearchProduct" style="display:none;" title="Seleccionar Producto">
+    @Html.Partial("~/Views/Invoice/SearchProduct.cshtml")
+</div>  
+
+
+<script type="text/javascript">
+
+    var LoadModelUrl = '@Url.Action("LoadModelByBrand", "Cliente")';
+ 
+    jQuery("#BrandId").ReloadCascadeDropDown({
+        fatherFieldName: "BrandId",
+        childFieldName: "ModelId",
+        loadChildUrl: LoadModelUrl
+    });
+
+    jQuery("#@InvoiceLineFields.ProductCost").change(function () {
+        var value = jQuery(this).val();
+        var newValue = value.replace(".", ",");
+        jQuery(this).val(newValue);
+    });
+
+    jQuery("#@InvoiceLineFields.InvoiceLineQuantity").change(function () {
+        var value = jQuery(this).val();
+        var newValue = value.replace(".", ",");
+        jQuery(this).val(newValue);
+    });
+    
+    jQuery(".CancelInvoiceLine").click(function (e) {
+        var ReloadUrl = '@Url.Action("Editar", "Invoice")';
+        var Id = jQuery("#InvoiceId").val();
+        window.location = ReloadUrl + "?InvoiceId=" + Id + "&tab=" + 2;
+    });
+
+
+    jQuery(".SaveInvoiceLine").click(function (e) {
+        e.preventDefault();
+        var NewInvoiceLineUrl = '@Url.Action("SaveInvoiceLine", "Invoice")';
+        var ReloadUrl = '@Url.Action("Editar", "Invoice")';
+        var Id = jQuery("#InvoiceId").val();
+        jQuery.ajax({
+            type: "POST",
+            url: NewInvoiceLineUrl,
+            dataType: "json",
+            cache: false,
+            async: false,
+            data: {
+                InvoiceLineId: jQuery("#@InvoiceLineFields.InvoiceLineId").val(),
+                InvoiceID: Id,
+                ProductId: jQuery("#ProductId1").val(),
+                ProductReference: jQuery("#@InvoiceLineFields.ProductReference").val(),
+                ProductName: jQuery("#ProductName1").val(),
+                InvoiceProductValue: jQuery("#@InvoiceLineFields.ProductCost").val().replace(",", "."),
+                InvoiceLineQuantity: jQuery("#@InvoiceLineFields.InvoiceLineQuantity").val(),
+                InvoiceLineDiscount: jQuery("#@InvoiceLineFields.InvoiceLineDiscount").val(),
+                SupplierId: jQuery("#@SupplierFields.SupplierId").val(),
+                BrandProductId: jQuery("#@BrandProductFields.BrandProductId").val(),
+                TypeProductId: jQuery("#@TypeProductFields.TypeProductId").val()
+            },
+            success: function (data) {
+                window.location = ReloadUrl + "?InvoiceId=" + Id + "&tab=" + 2;
+            }
+        });
+    });
+
+    jQuery("#@InvoiceLineFields.ProductReference").change(function () {
+
+        var LoadProductByReference = '@Url.Action("LoadProductByReference", "Invoice")';
+        var product = jQuery(this).val();
+
+        jQuery.ajax({
+            url: LoadProductByReference,
+            type: "POST",
+            data: { ProductReference: product },
+            cache: false,
+            async: false,
+            success: function (event) {
+                if (event.result == "success") {
+                    jQuery("#ProductName1").val(event.Product.ProductName);
+                    jQuery("#ProductId1").val(event.Product.ProductId);
+                    jQuery("#SupplierId").val(event.Product.SupplierId);
+                    jQuery("#BrandProductId").val(event.Product.BrandProductId);
+                    jQuery("#TypeProductId").val(event.Product.TypeProductId);
+                    jQuery(".ProductCost").val(event.Product.ProductCost);
+
+                    //var newValue = jQuery(".ProductCost").val().replace(".", ",");
+                    //jQuery(".ProductCost").val(newValue);
+                }
+                else {
+                    jQuery("#ProductName1").val("");
+                    jQuery("#ProductId1").val("");
+                    jQuery("#SupplierId").val("");
+                    jQuery("#BrandProductId").val("");
+                    jQuery("#TypeProductId").val("");
+                    jQuery(".ProductCost").val("");
+                }
+            }
+        });
+
+        jQuery("#supplier").css("display", "block");
+        jQuery("#brand").css("display", "block");
+        jQuery("#typeproduct").css("display", "block");
+    });
+
+
+
+    jQuery(".BuscarProducto").click(function (e) {
+        e.preventDefault();
+        jQuery("#DialogSearchProduct").dialog({
+            autoOpen: true,
+            modal: true,
+            show: 'fold',
+            width: 800,
+            position: ['center', 100],
+            close: function () {
+                jQuery("#DialogSearchCustomer").dialog("destroy");
+            }
+        });
+    });
+</script>

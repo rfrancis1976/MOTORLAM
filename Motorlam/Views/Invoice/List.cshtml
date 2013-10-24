@@ -1,0 +1,114 @@
+﻿@using Motorlam.Entities
+
+@model IList<Invoice>
+
+@{           
+    string rowClass = string.Empty;
+    int cont = 1;   
+}
+
+
+<table class="Grid evaluationTable" border="0" cellpadding="0" cellspacing="0">
+    <thead>
+        <tr>
+        <th colspan="100" class="nRegisters">
+                <div class="fullTableSearchDocs">            
+	                <div class="rightButton">
+                       <a href='@(Url.Action("Nuevo", "Invoice", null))' class="submitButton">Nueva Factura</a>
+                    </div>
+                    <span class="textNRegister">
+                        @Model.Count registro/s encontrados
+                    </span>                    
+                </div>
+            </th>
+           
+        </tr>
+        <tr> 
+            <th>Factura Nº</th> 
+            <th>Cliente</th>
+            <th>Facturado a</th>
+            <th>NIF</th>
+            <th>Fecha</th>                         
+            <th>Total sin IVA</th>
+            <th>Total con IVA</th>
+            <th>Factura Pagada</th>
+            <th class="TH52"></th>
+        </tr>        
+    </thead>
+    <tbody>
+         @foreach (var invoice in Model)
+         {
+            rowClass = cont % 2 != 0 ? "odd" : string.Empty;
+
+            var totalIva = invoice.InvoiceNetTotal + (invoice.InvoiceNetTotal * invoice.IvaValor) / 100;
+             
+            <tr class="@rowClass">                                
+                <td class="center TH80">@invoice.InvoiceNumber</td>
+                <td class="left TH180">@invoice.CustomerName @invoice.CustomerSurName</td>
+                <td class="left TH180">@invoice.InvoiceCustomerName</td>
+                <td class="center TH90">@invoice.InvoiceCustomerNIF</td>
+                <td class="center TH80">@if(invoice.InvoiceDate.HasValue){ @invoice.InvoiceDate.Value.ToShortDateString()}</td>
+                <td class="right TH90">@(invoice.InvoiceNetTotal.HasValue? invoice.InvoiceNetTotal.Value.ToString("0#.##"):"0.00") €</td>
+                <td class="right TH90">@(totalIva.HasValue ? totalIva.Value.ToString("0#.##") : "0.00") €</td> 
+                <td class="center">@if (invoice.IsInvoicePaid == false)
+                                   { <b></b>}
+                                   else {<img src="../../img/OK2.png" alt="Factura Pagada" />} </td>               
+                <td class="TH67 center">
+                    <a href='@(Url.Action("Editar", "Invoice", new { InvoiceId = invoice.InvoiceId, tab = 1 }))' class="btnView"></a>
+                    <a href="#" class="btnDelete" id="delete_@(invoice.InvoiceId)"></a>
+                </td>
+            </tr>
+            cont++;
+         }    
+
+         @for (int i = Model.Count; i <= 10; i++)
+         {
+            rowClass = cont % 2 != 0 ? "odd" : string.Empty;
+            <tr class="@rowClass">
+                <td class="TH80"></td>
+                <td class="TH180"></td>
+                <td class="TH180"></td>
+                <td class="TH90"></td>
+                <td class="TH80"></td>
+                <td class="TH90"></td>
+                <td class="TH90"></td>
+                <td class=""></td>
+                <td class="TH67 center"></td>
+            </tr>
+            cont++;
+        }
+    </tbody>
+    <tfoot>
+        <td colspan="10"></td>
+    </tfoot>
+</table>
+
+<script type="text/javascript">
+
+    jQuery(".btnDelete").click(function () {
+        var DeleteURL = '@Url.Action("DeleteInvoice","Invoice")';
+        var invoiceId = this.id.split('_')[1];
+        if (confirm("¿Estas seguro de eliminar esta Factura?")) {
+
+            jQuery.ajax({
+                url: DeleteURL,
+                type: "POST",
+                data: {
+                    Id: invoiceId,
+                    InvoiceId: jQuery("#@InvoiceFields.InvoiceId").val(),
+                    CustomerName: jQuery("#@InvoiceFields.CustomerName").val(),
+                    InvoiceDate: jQuery("#@InvoiceFields.InvoiceDate").val(),
+                    NIF: jQuery("#@InvoiceFields.InvoiceCustomerNIF").val(),
+                    IsInvoicePaid: jQuery("input[name='IsInvoicePaid']:checked").val()
+                },
+                cache: false,
+                success: function (data) {
+                    alert("Factura Eliminada");
+                    jQuery("#ListContainer1").html(data);
+                }
+            });
+        }
+    });   
+</script>
+
+

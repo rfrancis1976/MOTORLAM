@@ -1,0 +1,36 @@
+﻿@using Motorlam.Entities    
+
+@{
+    var brands = (IList<Brand>)ViewBag.Brands;
+    var models = (IList<Model>)ViewBag.Models;
+ }
+
+<h2 class="titleTabs" style="margin:10px 0 10px 0;">Buscador</h2>      
+<div id="tabs" class="ui-tabs ui-widget ui-widget-content ui-corner-all">                           
+     <div class="tabsContent">           
+       <div class="infoAdminContent">     
+            <div class="rowForm">
+                <label class="fieldName" style="width: 100px;">Marca:</label>
+                @Html.DropDownList("BrandId", new SelectList(brands, "BrandId",
+                             "BrandName"), "<< seleccione >>", new { style = "width:208px" })         
+            </div>  
+            <div class="rowForm">
+                <label class="fieldName" style="width: 100px;">Modelo:</label>
+                @Html.DropDownList("ModelId", new SelectList(models, "ModelId",
+                             "ModelName"), "<< seleccione >>", new { style = "width:208px" })         
+            </div>            
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+ var LoadModelUrl = '@Url.Action("LoadModelByBrand", "Car")';
+ 
+    jQuery("#BrandId").ReloadCascadeDropDown({
+            fatherFieldName: "BrandId",
+            childFieldName: "ModelId",
+            loadChildUrl: LoadModelUrl
+        });
+
+</script>

@@ -1,0 +1,146 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=8" />
+    <title>@ViewBag.Title</title>
+    <link href="@Url.Content("~/Content/Site.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/grids.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/custom-theme/jquery-ui-1.8.custom.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/reset.css")" rel="stylesheet" type="text/css" />
+    
+    <script src="@Url.Content("~/Scripts/MicrosoftAjax.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery-1.6.4.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.form.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/Motorlam/jquery.motorlam.ReloadCascadeDropDown.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/Motorlam/jquery.motorlam.DeleteItem.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/Motorlam/jquery.motorlam.Search.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery-ui-1.8.custom.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.template.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.numeric.js")" type="text/javascript"></script>
+        
+</head>
+<body>
+    <div class="page">
+        <div id="header">
+            <div id="title" style="width:1018px;">
+                <img src="../../img/motorlam_logo.png" alt="" />
+            </div>
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <div id="menucontainer" style="background-color:#bcf5a9;">
+                <ul id="menu">
+                    <li><a href="@Url.Action("Index", "Home")"><img src="../../img/Inicio_ico.png" alt=""/></a></li>
+                    <li><a href="@Url.Action("Index", "Administration")"><img src="../../img/Administracion_ico.png" alt="" /></a></li>
+                    <li><a href="@Url.Action("Index", "Invoice")"><img src="../../img/Facturas_ico.png" alt=""/></a></li>
+                    <li><a href="@Url.Action("Index", "Delivery")"><img src="../../img/Albaranes_ico.png" alt=""/></a></li>
+                    <li><a href="@Url.Action("Index", "Estimate")"><img src="../../img/presupuesto_ico.png" alt=""/></a></li>
+                </ul>
+            </div>
+        </div>
+        <div id="main">
+            @RenderBody()
+        </div>
+        <div id="FooterSection">
+             @if (this.IsSectionDefined("Footer"))
+        {
+            @RenderSection("Footer");
+        }
+        else
+        {
+            @Html.Partial("Footer");
+        }
+        </div>
+    </div>
+</body>
+</html>
+
+<script type="text/html" id="templateErrors">
+            <# for (var i in data.validationErrors) { #>
+                <# for (var e in data.validationErrors[i].Errors) { #>
+                    <li><#= data.validationErrors[i].Errors[e] #></li>
+                <# } #>
+            <# } #>
+            <a href="#" class="btnClose validationClose">Cerrar</a>
+    </script>
+    <script type="text/html" id="errorListTemplate">
+            <# for (var e in data) { #>
+                <li class="errorMessage"><#= data[e] #></li>
+            <# } #>
+    </script>  
+
+<div id="General_DeleteCorrect" style="display:none" class="popup validationDiv">
+        <div class="main">
+            <a href="#" class="btnClose validationClose">Cerrar </a>
+            <label class="succesSave">Eliminado Correctamente</label>
+        </div>
+        <div class="footer"></div>       
+</div>
+
+<div id="General_Notify" style="display:none" class="popup validationDivError">
+       <div class="main">
+            <a href="#" class="btnClose validationClose">Cerrar </a>
+            <label class="invalidUrl">Advertencia</label>
+            <ul class="errorMessageContent"></ul>
+        </div>
+        <div class="footer"></div>       
+</div>
+
+<script type="text/javascript">
+
+    jQuery(document).ready(function () {
+            jQuery('#tabs').tabs();
+    
+    
+    });
+    
+    jQuery('.datepicker').datepicker({ dateFormat: 'dd/mm/yy',
+        changeMonth: true,
+        changeYear: true,
+        numberOfMonths: 1,
+        dayNamesMin: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'],
+        monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo',
+                            'Junio', 'Julio', 'Agosto', 'Septiembre',
+                            'Octubre', 'Noviembre', 'Diciembre'],
+        monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr',
+                            'May', 'Jun', 'Jul', 'Ago',
+                            'Sep', 'Oct', 'Nov', 'Dic']
+    });
+
+    $(".ui-datepicker").draggable()
+
+    jQuery('.dialog_link, ul#icons li').hover(
+		function () { jQuery(this).addClass('ui-state-hover'); },
+		function () { jQuery(this).removeClass('ui-state-hover'); }
+    );
+
+    jQuery.fn.equalizeHeights = function () {
+        var maxHeight = this.map(function (i, e) {
+            return jQuery(e).height();
+        }).get();
+
+        return this.height(Math.max.apply(this, maxHeight));
+    };
+
+    // Funcion para mostrar los errores en los Dialog de Errores 
+    function ShowValidationErrors(formSelector, validationErrors, errorListTemplateId) {
+        jQuery(".errorMessage").remove();
+        jQuery(".errorIcon").hide();
+        jQuery(".validate").show();
+        jQuery(".noRequired").show();
+
+        for (var i in validationErrors) {
+            var ve = validationErrors[i];
+            var control = jQuery(formSelector + " [name='" + ve.PropertyName + "']");
+            var errorIcon = jQuery("span[id='" + ve.PropertyName + "_errorIcon']");
+            var errorList = jQuery("ul[id='" + ve.PropertyName + "_errorList']");
+            errorList.fromTemplate(errorListTemplateId, ve.Errors);
+            errorIcon.show();
+            var validate = jQuery("span[id='" + ve.PropertyName + "_validate']");
+            validate.hide();
+        }
+    }
+    
+</script>

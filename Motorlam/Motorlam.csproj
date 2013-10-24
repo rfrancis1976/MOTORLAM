@@ -1,0 +1,522 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{EF27DE01-D60D-4B1C-89C5-EE0A7AB1FD0A}</ProjectGuid>
+    <ProjectTypeGuids>{E53F8FEA-EAE0-44A6-8774-FFD645390401};{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Motorlam</RootNamespace>
+    <AssemblyName>Motorlam</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>true</UseIISExpress>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <IncludeIisSettings>false</IncludeIisSettings>
+    <FilesToIncludeForPublish>AllFilesInTheProject</FilesToIncludeForPublish>
+    <PublishDatabaseSettings>
+      <Objects>
+        <ObjectGroup Name="Motorlam-Deployment" Order="2" xmlns="">
+          <Destination Path="" />
+          <Object Type="dbFullSql">
+            <PreSource Path="Data Source=GUALLART-PC%3bInitial Catalog=Motorlam%3bIntegrated Security=True" ScriptSchema="True" ScriptData="False" CopyAllFullTextCatalogs="False" DriDefaults="True" />
+            <Source Path="obj\Debug\AutoScripts\Motorlam-Deployment_SchemaOnly.sql" Transacted="True" />
+          </Object>
+        </ObjectGroup>
+      </Objects>
+    </PublishDatabaseSettings>
+    <DeployIisAppPhysicalPath>d:\Documents\Visual Studio 2010\Projects\Northwind\Northwind1_deploy\</DeployIisAppPhysicalPath>
+    <DeployIisAppPath>Motorlam</DeployIisAppPath>
+    <PublishDatabases>false</PublishDatabases>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="FluentValidation">
+      <HintPath>..\Bin\FluentValidation.dll</HintPath>
+    </Reference>
+    <Reference Include="FluentValidation.Mvc">
+      <HintPath>..\Bin\FluentValidation.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="inercya.ORMLite">
+      <HintPath>..\Bin\inercya.ORMLite.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Office.Interop.Excel, Version=12.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Microsoft.ReportViewer.WebForms, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\Bin\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="NVelocity">
+      <HintPath>..\Bin\NVelocity.dll</HintPath>
+    </Reference>
+    <Reference Include="SpreadsheetGear">
+      <HintPath>..\Bin\SpreadsheetGear.dll</HintPath>
+    </Reference>
+    <Reference Include="SqlRanger.StoredProcedures.StoredProcedure">
+      <HintPath>..\Bin\SqlRanger.StoredProcedures.StoredProcedure.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Web.WebPages" />
+    <Reference Include="System.Web.Helpers" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="Trirand.Web.Mvc">
+      <HintPath>..\Bin\Trirand.Web.Mvc.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Controllers\AdministrationController.cs" />
+    <Compile Include="Controllers\BrandController.cs" />
+    <Compile Include="Controllers\BrandProductController.cs" />
+    <Compile Include="Controllers\CarController.cs" />
+    <Compile Include="Controllers\ClienteController.cs" />
+    <Compile Include="Controllers\DeliveryController.cs" />
+    <Compile Include="Controllers\EstimateController.cs" />
+    <Compile Include="Controllers\InvoiceController.cs" />
+    <Compile Include="Controllers\ProductController.cs" />
+    <Compile Include="Controllers\SupplierController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\NorthwindController.cs" />
+    <Compile Include="Controllers\TypeProductController.cs" />
+    <Compile Include="Extenders\MvcExtenders.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ChildItem.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WebForms\ReportViewerBuiltinForm.aspx.cs">
+      <DependentUpon>ReportViewerBuiltinForm.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebForms\ReportViewerBuiltinForm.aspx.designer.cs">
+      <DependentUpon>ReportViewerBuiltinForm.aspx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\custom-theme\images\ui-bg_flat_0_aaaaaa_40x100.png" />
+    <Content Include="Content\custom-theme\images\ui-bg_flat_0_ffffff_40x100.png" />
+    <Content Include="Content\custom-theme\images\ui-bg_flat_75_eaf3ff_40x100.png" />
+    <Content Include="Content\custom-theme\images\ui-bg_glass_100_b5d5ff_1x400.png" />
+    <Content Include="Content\custom-theme\images\ui-bg_glass_55_fbf9ee_1x400.png" />
+    <Content Include="Content\custom-theme\images\ui-bg_glass_65_eaf3ff_1x400.png" />
+    <Content Include="Content\custom-theme\images\ui-bg_glass_75_dadada_1x400.png" />
+    <Content Include="Content\custom-theme\images\ui-bg_glass_75_e6e6e6_1x400.png" />
+    <Content Include="Content\custom-theme\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
+    <Content Include="Content\custom-theme\images\ui-bg_inset-soft_95_fef1ec_1x100.png" />
+    <Content Include="Content\custom-theme\images\ui-icons_000000_256x240.png" />
+    <Content Include="Content\custom-theme\images\ui-icons_222222_256x240.png" />
+    <Content Include="Content\custom-theme\images\ui-icons_2e83ff_256x240.png" />
+    <Content Include="Content\custom-theme\images\ui-icons_454545_256x240.png" />
+    <Content Include="Content\custom-theme\images\ui-icons_888888_256x240.png" />
+    <Content Include="Content\custom-theme\images\ui-icons_cd0a0a_256x240.png" />
+    <Content Include="Content\custom-theme\jquery-ui-1.8.12.custom.css" />
+    <Content Include="Content\custom-theme\jquery-ui-1.8.custom.css" />
+    <Content Include="Content\grids.css" />
+    <Content Include="Content\jquery-ui-1.8.16.custom.css" />
+    <Content Include="Global.asax" />
+    <Content Include="Content\Site.css" />
+    <Content Include="Content\themes\base\jquery-ui.css" />
+    <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
+    <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_65_ffffff_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_75_dadada_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_75_e6e6e6_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_95_fef1ec_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
+    <Content Include="Content\themes\base\images\ui-icons_222222_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_2e83ff_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_454545_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_888888_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_cd0a0a_256x240.png" />
+    <Content Include="img\Administracion_ico.png" />
+    <Content Include="img\BackgroundBody.jpg" />
+    <Content Include="img\bckgrAdmin.gif" />
+    <Content Include="img\bckgrH2Home.gif" />
+    <Content Include="img\bckgrHeader.gif" />
+    <Content Include="img\bckgrLogin.gif" />
+    <Content Include="img\bckgrMainContainer.gif" />
+    <Content Include="img\bckgrMisDatos.gif" />
+    <Content Include="img\bckgrSubmitButton.gif" />
+    <Content Include="img\bg.gif" />
+    <Content Include="img\bg_button.png" />
+    <Content Include="img\blackArrow.png" />
+    <Content Include="img\botonClientes.png" />
+    <Content Include="img\bottomshadow.png" />
+    <Content Include="img\btn-sprite.gif" />
+    <Content Include="img\Buttons\btnAdministracion.gif" />
+    <Content Include="img\Buttons\btnComplete.gif" />
+    <Content Include="img\Buttons\btnDelete.gif" />
+    <Content Include="img\Buttons\btnEdit.gif" />
+    <Content Include="img\Buttons\btnGestResponsable.gif" />
+    <Content Include="img\Buttons\btnInfoComun.gif" />
+    <Content Include="img\Buttons\btnInformes.gif" />
+    <Content Include="img\Buttons\btnProcesoEval.gif" />
+    <Content Include="img\Buttons\btnSeguimientos.gif" />
+    <Content Include="img\Buttons\btnTitulos.gif" />
+    <Content Include="img\Buttons\btnURL.gif" />
+    <Content Include="img\Buttons\btnView.gif" />
+    <Content Include="img\Buttons\icoComments.png" />
+    <Content Include="img\Buttons\icoCommentsNew.png" />
+    <Content Include="img\Buttons\icoUploadFile.png" />
+    <Content Include="img\Buttons\Pdf.gif" />
+    <Content Include="img\Clientes_ico.png" />
+    <Content Include="img\ddn.png" />
+    <Content Include="img\dn.png" />
+    <Content Include="img\Facturas_ico.png" />
+    <Content Include="img\fhbg.gif" />
+    <Content Include="img\first.gif" />
+    <Content Include="img\fndH3MenuHome.jpg" />
+    <Content Include="img\fndH3MenuHomeDatos.gif" />
+    <Content Include="img\fndNote.gif" />
+    <Content Include="img\GestionUni\arrowFacultad.gif" />
+    <Content Include="img\GestionUni\arrowUniversidad.gif" />
+    <Content Include="img\GestionUni\icoActivo.gif" />
+    <Content Include="img\GestionUni\icoAutoinformeFacultad.gif" />
+    <Content Include="img\GestionUni\icoDeleteGradoPersona.gif" />
+    <Content Include="img\GestionUni\icoEditarGradoPersona.gif" />
+    <Content Include="img\GestionUni\icoGrado.gif" />
+    <Content Include="img\GestionUni\icoMaster.gif" />
+    <Content Include="img\grids\bg.gif" />
+    <Content Include="img\grids\btn-sprite.gif" />
+    <Content Include="img\grids\ddn.png" />
+    <Content Include="img\grids\dn.png" />
+    <Content Include="img\grids\fhbg.gif" />
+    <Content Include="img\grids\first.gif" />
+    <Content Include="img\grids\fndNRegisters.gif" />
+    <Content Include="img\grids\fndNRegistersComments.gif" />
+    <Content Include="img\grids\hl.png" />
+    <Content Include="img\grids\icoRowGrid.png" />
+    <Content Include="img\grids\icoRowNameResumeDetail.gif" />
+    <Content Include="img\grids\icoSeparatorHeaderTable.gif" />
+    <Content Include="img\grids\ico_avisos.png" />
+    <Content Include="img\grids\last.gif" />
+    <Content Include="img\grids\line.gif" />
+    <Content Include="img\grids\load.gif" />
+    <Content Include="img\grids\load.png" />
+    <Content Include="img\grids\magnifier.png" />
+    <Content Include="img\grids\next.gif" />
+    <Content Include="img\grids\prev.gif" />
+    <Content Include="img\grids\up.png" />
+    <Content Include="img\grids\uup.png" />
+    <Content Include="img\grids\wbg.gif" />
+    <Content Include="img\headerNote.gif" />
+    <Content Include="img\hl.png" />
+    <Content Include="img\icoAbrirTab.png" />
+    <Content Include="img\icoCerrarTab.png" />
+    <Content Include="img\icoInfoHeaderTabs.gif" />
+    <Content Include="img\icoLoginLabel.gif" />
+    <Content Include="img\icoLoginLabelFieldgroup.gif" />
+    <Content Include="img\icoNew.gif" />
+    <Content Include="img\icono-proveedores.png" />
+    <Content Include="img\icoReports.jpg" />
+    <Content Include="img\icoReportsAbiertoUL.jpg" />
+    <Content Include="img\icoReportsCerradoUL.jpg" />
+    <Content Include="img\icoReportsSonUL.jpg" />
+    <Content Include="img\icosMenuHome\checkmark_32.png" />
+    <Content Include="img\icosMenuHome\forbidden_32.png" />
+    <Content Include="img\icosMenuHome\ico_alegaciones.png" />
+    <Content Include="img\icosMenuHome\ico_autoinforme.png" />
+    <Content Include="img\icosMenuHome\ico_centros.gif" />
+    <Content Include="img\icosMenuHome\ico_dates.png" />
+    <Content Include="img\icosMenuHome\ico_datos.png" />
+    <Content Include="img\icosMenuHome\ico_datosuni.png" />
+    <Content Include="img\icosMenuHome\ico_email.gif" />
+    <Content Include="img\icosMenuHome\ico_evaluacion.png" />
+    <Content Include="img\icosMenuHome\ico_final.png" />
+    <Content Include="img\icosMenuHome\ico_generaldata.png" />
+    <Content Include="img\icosMenuHome\ico_grupos.gif" />
+    <Content Include="img\icosMenuHome\ico_summary.png" />
+    <Content Include="img\icosMenuHome\ico_titulos.png" />
+    <Content Include="img\icosMenuHome\ico_universidades.png" />
+    <Content Include="img\icosMenuHome\ico_usuarios.gif" />
+    <Content Include="img\icosMenuHome\ico_usuarios.png" />
+    <Content Include="img\icosMenuHome\old\ico_autoinforme.png" />
+    <Content Include="img\icosMenuHome\old\ico_evaluacion.png" />
+    <Content Include="img\icosMenuHome\old\ico_titulos.png" />
+    <Content Include="img\icosMenuHome\old\ico_universidades.png" />
+    <Content Include="img\icoTitleTabsH3.png" />
+    <Content Include="img\ico_advertencias.png" />
+    <Content Include="img\ico_autoeval.png" />
+    <Content Include="img\ico_avisos2.png" />
+    <Content Include="img\ico_buenaspracticas.png" />
+    <Content Include="img\ico_finalreport.png" />
+    <Content Include="img\ico_pdf.png" />
+    <Content Include="img\ico_recomendaciones.png" />
+    <Content Include="img\imgInfoUserMainContent.gif" />
+    <Content Include="img\imgReports.jpg" />
+    <Content Include="img\impresion_ico.png" />
+    <Content Include="img\inicio.jpg" />
+    <Content Include="img\Inicio_ico.png" />
+    <Content Include="img\last.gif" />
+    <Content Include="img\line.gif" />
+    <Content Include="img\listStyleSquareBlue.png" />
+    <Content Include="img\load.gif" />
+    <Content Include="img\load.png" />
+    <Content Include="img\magnifier.png" />
+    <Content Include="img\motorlam_logo.png" />
+    <Content Include="img\next.gif" />
+    <Content Include="img\NuevaFactura_ico.png" />
+    <Content Include="img\OK.png" />
+    <Content Include="img\pdf.png" />
+    <Content Include="img\presupuesto_ico.png" />
+    <Content Include="img\prev.gif" />
+    <Content Include="img\Productos_ico.png" />
+    <Content Include="img\Proveedores_ico.png" />
+    <Content Include="img\redArrow.png" />
+    <Content Include="img\reportLinkArrow.png" />
+    <Content Include="img\searching.gif" />
+    <Content Include="img\seleccionarcliente.png" />
+    <Content Include="img\seleccionarcoche.png" />
+    <Content Include="img\shadow.png" />
+    <Content Include="img\thumbnails\bmp.png" />
+    <Content Include="img\thumbnails\doc.png" />
+    <Content Include="img\thumbnails\gif.png" />
+    <Content Include="img\thumbnails\jpg.png" />
+    <Content Include="img\thumbnails\otros.png" />
+    <Content Include="img\thumbnails\pdf.png" />
+    <Content Include="img\thumbnails\png.png" />
+    <Content Include="img\thumbnails\xls.png" />
+    <Content Include="img\treeview\ajax-loader.gif" />
+    <Content Include="img\treeview\file.gif" />
+    <Content Include="img\treeview\folder-closed.gif" />
+    <Content Include="img\treeview\folder.gif" />
+    <Content Include="img\treeview\minus.gif" />
+    <Content Include="img\treeview\plus.gif" />
+    <Content Include="img\treeview\treeview-black-line.gif" />
+    <Content Include="img\treeview\treeview-black.gif" />
+    <Content Include="img\treeview\treeview-default - Copy.gif" />
+    <Content Include="img\treeview\treeview-default-line.gif" />
+    <Content Include="img\treeview\treeview-default.gif" />
+    <Content Include="img\treeview\treeview-famfamfam-line.gif" />
+    <Content Include="img\treeview\treeview-famfamfam.gif" />
+    <Content Include="img\treeview\treeview-gray-line.gif" />
+    <Content Include="img\treeview\treeview-gray.gif" />
+    <Content Include="img\treeview\treeview-red-line.gif" />
+    <Content Include="img\treeview\treeview-red.gif" />
+    <Content Include="img\up.png" />
+    <Content Include="img\Url.png" />
+    <Content Include="img\uup.png" />
+    <Content Include="img\wbg.gif" />
+    <Content Include="img\whiteArrow.png" />
+    <Content Include="img\wizard\activeBotWizard.png" />
+    <Content Include="img\wizard\activeBotWizard140.png" />
+    <Content Include="img\wizard\fndSelectedStep.gif" />
+    <Content Include="img\wizard\fndStep.gif" />
+    <Content Include="img\wizard\fndStepDisabled.gif" />
+    <Content Include="img\wizard\icAyudaHeadStepTitular.gif" />
+    <Content Include="img\wizard\icAyudaHeadStepTitular.png" />
+    <Content Include="img\wizard\imgLabelStep.png" />
+    <Content Include="img\wizard\imgLabelStepDisabled.png" />
+    <Content Include="img\wizard\inactiveBotWizard.png" />
+    <Content Include="img\wizard\inactiveBotWizard140.png" />
+    <Content Include="Scripts\jquery-1.6.4.js" />
+    <Content Include="Scripts\jquery-1.6.4.min.js" />
+    <Content Include="Scripts\jquery-ui-1.8.12.custom.min.js" />
+    <Content Include="Scripts\jquery-ui-1.8.16.custom.min.js" />
+    <Content Include="Scripts\jquery-ui-1.8.custom.min.js" />
+    <Content Include="Scripts\jquery.checkboxtree.js" />
+    <Content Include="Scripts\jquery.checkboxtree.min.js" />
+    <Content Include="Scripts\jquery.cookie.js" />
+    <Content Include="Scripts\jquery.form.js" />
+    <Content Include="Scripts\jQuery.Inercya.DeleteItem.js" />
+    <Content Include="Scripts\jquery.jqGrid.min.js" />
+    <Content Include="Scripts\jquery.numeric.js" />
+    <Content Include="Scripts\jquery.template.js" />
+    <Content Include="Scripts\jquery.textarea.js" />
+    <Content Include="Scripts\jquery.treeview.js" />
+    <Content Include="Scripts\jquery.ui.datepicker.js" />
+    <Content Include="Scripts\Motorlam\jquery.motorlam.ReloadCascadeDropDown.js" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Scripts\jquery-1.4.4.js" />
+    <Content Include="Scripts\jquery-1.4.4.min.js" />
+    <Content Include="Scripts\jquery-1.4.4-vsdoc.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery-ui.js" />
+    <Content Include="Scripts\jquery-ui.min.js" />
+    <Content Include="Scripts\MicrosoftAjax.js" />
+    <Content Include="Scripts\MicrosoftAjax.debug.js" />
+    <Content Include="Scripts\MicrosoftMvcAjax.js" />
+    <Content Include="Scripts\MicrosoftMvcAjax.debug.js" />
+    <Content Include="Scripts\MicrosoftMvcValidation.js" />
+    <Content Include="Scripts\MicrosoftMvcValidation.debug.js" />
+    <Content Include="Views\Web.config" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="WebForms\ReportViewerBuiltinForm.aspx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Cliente\Criteria.cshtml" />
+    <Content Include="Views\Cliente\DatosCoche.cshtml" />
+    <Content Include="Views\Cliente\Index.cshtml" />
+    <Content Include="Views\Cliente\List.cshtml" />
+    <Content Include="Views\Cliente\ListCars.cshtml" />
+    <Content Include="Views\Cliente\Nuevo.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Home\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Administration\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\AdministrationLayout.cshtml" />
+    <Content Include="Views\Shared\LateralMenuAdministration.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Content\custom-theme\images\Thumbs.db" />
+    <None Include="img\Buttons\Thumbs.db" />
+    <None Include="img\grids\Thumbs.db" />
+    <None Include="img\icosMenuHome\Thumbs.db" />
+    <None Include="img\thumbnails\Thumbs.db" />
+    <None Include="img\Thumbs.db" />
+    <None Include="img\treeview\Thumbs.db" />
+    <None Include="img\wizard\Thumbs.db" />
+    <Content Include="Views\Supplier\Criteria.cshtml" />
+    <Content Include="Views\Supplier\Index.cshtml" />
+    <Content Include="Views\Supplier\List.cshtml" />
+    <Content Include="Views\Supplier\Nuevo.cshtml" />
+    <Content Include="Views\Product\Criteria.cshtml" />
+    <Content Include="Views\Product\Index.cshtml" />
+    <Content Include="Views\Product\List.cshtml" />
+    <Content Include="Views\Product\Nuevo.cshtml" />
+    <Content Include="Views\Invoice\Index.cshtml" />
+    <Content Include="Views\Shared\InvoiceLayout.cshtml" />
+    <Content Include="Views\Shared\LateralMenuInvoice.cshtml" />
+    <Content Include="Views\Invoice\Criteria.cshtml" />
+    <Content Include="Views\Invoice\List.cshtml" />
+    <Content Include="Views\Invoice\Nuevo.cshtml" />
+    <Content Include="Views\Invoice\OrderList.cshtml" />
+    <Content Include="Views\Invoice\SearchCustomer.cshtml" />
+    <Content Include="Views\Invoice\ListCustomer.cshtml" />
+    <Content Include="Views\Invoice\CriteriaCustomer.cshtml" />
+    <Content Include="Views\Invoice\DatosLineaFactura.cshtml" />
+    <Content Include="Views\Shared\Footer.cshtml" />
+    <Content Include="Views\Estimate\Criteria.cshtml" />
+    <Content Include="Views\Estimate\SearchCustomer.cshtml" />
+    <Content Include="Views\Estimate\CriteriaCustomer.cshtml" />
+    <Content Include="Views\Estimate\DatosLineaFactura.cshtml" />
+    <Content Include="Views\Estimate\Index.cshtml" />
+    <Content Include="Views\Estimate\List.cshtml" />
+    <Content Include="Views\Estimate\ListCustomer.cshtml" />
+    <Content Include="Views\Estimate\Nuevo.cshtml" />
+    <Content Include="Views\Estimate\OrderList.cshtml" />
+    <Content Include="Views\Invoice\ListCar.cshtml" />
+    <Content Include="Views\Invoice\DatosFactura.cshtml" />
+    <Content Include="Views\Invoice\DatosCoche.cshtml" />
+    <Content Include="Views\Shared\LateralMenuEstimate.cshtml" />
+    <Content Include="Views\Shared\EstimateLayout.cshtml" />
+    <Content Include="Views\Brand\Index.cshtml" />
+    <Content Include="Views\Brand\List.cshtml" />
+    <Content Include="Views\Brand\Nuevo.cshtml" />
+    <Content Include="Views\BrandProduct\Index.cshtml" />
+    <Content Include="Views\BrandProduct\List.cshtml" />
+    <Content Include="Views\BrandProduct\Nuevo.cshtml" />
+    <Content Include="Views\Car\Criteria.cshtml" />
+    <Content Include="Views\Car\Index.cshtml" />
+    <Content Include="Views\Car\List.cshtml" />
+    <Content Include="Views\Car\Nuevo.cshtml" />
+    <Content Include="Views\Delivery\Criteria.cshtml" />
+    <Content Include="Views\Delivery\DatosDelivery.cshtml" />
+    <Content Include="Views\Delivery\DatosLineaDelivery.cshtml" />
+    <Content Include="Views\Delivery\Index.cshtml" />
+    <Content Include="Views\Delivery\List.cshtml" />
+    <Content Include="Views\Delivery\Nuevo.cshtml" />
+    <Content Include="Views\Delivery\OrderList.cshtml" />
+    <Content Include="Views\TypeProduct\Index.cshtml" />
+    <Content Include="Views\TypeProduct\List.cshtml" />
+    <Content Include="Views\TypeProduct\Nuevo.cshtml" />
+    <Content Include="Views\Invoice\SearchProduct.cshtml" />
+    <Content Include="Views\Invoice\CriteriaProduct.cshtml" />
+    <Content Include="Views\Invoice\ListProduct.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Motorlam.Data\Motorlam.Data.csproj">
+      <Project>{17BC388D-3F44-4B8A-84E5-8AA5B24919D1}</Project>
+      <Name>Motorlam.Data</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target> -->
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>2145</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:2145/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

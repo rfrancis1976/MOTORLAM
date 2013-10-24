@@ -1,0 +1,31 @@
+﻿@using Motorlam.Entities
+@{
+    ViewBag.Title = "Pagina Inicio";
+    Layout = "~/Views/Shared/DeliveryLayout.cshtml";
+}
+<h2>BUSCADOR DE ALBARANES</h2>
+@using (Html.BeginForm("Buscar", "Delivery", FormMethod.Post, new { id = "BuscarDeliveryForm" }))
+{
+    <div class="criteriaContainer">
+        @Html.Partial("~/Views/Delivery/Criteria.cshtml") 
+    </div>
+    <div class="buttonBarCriteria">
+        <div class="leftContent"></div>            
+        <div class="rightContent">
+            <input type="submit" id="buscar" onkeypress="return event.keyCode!=13" value="Buscar" />
+        </div>
+    </div>            
+}
+
+<div id="ListContainer">
+    @Html.Partial("~/Views/Delivery/List.cshtml")
+</div>
+
+<script type="text/javascript">
+    
+    jQuery("#buscar").Search({
+        formName: "BuscarDeliveryForm",
+        listContainer: "ListContainer"
+    });
+
+</script>

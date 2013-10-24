@@ -1,0 +1,32 @@
+﻿@using Motorlam.Entities
+
+@{
+    var Suppliers = (IList<Supplier>)ViewBag.Suppliers;
+}
+
+<h2 class="titleTabs" style="margin:10px 0 10px 0;">Buscador</h2>      
+ <div id="tabs" class="ui-tabs ui-widget ui-widget-content ui-corner-all">                           
+     <div class="tabsContent">           
+       <div class="infoAdminContent">                   
+            <div class="rowForm">
+                <span>
+                <label class="fieldName" style="width: 100px;">Nº Ref. Albaran:</label>
+                <input name="RefDelivery2" id="RefDelivery2" type="text" style="width: 120px;" />              
+                </span><span>
+                <label class="fieldName" style="width: 100px;">Fecha:</label>
+                <input name="@DeliveryFields.DeliveryDate" id="@DeliveryFields.DeliveryDate" class="datepicker" type="text" style="width: 100px;" />        
+                </span>
+            </div>
+            <div class="rowForm">
+                <label class="fieldName" style="width: 100px;">Proveedor:</label>
+                @Html.DropDownList(@SupplierFields.SupplierId, new SelectList(Suppliers, @SupplierFields.SupplierId, @SupplierFields.SupplierName), "<< seleccione >>", new { style = "width:250px" })         
+            </div>
+            <div class="rowForm">
+                <label class="fieldName" style="width: 100px;">Estado:</label>
+                <span class="radio" style="float:none;"><label>Todas</label><input name="@DeliveryFields.DeliveryIsPaid" id="@DeliveryFields.DeliveryIsPaid" type="radio" value="0"/></span> 
+                <span class="radio" style="float:none;"><label>Pagados</label><input name="@DeliveryFields.DeliveryIsPaid" id="@DeliveryFields.DeliveryIsPaid" type="radio" value="1"/></span> 
+                <span class="radio" style="float:none;"><label>Pendiente de Pago</label><input name="@DeliveryFields.DeliveryIsPaid" id="@DeliveryFields.DeliveryIsPaid" type="radio" value="2" checked="checked"/></span> 
+            </div>
+         </div>
+    </div>
+</div>
