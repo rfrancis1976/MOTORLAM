@@ -15,12 +15,12 @@ namespace Motorlam.Controllers
         [HttpPost]
         public ActionResult DeleteTypeProduct(int Id)
         {
-            TypeProduct typeProduct = this.CreateQuery<TypeProduct>(Proyection.Basic).Where(TypeProductFields.TypeProductId, Id).ToList().FirstOrDefault();
+            var typeProduct = this.DataService.TypeProductRepository.CreateQuery(Proyection.Basic).Where(TypeProductFields.TypeProductId, Id).ToList().FirstOrDefault();
             if (typeProduct != null)
             {
                 try
                 {
-                    base.Repository.Delete(typeProduct);
+                    base.DataService.Delete(typeProduct);
                 }
                 catch (Exception)
                 {
@@ -35,20 +35,20 @@ namespace Motorlam.Controllers
         public ActionResult Editar(int TypeProductId)
         {
             ViewBag.Message = "Tipos de Productos";
-            TypeProduct typeProduct = this.CreateQuery<TypeProduct>(Proyection.Basic).Where(TypeProductFields.TypeProductId, TypeProductId).ToList().FirstOrDefault();
+            var typeProduct = this.DataService.TypeProductRepository.CreateQuery(Proyection.Basic).Where(TypeProductFields.TypeProductId, TypeProductId).ToList().FirstOrDefault();
             return View("Nuevo", typeProduct);
         }
 
         public ActionResult Index()
         {
             ViewBag.Message = "Tipos de Productos";
-            var list = this.CreateQuery<TypeProduct>(Proyection.Basic).OrderBy(TypeProductFields.TypeProductName).ToList();
+            var list = this.DataService.TypeProductRepository.CreateQuery(Proyection.Basic).OrderBy(TypeProductFields.TypeProductName).ToList();
             return View(list);
         }
 
         public ActionResult LoadTypeProducts()
         {
-            var list = this.CreateQuery<TypeProduct>(Proyection.Basic).OrderBy(TypeProductFields.TypeProductName).ToList();
+            var list = this.DataService.TypeProductRepository.CreateQuery(Proyection.Basic).OrderBy(TypeProductFields.TypeProductName).ToList();
             return PartialView("List", list);
         }
 
@@ -61,14 +61,7 @@ namespace Motorlam.Controllers
         public ActionResult SalvarTypeProduct(TypeProduct type)
         {
             ViewBag.Message = "Tipos de Productos";
-            if (type.TypeProductId != 0)
-            {
-                base.Repository.Update(type);
-            }
-            else
-            {
-                base.Repository.Insert(type);
-            }
+            SaveEntity(type);
             return View("Nuevo", type);
         }
     }

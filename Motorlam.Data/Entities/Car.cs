@@ -106,6 +106,13 @@ namespace Motorlam.Entities
 		
 	}
 	
+	public partial class CarRepository : Repository<Car> 
+	{
+		public CarRepository(DataAccess dataAccess) : base(dataAccess)
+		{
+		}
+	}
+	
 	public static partial class CarFields
 	{
 		public const string CarId = "CarId";

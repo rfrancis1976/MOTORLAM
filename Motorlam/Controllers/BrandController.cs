@@ -15,12 +15,12 @@ namespace Motorlam.Controllers
         [HttpPost]
         public ActionResult DeleteBrand(int Id)
         {
-            Brand brand = this.CreateQuery<Brand>(Proyection.Basic).Where(BrandFields.BrandId, Id).ToList().FirstOrDefault();
+            Brand brand = this.DataService.BrandRepository.CreateQuery(Proyection.Basic).Where(BrandFields.BrandId, Id).ToList().FirstOrDefault();
             if (brand != null)
             {
                 try
                 {
-                    this.Repository.Delete(brand);
+                    this.DataService.Delete(brand);
                 }
                 catch (Exception)
                 {
@@ -34,20 +34,20 @@ namespace Motorlam.Controllers
         public ActionResult Editar(int BrandId)
         {
             ViewBag.Message = "Marcas de Coche";
-            Brand brand = this.CreateQuery<Brand>(Proyection.Basic).Where(BrandFields.BrandId, BrandId).ToList().FirstOrDefault();
+            Brand brand = this.DataService.BrandRepository.CreateQuery(Proyection.Basic).Where(BrandFields.BrandId, BrandId).ToList().FirstOrDefault();
             return View("Nuevo", brand);
         }
 
         public ActionResult Index()
         {
             ViewBag.Message = "Marcas de Coche";
-            var list = this.CreateQuery<Brand>(Proyection.Basic).OrderBy(BrandFields.BrandName).ToList();
+            var list = this.DataService.BrandRepository.CreateQuery(Proyection.Basic).OrderBy(BrandFields.BrandName).ToList();
             return View(list);
         }
 
         public ActionResult LoadBrands()
         {
-            var list = this.CreateQuery<Brand>(Proyection.Basic).OrderBy(BrandFields.BrandName).ToList(); ;
+            var list = this.DataService.BrandRepository.CreateQuery(Proyection.Basic).OrderBy(BrandFields.BrandName).ToList(); ;
             return this.PartialView("List", list);
         }
 
@@ -60,14 +60,8 @@ namespace Motorlam.Controllers
         public ActionResult SalvarBrand(Brand brand)
         {
             ViewBag.Message = "Marcas de Coche";
-            if (brand.BrandId != 0)
-            {
-                base.Repository.Update(brand);
-            }
-            else
-            {
-                base.Repository.Insert(brand);
-            }
+            SaveEntity(brand);
+         
             return base.View("Nuevo", brand);
         }
     }

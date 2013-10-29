@@ -1,4 +1,5 @@
 ﻿<#@ assembly name="System.Data" #>
+<#@ assembly name="System.Core" #>
 <#@ import namespace="System" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#@ import namespace="System.Data" #>
@@ -13,14 +14,32 @@ public class EntityTemplate : Template
 	public string Namespace = "Motorlam.Entities";
 	public string EntityName;
 	public string BaseTable;
+	public string CalculatedFields = string.Empty;
 	public bool UseSchema;
+	
+	private HashSet<string> ReadOnlyFields;
+	
+	private HashSet<string> GetReadOnlyFields()
+	{
+		HashSet<string> readOnlyFields = new HashSet<string>(StringComparer.InvariantCultureIgnoreCase);
+		foreach (string token in this.CalculatedFields.Split(','))
+		{
+			string fieldName = token.Trim();
+			if (!string.IsNullOrEmpty(fieldName))
+			{
+				readOnlyFields.Add(fieldName);	
+			}
+		}
+		return readOnlyFields;
+	}
 	
 	public override string TransformText()
 	{
+		ReadOnlyFields = GetReadOnlyFields();
 		DbProviderFactory factory = DbProviderFactories.GetFactory(ProviderName);
 		DbConnection cn = factory.CreateConnection();
 		cn.ConnectionString = ConnectionString;
-		Regex regex = new Regex("^" + Regex.Escape(EntityName) + "_(Minimal|Basic|Detailed|Extended|InProject)$");
+		Regex regex = new Regex("^" + Regex.Escape(EntityName) + "_(Minimal|Basic|Detailed|Extended|MinimalLocalized|BasicLocalized|DetailedLocalized|ExtendedLocalized|Count|Sum|Hierarchy|Promotionals|ExpensesReturnAdvance|Documents)$");
 		cn.Open();
 		ViewHelper helper = new ViewHelper(cn, regex);
 		DataTable schema = helper.GetSchemaUnion(string.IsNullOrEmpty(BaseTable) ? null : "dbo." + BaseTable);
@@ -46,7 +65,7 @@ namespace <#= Namespace #>
 			bool isNullable = dataType.IsValueType && (bool) row["AllowDBNull"];
 			DbType dbType = DbTypeConverter.ToDbType( (int) row["ProviderType"], ProviderName);
 			bool IsAutoincrement = (bool) row["IsAutoincrement"];
-			bool IsReadOnly = (bool) row["IsReadOnly"];
+			bool IsReadOnly = (bool) row["IsReadOnly"] || this.ReadOnlyFields.Contains((string) row["ColumnName"]);
 			bool IsKey = (bool) row["IsKey"];
 			bool AllowDBNull = isNullable;
 			byte precision = Convert.IsDBNull(row["NumericPrecision"]) ? (byte) 255 : Convert.ToByte(row["NumericPrecision"]);
@@ -71,6 +90,13 @@ namespace <#= Namespace #>
 			}
 		}
 #>
+	}
+	
+	public partial class <#= EntityName #>Repository : Repository<<#= EntityName #>> 
+	{
+		public <#= EntityName #>Repository(DataAccess dataAccess) : base(dataAccess)
+		{
+		}
 	}
 	
 	public static partial class <#= EntityName #>Fields

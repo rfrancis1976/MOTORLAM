@@ -8,6 +8,9 @@ using System.Web.Mvc.Html;
 using FluentValidation.Mvc;
 using FluentValidation.Attributes;
 using Motorlam.Data;
+using System.Globalization;
+using System.Threading;
+using Motorlam.Filters;
 
 namespace Motorlam
 {
@@ -16,21 +19,18 @@ namespace Motorlam
 
     public class MvcApplication : System.Web.HttpApplication
     {
-        public MvcApplication()
+        static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
-            this.BeginRequest += new EventHandler(MvcApplication_BeginRequest);
-            this.EndRequest += new EventHandler(MvcApplication_EndRequest);
+            filters.Add(new HandleErrorAttribute());
+            filters.Add(new MotorlamFilterAttribute());
         }
 
-        void MvcApplication_EndRequest(object sender, EventArgs e)
-        {
-            MotorlamRepository repository = (MotorlamRepository)this.Context.Items["_MotorlamRepository_"];
-            if (repository != null) repository.Dispose();
-        }
 
-        void MvcApplication_BeginRequest(object sender, EventArgs e)
+        protected void Application_BeginRequest(object sender, EventArgs e)
         {
-            this.Context.Items.Add("_MotorlamRepository_", new MotorlamRepository());
+            var culture = CultureInfo.GetCultureInfo("en-GB");
+            Thread.CurrentThread.CurrentCulture = culture;
+            Thread.CurrentThread.CurrentUICulture = culture;
         }
 
         public static void RegisterRoutes(RouteCollection routes)
@@ -48,13 +48,22 @@ namespace Motorlam
         protected void Application_Start()
         {
             AreaRegistration.RegisterAllAreas();
-
+            RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
             ValidationExtensions.ResourceClassKey = "BindingErrors";
             ModelValidatorProviders.Providers.Clear();
             ModelValidatorProviders.Providers.Add(
                     new FluentValidationModelValidatorProvider(new AttributedValidatorFactory()));
 
+        }
+
+        protected void Application_EndRequest(object sender, EventArgs e)
+        {
+            IDisposable ds = (IDisposable)this.Context.Items["DataService"];
+            if (ds != null)
+            {
+                ds.Dispose();
+            }
         }
     }
 }

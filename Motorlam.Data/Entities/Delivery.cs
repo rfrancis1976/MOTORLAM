@@ -58,6 +58,13 @@ namespace Motorlam.Entities
 		
 	}
 	
+	public partial class DeliveryRepository : Repository<Delivery> 
+	{
+		public DeliveryRepository(DataAccess dataAccess) : base(dataAccess)
+		{
+		}
+	}
+	
 	public static partial class DeliveryFields
 	{
 		public const string RefDelivery = "RefDelivery";

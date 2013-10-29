@@ -15,14 +15,14 @@ namespace Motorlam.Controllers
         [HttpPost]
         public ActionResult DeleteBrandProduct(int Id)
         {
-            BrandProduct brandProduct = this.CreateQuery<BrandProduct>(Proyection.Basic).Where(BrandProductFields.BrandProductId, Id).ToList().FirstOrDefault();
+            var brandProduct = this.DataService.BrandProductRepository.CreateQuery(Proyection.Basic).Where(BrandProductFields.BrandProductId, Id).ToList().FirstOrDefault();
             if (brandProduct != null)
             {
                 try
                 {
                     this.Repository.Delete(brandProduct);
                 }
-                catch (Exception exception)
+                catch (Exception ex)
                 {
                     this.ModelState.AddModelError("ErrorSQL", "No se ha podido eliminar la Marca de Producto, porque esta asociado a una factura o albaran");
                     return this.Json(new { result = "error", validationErrors = base.ModelState.GetErrors() });                   
@@ -34,20 +34,20 @@ namespace Motorlam.Controllers
         public ActionResult Editar(int BrandProductId)
         {
             ViewBag.Message = "Marcas de Coche";
-            BrandProduct brandProduct = this.CreateQuery<BrandProduct>(Proyection.Basic).Where(BrandProductFields.BrandProductId, BrandProductId).ToList().FirstOrDefault();
+            var brandProduct = this.DataService.BrandProductRepository.CreateQuery(Proyection.Basic).Where(BrandProductFields.BrandProductId, BrandProductId).ToList().FirstOrDefault();
             return View("Nuevo", brandProduct);
         }
 
         public ActionResult Index()
         {
             ViewBag.Message = "Marcas de Coche";
-            var list = this.CreateQuery<BrandProduct>(Proyection.Basic).OrderBy(BrandProductFields.BrandProductName).ToList();
+            var list = this.DataService.BrandProductRepository.CreateQuery(Proyection.Basic).OrderBy(BrandProductFields.BrandProductName).ToList();
             return View(list);
         }
 
         public ActionResult LoadBrandProducts()
         {
-            var list = this.CreateQuery<BrandProduct>(Proyection.Basic).OrderBy(BrandProductFields.BrandProductName).ToList();
+            var list = this.DataService.BrandProductRepository.CreateQuery(Proyection.Basic).OrderBy(BrandProductFields.BrandProductName).ToList();
             return PartialView("List", list);
         }
 

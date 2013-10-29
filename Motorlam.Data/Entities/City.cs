@@ -26,6 +26,13 @@ namespace Motorlam.Entities
 		
 	}
 	
+	public partial class CityRepository : Repository<City> 
+	{
+		public CityRepository(DataAccess dataAccess) : base(dataAccess)
+		{
+		}
+	}
+	
 	public static partial class CityFields
 	{
 		public const string CityId = "CityId";

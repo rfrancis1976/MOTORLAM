@@ -34,6 +34,13 @@ namespace Motorlam.Entities
 		
 	}
 	
+	public partial class MotorRepository : Repository<Motor> 
+	{
+		public MotorRepository(DataAccess dataAccess) : base(dataAccess)
+		{
+		}
+	}
+	
 	public static partial class MotorFields
 	{
 		public const string MotorId = "MotorId";

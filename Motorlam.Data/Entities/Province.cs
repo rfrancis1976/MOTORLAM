@@ -30,6 +30,13 @@ namespace Motorlam.Entities
 		
 	}
 	
+	public partial class ProvinceRepository : Repository<Province> 
+	{
+		public ProvinceRepository(DataAccess dataAccess) : base(dataAccess)
+		{
+		}
+	}
+	
 	public static partial class ProvinceFields
 	{
 		public const string ProvinceId = "ProvinceId";

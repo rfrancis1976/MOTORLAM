@@ -114,14 +114,16 @@
     <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Controllers\SupplierController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\NorthwindController.cs" />
+    <Compile Include="Controllers\MotorlamController.cs" />
     <Compile Include="Controllers\TypeProductController.cs" />
     <Compile Include="Extenders\MvcExtenders.cs" />
+    <Compile Include="Filters\GlobalFilter.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\ChildItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\AuthorizationManager.cs" />
     <Compile Include="WebForms\ReportViewerBuiltinForm.aspx.cs">
       <DependentUpon>ReportViewerBuiltinForm.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -483,6 +485,7 @@
     <Content Include="Views\Invoice\SearchProduct.cshtml" />
     <Content Include="Views\Invoice\CriteriaProduct.cshtml" />
     <Content Include="Views\Invoice\ListProduct.cshtml" />
+    <Content Include="Views\Cliente\UploadFile.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Motorlam.Data\Motorlam.Data.csproj">
@@ -490,6 +493,7 @@
       <Name>Motorlam.Data</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

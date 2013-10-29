@@ -38,6 +38,13 @@ namespace Motorlam.Entities
 		
 	}
 	
+	public partial class MethodPaymentRepository : Repository<MethodPayment> 
+	{
+		public MethodPaymentRepository(DataAccess dataAccess) : base(dataAccess)
+		{
+		}
+	}
+	
 	public static partial class MethodPaymentFields
 	{
 		public const string MethodPaymentName = "MethodPaymentName";

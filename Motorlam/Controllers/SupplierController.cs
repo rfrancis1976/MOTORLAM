@@ -17,9 +17,7 @@ namespace Motorlam.Controllers
         public ActionResult Index()
         {
             ViewBag.Message = "Proveedores";
-
-            var supliers = new List<Supplier>();
-            
+            var supliers = new List<Supplier>();            
             return View(supliers);
         }
 
@@ -27,65 +25,45 @@ namespace Motorlam.Controllers
         public ActionResult Nuevo()
         {
             ViewBag.Message = "Proveedores";
-
-            var provinces = this.CreateQuery<Province>(Proyection.Basic).ToList();
-
-            ViewBag.Provinces = provinces;
+            ViewBag.Provinces = this.DataService.ProvinceRepository.CreateQuery(Proyection.Basic).ToList();
             ViewBag.Cities = new List<City>();
-
-            return View(new Supplier());
-            
+            return View(new Supplier());            
         }
 
         public ActionResult Editar(int SupplierId)
         {
             ViewBag.Message = "Proveedores";
-            var supplier = this.CreateQuery<Supplier>(Proyection.Detailed)
+            var supplier = this.DataService.SupplierRepository.CreateQuery(Proyection.Detailed)
                 .Where(SupplierFields.SupplierId, SupplierId).ToList().FirstOrDefault();
                         
-            var provinces = this.CreateQuery<Province>(Proyection.Basic).ToList();
-            ViewBag.Provinces = provinces;
-            var cities = this.CreateQuery<City>(Proyection.Basic).ToList();
-            ViewBag.Cities = cities;
-
+            ViewBag.Provinces = this.DataService.ProvinceRepository.CreateQuery(Proyection.Basic).ToList();
+            ViewBag.Cities = this.CreateQuery<City>(Proyection.Basic).ToList();
             return View("Nuevo", supplier);
         }
-
 
         public ActionResult SalvarProveedor(Supplier supplier)
         {
             ViewBag.Message = "Proveedores";
-
-            if (supplier.SupplierId == 0)
-                this.Repository.Insert(supplier);
-            else
-                this.Repository.Update(supplier);
-                       
+            SaveEntity(supplier);             
             var suppliers = new List<Supplier>();
             return View("Index", suppliers);           
         }
 
-
         public ActionResult Buscar(string SupplierName, string SupplierNIF)
         {
-            ViewBag.Message = "Proveedores";
-           
-            var suppliers = this.CreateQuery<Supplier>(Proyection.Basic);
-
+            ViewBag.Message = "Proveedores";           
+            var suppliers = this.DataService.SupplierRepository.CreateQuery(Proyection.Basic);
             if (!string.IsNullOrEmpty(SupplierName))
                 suppliers.Where(SupplierFields.SupplierName, OperatorLite.Contains, SupplierName);
             if (!string.IsNullOrEmpty(SupplierNIF))
                 suppliers.And(SupplierFields.SupplierNIF, OperatorLite.Contains, SupplierNIF);
-
-           
             return PartialView("List", suppliers.ToList());
         }
 
         [HttpPost]
         public ActionResult DeleteSupplier(int Id)
         {
-            var products = this.CreateQuery<Product>(Proyection.Basic)
-                .Where(ProductFields.SupplierId,Id).ToList();
+            var products = this.DataService.ProductRepository.CreateQuery(Proyection.Basic).Where(ProductFields.SupplierId,Id).ToList();
 
             if (products.Count > 0)
             {
@@ -94,20 +72,16 @@ namespace Motorlam.Controllers
             }
             else
             {
-                var supplier = this.CreateQuery<Supplier>(Proyection.Basic).Get(Id);
-
-                if (supplier != null) this.Repository.Delete(supplier);
-
-                var suppliers = this.CreateQuery<Supplier>(Proyection.Detailed).ToList();
-
-                return this.Json(new { result = "success" });
-                
+                var supplier = this.DataService.SupplierRepository.CreateQuery(Proyection.Basic).Get(Id);
+                if (supplier != null) this.DataService.Delete(supplier);
+                var suppliers = this.DataService.SupplierRepository.CreateQuery(Proyection.Detailed).ToList();
+                return this.Json(new { result = "success" });                
             }
         }
 
         public ActionResult LoadSuppliers(string SupplierName, string SupplierNIF)
         {
-            var suppliers = this.CreateQuery<Supplier>(Proyection.Basic);
+            var suppliers = this.DataService.SupplierRepository.CreateQuery(Proyection.Basic);
 
             if (!string.IsNullOrEmpty(SupplierName))
                 suppliers.Where(SupplierFields.SupplierName, OperatorLite.Contains, SupplierName);
@@ -116,23 +90,19 @@ namespace Motorlam.Controllers
 
             return PartialView("List",suppliers.ToList());
         }
-
        
         [HttpGet]
         public ActionResult LoadCityByProvince(int fatherId)
         {
             var ChildItems = LoadCities(fatherId);
-
             return this.Json(new { result = "success", ChildItems }, JsonRequestBehavior.AllowGet);
         }
 
         private IList<ChildItem> LoadCities(int fatherId)
         {
-            var cities = this.CreateQuery<City>(Proyection.Basic)
-                .Where(CityFields.ProvinceId, fatherId).ToList();
+            var cities = this.DataService.CityRepository.CreateQuery(Proyection.Basic).Where(CityFields.ProvinceId, fatherId).ToList();
             var ChildItems = ChildItem.GetChildItems(new SelectList(cities, CityFields.CityId, CityFields.CityName));
-            return ChildItems;
-            
+            return ChildItems;            
         }     
     }
 }

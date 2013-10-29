@@ -150,6 +150,13 @@ namespace Motorlam.Entities
 		
 	}
 	
+	public partial class InvoiceRepository : Repository<Invoice> 
+	{
+		public InvoiceRepository(DataAccess dataAccess) : base(dataAccess)
+		{
+		}
+	}
+	
 	public static partial class InvoiceFields
 	{
 		public const string InvoiceId = "InvoiceId";

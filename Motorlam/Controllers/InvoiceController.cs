@@ -290,7 +290,7 @@ namespace Motorlam.Controllers
             invoiceLine.ProductId = product.ProductId;
             invoiceLine.InvoiceLineQuantity = InvoiceLineQuantity;
             invoiceLine.InvoiceProductValue = (decimal)InvoiceProductValue;
-            if  (invoiceLine.InvoiceLineDiscount.HasValue)
+            if (InvoiceLineDiscount.HasValue)
                 invoiceLine.InvoiceLineDiscount = InvoiceLineDiscount/100;
             var total = (decimal)InvoiceProductValue * (decimal)invoiceLine.InvoiceLineQuantity;
             if (InvoiceLineDiscount.HasValue)

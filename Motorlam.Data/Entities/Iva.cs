@@ -22,6 +22,13 @@ namespace Motorlam.Entities
 		
 	}
 	
+	public partial class IvaRepository : Repository<Iva> 
+	{
+		public IvaRepository(DataAccess dataAccess) : base(dataAccess)
+		{
+		}
+	}
+	
 	public static partial class IvaFields
 	{
 		public const string Id = "Id";

@@ -22,6 +22,13 @@ namespace Motorlam.Entities
 		
 	}
 	
+	public partial class TypeProductRepository : Repository<TypeProduct> 
+	{
+		public TypeProductRepository(DataAccess dataAccess) : base(dataAccess)
+		{
+		}
+	}
+	
 	public static partial class TypeProductFields
 	{
 		public const string TypeProductId = "TypeProductId";

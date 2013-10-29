@@ -94,6 +94,13 @@ namespace Motorlam.Entities
 		
 	}
 	
+	public partial class SupplierRepository : Repository<Supplier> 
+	{
+		public SupplierRepository(DataAccess dataAccess) : base(dataAccess)
+		{
+		}
+	}
+	
 	public static partial class SupplierFields
 	{
 		public const string SupplierId = "SupplierId";

@@ -18,46 +18,31 @@ namespace Motorlam.Controllers
     {
         public ActionResult Index()
         {
-            var brands = this.CreateQuery<Brand>(Proyection.Basic)
-                .OrderBy(BrandFields.BrandName)
-                .ToList();
-            ViewBag.Brands = brands;
+            ViewBag.Brands = this.DataService.BrandRepository.CreateQuery(Proyection.Basic).OrderBy(BrandFields.BrandName).ToList();
             var models = new List<Model>();
             ViewBag.Models = new List<Model>();
             return View(models);
         }
 
-
         public ActionResult Nuevo()
         {
-           var brands = this.CreateQuery<Brand>(Proyection.Basic)
-                .OrderBy(BrandFields.BrandName)
-                .ToList();
-            ViewBag.Brands = brands;
-            
+            ViewBag.Brands = this.DataService.BrandRepository.CreateQuery(Proyection.Basic).OrderBy(BrandFields.BrandName).ToList();
             ViewBag.Models = new List<Model>();
-            
             return View(new ModelMotor());            
         }
 
         public ActionResult EditarModel(int ModelMotorId)
         {
-            var model = this.CreateQuery<ModelMotor>(Proyection.Basic).Where(ModelFields.ModelMotorId, ModelMotorId).ToList().FirstOrDefault();
-
-            var brands = this.CreateQuery<Brand>(Proyection.Basic)
-                .OrderBy(BrandFields.BrandName)
-                .ToList();
-            ViewBag.Brands = brands;
-            ViewBag.Models = this.CreateQuery<Model>(Proyection.Basic)
-                .Where(ModelFields.BrandId, model.BrandId).ToList();
-            
+            var model = this.DataService.ModelMotorRepository.CreateQuery(Proyection.Basic).Where(ModelFields.ModelMotorId, ModelMotorId).ToList().FirstOrDefault();
+            ViewBag.Brands = this.DataService.BrandRepository.CreateQuery(Proyection.Basic).OrderBy(BrandFields.BrandName).ToList();
+            ViewBag.Models = this.DataService.ModelRepository.CreateQuery(Proyection.Basic).Where(ModelFields.BrandId, model.BrandId).ToList();            
             return View("Nuevo", model);
         }
 
 
         public ActionResult SalvarModelo(ModelMotor model)
         {
-            this.Repository.BeginTransaction();
+            this.DataService.BeginTransaction();
 
             if (model.ModelMotorId < 1)
             {
@@ -76,16 +61,10 @@ namespace Motorlam.Controllers
                 SaveEntity(motor);
             }
 
-            if (model.ModelMotorId == 0)
-                this.Repository.Insert(model);
-            else
-                this.Repository.Update(model);
+            SaveEntity(model);
 
-            this.Repository.Commit();
-            var brands = this.CreateQuery<Brand>(Proyection.Basic)
-                .OrderBy(BrandFields.BrandName)
-                .ToList();
-            ViewBag.Brands = brands;
+            this.DataService.Commit();
+            ViewBag.Brands = this.DataService.BrandRepository.CreateQuery(Proyection.Basic).OrderBy(BrandFields.BrandName).ToList();
             ViewBag.Models = new List<Model>();
             return View("Nuevo",model);           
         }
@@ -93,8 +72,7 @@ namespace Motorlam.Controllers
         [HttpPost]
         public ActionResult DeleteModelMotor(int Id)
         {
-            var cars = this.CreateQuery<Car>(Proyection.Basic)
-                .Where(CarFields.ModelMotorId, Id).ToList();
+            var cars = this.DataService.CarRepository.CreateQuery(Proyection.Basic).Where(CarFields.ModelMotorId, Id).ToList();
 
             if (cars.Count > 0)
             {
@@ -105,18 +83,17 @@ namespace Motorlam.Controllers
             {
                 this.Repository.BeginTransaction();
 
-                var modelmotor = this.CreateQuery<ModelMotor>(Proyection.Basic).Get(Id);
+                var modelmotor = this.DataService.ModelMotorRepository.CreateQuery(Proyection.Basic).Get(Id);
 
                 if (modelmotor.MotorId != null)
                 {
-                    var motor = this.CreateQuery<Motor>(Proyection.Basic).Get(modelmotor.MotorId);
-                    this.Repository.Delete(motor);
+                    var motor = this.DataService.MotorRepository.CreateQuery(Proyection.Basic).Get(modelmotor.MotorId);
+                    this.DataService.Delete(motor);
                 }
 
-                this.Repository.Delete(modelmotor);
+                this.DataService.Delete(modelmotor);
 
-                this.Repository.Commit();
-
+                this.DataService.Commit();
 
                 return this.Json(new { result = "success" });
             }
@@ -124,8 +101,7 @@ namespace Motorlam.Controllers
 
         public ActionResult Buscar(int? BrandId, int? ModelId)
         {
-            var models = this.CreateQuery<Model>(Proyection.Detailed);
-
+            var models = this.DataService.ModelRepository.CreateQuery(Proyection.Detailed);
 
             if (BrandId.HasValue) models.Where(ModelFields.BrandId, BrandId);
 
@@ -136,9 +112,8 @@ namespace Motorlam.Controllers
 
         public ActionResult LoadCars(int? BrandId, int? ModelId)
         {
-            var models = this.CreateQuery<Model>(Proyection.Detailed);
-
-
+            var models = this.DataService.ModelRepository.CreateQuery(Proyection.Detailed);
+            
             if (BrandId.HasValue) models.Where(ModelFields.BrandId, BrandId);
 
             if (ModelId.HasValue) models.Where(ModelFields.ModelId, ModelId);
@@ -150,10 +125,10 @@ namespace Motorlam.Controllers
         public ActionResult SaveModel(int BrandId, string NewModelName)
         {
             Model newModel = new Model();
-            this.Repository.BeginTransaction();
+            this.DataService.BeginTransaction();
             if (!string.IsNullOrEmpty(NewModelName))
             {
-                var oldmodel = this.CreateQuery<Model>(Proyection.Basic).Where(ModelFields.ModelName, NewModelName).ToList().FirstOrDefault();
+                var oldmodel = this.DataService.ModelRepository.CreateQuery(Proyection.Basic).Where(ModelFields.ModelName, NewModelName).ToList().FirstOrDefault();
 
                 if (oldmodel == null)
                 {
@@ -162,13 +137,9 @@ namespace Motorlam.Controllers
                     SaveEntity(newModel);
                 }
             }
-            this.Repository.Commit();
+            this.DataService.Commit();
 
-            var brands = this.CreateQuery<Brand>(Proyection.Basic)
-                .OrderBy(BrandFields.BrandName)
-                .ToList();
-            ViewBag.Brands = brands;
-
+            ViewBag.Brands = this.DataService.BrandRepository.CreateQuery(Proyection.Basic).OrderBy(BrandFields.BrandName).ToList();
             ViewBag.Models = this.CreateQuery<Model>(Proyection.Basic).Where(ModelFields.BrandId,BrandId).OrderBy(ModelFields.ModelName).ToList();
 
             return this.Json(new{ result = "success" });
@@ -184,8 +155,7 @@ namespace Motorlam.Controllers
 
         private IList<ChildItem> LoadModels(int fatherId)
         {
-            var models = this.CreateQuery<Model>(Proyection.Basic)
-                .Where(ModelFields.BrandId, fatherId).OrderBy(ModelFields.ModelName).ToList();
+            var models = this.DataService.ModelRepository.CreateQuery(Proyection.Basic).Where(ModelFields.BrandId, fatherId).OrderBy(ModelFields.ModelName).ToList();
             var ChildItems = ChildItem.GetChildItems(new SelectList(models, ModelFields.ModelId, ModelFields.ModelName));
             return ChildItems;
         }

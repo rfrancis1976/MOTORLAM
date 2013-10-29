@@ -22,51 +22,37 @@ namespace Motorlam.Controllers
             culturaPersonal.NumberFormat.PercentDecimalDigits = 2;
             culturaPersonal.NumberFormat.NumberDecimalDigits = 2;
 
-            ViewBag.Suppliers = this.CreateQuery<Supplier>(Proyection.Basic).ToList();
-            
-            var deliverys = this.CreateQuery<Delivery>(Proyection.Detailed)
-                .Where(DeliveryFields.DeliveryIsPaid,false)
-                .OrderByDesc(DeliveryFields.DeliveryDate)
-                .ToList();
-
+            ViewBag.Suppliers = this.DataService.SupplierRepository.CreateQuery(Proyection.Basic).ToList();            
+            var deliverys = this.DataService.DeliveryRepository.CreateQuery(Proyection.Detailed)
+                .Where(DeliveryFields.DeliveryIsPaid,false).OrderByDesc(DeliveryFields.DeliveryDate).ToList();
             return View(deliverys);
         }
 
         public ActionResult Nuevo()
         {
             ViewBag.Message = "Albaranes";
-
-            ViewBag.Suppliers = this.CreateQuery<Supplier>(Proyection.Basic).ToList();
-            ViewBag.BrandProducts = this.CreateQuery<BrandProduct>(Proyection.Basic).ToList();
-            ViewBag.TypeProducts = this.CreateQuery<TypeProduct>(Proyection.Basic).ToList();
-            
-             
+            ViewBag.Suppliers = this.DataService.SupplierRepository.CreateQuery(Proyection.Basic).ToList();
+            ViewBag.BrandProducts = this.DataService.BrandProductRepository.CreateQuery(Proyection.Basic).ToList();
+            ViewBag.TypeProducts = this.DataService.TypeProductRepository.CreateQuery(Proyection.Basic).ToList();            
             return View(new Delivery());
         }
 
         public ActionResult Editar(int DeliveryId)
         {
             ViewBag.Message = "Albaranes";
-
-            var delivery = this.CreateQuery<Delivery>(Proyection.Detailed).Where(DeliveryFields.DeliveryId, DeliveryId).ToList().FirstOrDefault();
-
-            ViewBag.Suppliers = this.CreateQuery<Supplier>(Proyection.Basic).ToList();
-            ViewBag.BrandProducts = this.CreateQuery<BrandProduct>(Proyection.Basic).ToList();
-            ViewBag.TypeProducts = this.CreateQuery<TypeProduct>(Proyection.Basic).ToList();
-          
-            ViewBag.DeliveryLines = this.CreateQuery<DeliveryLine>(Proyection.Basic).Where(DeliveryLineFields.DeliveryId, DeliveryId).ToList();
+            var delivery = this.DataService.DeliveryRepository.CreateQuery(Proyection.Detailed).Where(DeliveryFields.DeliveryId, DeliveryId).ToList().FirstOrDefault();
+            ViewBag.Suppliers = this.DataService.SupplierRepository.CreateQuery(Proyection.Basic).ToList();
+            ViewBag.BrandProducts = this.DataService.BrandProductRepository.CreateQuery(Proyection.Basic).ToList();
+            ViewBag.TypeProducts = this.DataService.TypeProductRepository.CreateQuery(Proyection.Basic).ToList();
+            ViewBag.DeliveryLines = this.DataService.DeliveryLineRepository.CreateQuery(Proyection.Basic).Where(DeliveryLineFields.DeliveryId, DeliveryId).ToList();
             ViewBag.DeliveryLine = new DeliveryLine();
-
             return View("Nuevo", delivery);
-
         }
 
         [HttpPost]
         public ActionResult DeleteDelivery(int Id)
         {
-            var deliveryLines = this.CreateQuery<DeliveryLine>(Proyection.Basic)
-                .Where(DeliveryLineFields.DeliveryId, Id).ToList();
-
+            var deliveryLines = this.DataService.DeliveryLineRepository.CreateQuery(Proyection.Basic).Where(DeliveryLineFields.DeliveryId, Id).ToList();
             if (deliveryLines != null)
             {
                 foreach (var line in deliveryLines)
@@ -74,42 +60,24 @@ namespace Motorlam.Controllers
                     this.Repository.Delete(line);
                 }
             }
-
-            var delivery = this.CreateQuery<Delivery>(Proyection.Basic).Get(Id);
-
-            this.Repository.Delete(delivery);
-
+            var delivery = this.DataService.DeliveryRepository.CreateQuery(Proyection.Basic).Get(Id);
+            this.DataService.Delete(delivery);
             return this.Json(new { result = "success" });
         }
 
-
         public ActionResult DeleteDeliveryLine(int ID)
         {
-            var line = this.CreateQuery<DeliveryLine>(Proyection.Basic).Get(ID);
-
+            var line = this.DataService.DeliveryLineRepository.CreateQuery(Proyection.Basic).Get(ID);
             if (line != null) this.Repository.Delete(line);
-
             TotalsDelivery(line.DeliveryId);
-
-            var deliveryLines = this.CreateQuery<DeliveryLine>(Proyection.Basic).Where(DeliveryLineFields.DeliveryId, line.DeliveryId).ToList();
-
+            var deliveryLines = this.DataService.DeliveryLineRepository.CreateQuery(Proyection.Basic).Where(DeliveryLineFields.DeliveryId, line.DeliveryId).ToList();
             return PartialView("OrderList", deliveryLines);
         }
-
      
         [HttpPost]
         public ActionResult SaveDelivery(Delivery delivery)
         {
-            var deli = this.CreateQuery<Delivery>(Proyection.Basic)
-                .Where(DeliveryFields.DeliveryId, delivery.DeliveryId).ToList().FirstOrDefault();
-
-            if (deli != null)
-                this.Repository.Update(delivery);
-            else
-            {
-                this.Repository.Insert(delivery);
-            }         
-                        
+            SaveEntity(delivery);
             return this.Json(new { result = "success" , Delivery = delivery});
         }
 
@@ -122,12 +90,12 @@ namespace Motorlam.Controllers
 
             if (DeliveryLineId > 0)
             {
-                deliveryLine = this.CreateQuery<DeliveryLine>(Proyection.Basic)
+                deliveryLine = this.DataService.DeliveryLineRepository.CreateQuery(Proyection.Basic)
                     .Where(DeliveryLineFields.DeliveryLineId, DeliveryLineId).ToList().FirstOrDefault();
             }
 
             var product = new Product();
-            if (ProductId.HasValue) product = this.CreateQuery<Product>(Proyection.Basic).Where(ProductFields.ProductId, ProductId).ToList().FirstOrDefault();
+            if (ProductId.HasValue) product = this.DataService.ProductRepository.CreateQuery(Proyection.Basic).Where(ProductFields.ProductId, ProductId).ToList().FirstOrDefault();
             if (DeliveryID.HasValue) deliveryLine.DeliveryId = DeliveryID;
             if (!string.IsNullOrEmpty(ProductReference)) product.ProductReference = ProductReference;
 
@@ -159,14 +127,7 @@ namespace Motorlam.Controllers
 
 
             this.Repository.BeginTransaction();
-            if (DeliveryLineId > 0)
-            {
-                this.Repository.Update(deliveryLine);
-            }
-            else
-            {
-                this.Repository.Insert(deliveryLine);
-            }
+            SaveEntity(deliveryLine);
             TotalsDelivery(DeliveryID);
 
             this.Repository.Commit();
@@ -177,9 +138,9 @@ namespace Motorlam.Controllers
 
         private void TotalsDelivery(int? DeliveryID)
         {
-            var delivery = this.CreateQuery<Delivery>(Proyection.Basic).Where(DeliveryFields.DeliveryId, DeliveryID).ToList().FirstOrDefault();
+            var delivery = this.DataService.DeliveryRepository.CreateQuery(Proyection.Basic).Where(DeliveryFields.DeliveryId, DeliveryID).ToList().FirstOrDefault();
 
-            var deliveryLines = this.CreateQuery<DeliveryLine>(Proyection.Basic).Where(DeliveryLineFields.DeliveryId, DeliveryID).ToList();
+            var deliveryLines = this.DataService.DeliveryLineRepository.CreateQuery(Proyection.Basic).Where(DeliveryLineFields.DeliveryId, DeliveryID).ToList();
 
             decimal total = 0;
             double totaldiscount = 0;
@@ -197,39 +158,31 @@ namespace Motorlam.Controllers
             delivery.TotalDeliveryConIVA = total + (total * 18 / 100);
             //delivery.InvoiceTotalDiscount = (decimal)totaldiscount;
 
-            this.Repository.Update(delivery);
+            this.DataService.Update(delivery);
         }
 
         public ActionResult LoadInvoice(int InvoiceId)
         {
-            var invoice = this.CreateQuery<Invoice>(Proyection.Basic)
-                .Where(InvoiceFields.InvoiceId, InvoiceId).ToList().FirstOrDefault();
-            ViewBag.InvoiceLines = this.CreateQuery<InvoiceLine>(Proyection.Basic)
-                .Where(InvoiceLineFields.InvoiceId, InvoiceId).ToList();
-            var provinces = this.CreateQuery<Province>(Proyection.Basic).ToList();
-            ViewBag.Provinces = provinces;
+            var invoice = this.DataService.InvoiceRepository.CreateQuery(Proyection.Basic).Where(InvoiceFields.InvoiceId, InvoiceId).ToList().FirstOrDefault();
+            ViewBag.InvoiceLines = this.DataService.InvoiceLineRepository.CreateQuery(Proyection.Basic).Where(InvoiceLineFields.InvoiceId, InvoiceId).ToList();
+            ViewBag.Provinces = this.DataService.ProvinceRepository.CreateQuery(Proyection.Basic).ToList();
             ViewBag.Cities = new List<City>();
             ViewBag.Customers = new List<Customer>();
-
             return View("Nuevo",invoice);
         }
 
-
         public ActionResult EditarLinea(int DeliveryLineId)
         {
-            var deliveryLine = this.CreateQuery<DeliveryLine>(Proyection.Basic)
+            var deliveryLine = this.DataService.DeliveryLineRepository.CreateQuery(Proyection.Basic)
                 .Where(DeliveryLineFields.DeliveryLineId, DeliveryLineId).ToList().FirstOrDefault();
-
-            ViewBag.BrandProducts = this.CreateQuery<BrandProduct>(Proyection.Basic).ToList();
-            ViewBag.TypeProducts = this.CreateQuery<TypeProduct>(Proyection.Basic).ToList(); 
-
+            ViewBag.BrandProducts = this.DataService.BrandProductRepository.CreateQuery(Proyection.Basic).ToList();
+            ViewBag.TypeProducts = this.DataService.TypeProductRepository.CreateQuery(Proyection.Basic).ToList(); 
             return PartialView("DatosLineaDelivery", deliveryLine);
         }
-
         
         public ActionResult Buscar(string RefDelivery2, DateTime? DeliveryDate, int? SupplierId, int DeliveryIsPaid)
         {
-            var deliverys = this.CreateQuery<Delivery>(Proyection.Detailed);
+            var deliverys = this.DataService.DeliveryRepository.CreateQuery(Proyection.Detailed);
 
             if (!string.IsNullOrEmpty(RefDelivery2))
                 deliverys.And(DeliveryFields.RefDelivery, OperatorLite.Contains, RefDelivery2);
@@ -249,7 +202,7 @@ namespace Motorlam.Controllers
 
         public ActionResult LoadDeliverys(string RefDelivery2, DateTime? DeliveryDate, int? SupplierId, int DeliveryIsPaid)
         {
-            var deliverys = this.CreateQuery<Delivery>(Proyection.Detailed);
+            var deliverys = this.DataService.DeliveryRepository.CreateQuery(Proyection.Detailed);
             
             if (!string.IsNullOrEmpty(RefDelivery2))
                 deliverys.And(DeliveryFields.RefDelivery, OperatorLite.Contains, RefDelivery2);
@@ -270,7 +223,7 @@ namespace Motorlam.Controllers
         [HttpPost]
         public ActionResult LoadProductByReference(string ProductReference)
         {
-            var product = this.CreateQuery<Product>(Proyection.Detailed).Where(ProductFields.ProductReference, ProductReference).ToList().FirstOrDefault();
+            var product = this.DataService.ProductRepository.CreateQuery(Proyection.Detailed).Where(ProductFields.ProductReference, ProductReference).ToList().FirstOrDefault();
 
             if (product != null) return this.Json(new { result = "success", Product = product });
             else return this.Json(new { result = "error"});

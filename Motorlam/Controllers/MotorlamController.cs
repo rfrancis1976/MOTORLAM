@@ -5,22 +5,34 @@ using System.Web;
 using System.Web.Mvc;
 using inercya.ORMLite;
 using Motorlam.Data;
+using Motorlam.Entities;
+using Motorlam.Services;
 
 
 namespace Motorlam.Controllers
 {
     public abstract class MotorlamController : Controller
     {
-        protected MotorlamRepository Repository
+        public DataService DataService { get; set; }
+        public AuthorizationManager AuthorizationManager { get; set; }
+
+        public User CurrentUser
         {
-            get { return (MotorlamRepository)this.HttpContext.Items["_MotorlamRepository_"]; }
+            get
+            {
+                return AuthorizationManager == null ? null : AuthorizationManager.CurrentUser;
+            }
+        }
+
+        protected DataService Repository
+        {
+            get { return (DataService)this.HttpContext.Items["DataService"]; }
         }
 
         protected QueryLite<T> CreateQuery<T>(Proyection proyection) where T:class, new()
         {
             return new QueryLite<T>(proyection, this.Repository);
         }
-
 
         protected virtual ActionResult SaveEntity(object entity)
         {

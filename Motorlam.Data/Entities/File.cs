@@ -50,6 +50,13 @@ namespace Motorlam.Entities
 		
 	}
 	
+	public partial class FileRepository : Repository<File> 
+	{
+		public FileRepository(DataAccess dataAccess) : base(dataAccess)
+		{
+		}
+	}
+	
 	public static partial class FileFields
 	{
 		public const string FileId = "FileId";

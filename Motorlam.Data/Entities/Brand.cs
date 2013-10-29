@@ -22,6 +22,13 @@ namespace Motorlam.Entities
 		
 	}
 	
+	public partial class BrandRepository : Repository<Brand> 
+	{
+		public BrandRepository(DataAccess dataAccess) : base(dataAccess)
+		{
+		}
+	}
+	
 	public static partial class BrandFields
 	{
 		public const string BrandId = "BrandId";

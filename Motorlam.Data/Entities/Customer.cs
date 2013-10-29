@@ -86,6 +86,13 @@ namespace Motorlam.Entities
 		
 	}
 	
+	public partial class CustomerRepository : Repository<Customer> 
+	{
+		public CustomerRepository(DataAccess dataAccess) : base(dataAccess)
+		{
+		}
+	}
+	
 	public static partial class CustomerFields
 	{
 		public const string CustomerId = "CustomerId";

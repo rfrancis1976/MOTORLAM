@@ -17,44 +17,30 @@ namespace Motorlam.Controllers
         public ActionResult Index()
         {
             ViewBag.Message = "Clientes";
-
-            var customers = new List<Customer>();
-            
+            var customers = new List<Customer>();            
             return View(customers);
         }
 
         public ActionResult Nuevo()
         {
             ViewBag.Message = "Clientes";
-
-            var provinces = this.CreateQuery<Province>(Proyection.Basic).ToList();
-
-            ViewBag.Provinces = provinces;
+            ViewBag.Provinces = this.DataService.ProvinceRepository.CreateQuery(Proyection.Basic).ToList();
             ViewBag.Cities = new List<City>();
-
-            return View(new Customer());
-            
+            return View(new Customer());            
         }
 
         public ActionResult Editar(int CustomerID)
         {
             ViewBag.Message = "Clientes";
-            var customer = this.CreateQuery<Customer>(Proyection.Detailed)
-                .Where(CustomerFields.CustomerId, CustomerID).ToList().FirstOrDefault();
-
-            var cars = this.CreateQuery<Car>(Proyection.Detailed)
-                .Where(CarFields.CustomerId, CustomerID).ToList();
+            var customer = this.DataService.CustomerRepository.CreateQuery(Proyection.Detailed).Where(CustomerFields.CustomerId, CustomerID).ToList().FirstOrDefault();
+            var cars = this.DataService.CarRepository.CreateQuery(Proyection.Detailed).Where(CarFields.CustomerId, CustomerID).ToList();
 
             if (cars.Count > 0) ViewBag.Cars = cars;
             else ViewBag.Cars = new List<Car>();
 
-            var provinces = this.CreateQuery<Province>(Proyection.Basic).ToList();
-            ViewBag.Provinces = provinces;
-            var cities = this.CreateQuery<City>(Proyection.Basic).ToList();
-            ViewBag.Cities = cities;
-
-            var brands = this.CreateQuery<Brand>(Proyection.Basic).ToList();
-            ViewBag.Brands = brands;
+            ViewBag.Provinces = this.DataService.ProvinceRepository.CreateQuery(Proyection.Basic).ToList();
+            ViewBag.Cities = this.DataService.CityRepository.CreateQuery(Proyection.Basic).ToList();
+            ViewBag.Brands = this.DataService.BrandRepository.CreateQuery(Proyection.Basic).ToList();
             ViewBag.Models = new List<Model>();
             ViewBag.Motors = new List<ModelMotor>();
             ViewBag.TypeMotors = new List<Motor>();
@@ -73,9 +59,9 @@ namespace Motorlam.Controllers
             if (cars.Count > 0) ViewBag.Cars = cars;
             else ViewBag.Cars = new List<Car>();
 
-            ViewBag.Provinces = this.CreateQuery<Province>(Proyection.Basic).ToList();
-            ViewBag.Cities = this.CreateQuery<City>(Proyection.Basic).ToList();
-            ViewBag.Brands = this.CreateQuery<Brand>(Proyection.Basic).ToList();
+            ViewBag.Provinces = this.DataService.ProvinceRepository.CreateQuery(Proyection.Basic).ToList();
+            ViewBag.Cities = this.DataService.CityRepository.CreateQuery(Proyection.Basic).ToList();
+            ViewBag.Brands = this.DataService.BrandRepository.CreateQuery(Proyection.Basic).ToList();
             ViewBag.Models = new List<Model>();
             ViewBag.Motors = new List<ModelMotor>();
             ViewBag.TypeMotors = new List<Motor>();
@@ -83,49 +69,43 @@ namespace Motorlam.Controllers
             return View("Nuevo", customer);           
         }        
 
-        public ActionResult Buscar(string CustomerName, string CustomerSurName, string NIF)
+        public ActionResult Buscar(string CustomerName, string CustomerSurName, string NIF, string carRack)
         {
-
             ViewBag.Message = "Clientes";
-            var customers = this.CreateQuery<Customer>(Proyection.Basic);
-
+            var customers = this.DataService.CustomerRepository.CreateQuery(Proyection.Basic);
             if (!string.IsNullOrEmpty(CustomerName))
                 customers.Where(CustomerFields.CustomerName, OperatorLite.Contains, CustomerName);
             if (!string.IsNullOrEmpty(CustomerSurName))
                 customers.And(CustomerFields.CustomerSurName, OperatorLite.Contains, CustomerSurName);
             if (!string.IsNullOrEmpty(NIF))
                 customers.And(CustomerFields.CustomerNIF, OperatorLite.Contains, NIF);
+            if (!string.IsNullOrEmpty(carRack))
+            {
+                var ids = this.DataService.CarRepository.CreateQuery(Proyection.Basic).Where(CarFields.CarRack, OperatorLite.Contains, carRack).ToList();
+                customers.And(CustomerFields.CustomerId, OperatorLite.In, ids.Select(p => p.CustomerId));
+            }
 
-                       
             return PartialView("List", customers.ToList());
         }
 
         [HttpPost]
         public ActionResult DeleteCustomer(int Id)
         {
-            var customer = this.CreateQuery<Customer>(Proyection.Basic)
-                .Where(CustomerFields.CustomerId, Id).ToList().FirstOrDefault();
-
-            var invoices = this.CreateQuery<Invoice>(Proyection.Basic).Where(InvoiceFields.CustomerId, Id).ToList();
-
+            var customer = this.DataService.CustomerRepository.CreateQuery(Proyection.Basic).Where(CustomerFields.CustomerId, Id).ToList().FirstOrDefault();
+            var invoices = this.DataService.InvoiceRepository.CreateQuery(Proyection.Basic).Where(InvoiceFields.CustomerId, Id).ToList();
             if (invoices.Count > 0)
             {
                 ModelState.AddModelError("ErrorSql", "Este cliente no puede ser eliminado, porque tiene facturas asociadas");
                 return this.Json(new { result = "error", validationErrors = ModelState.GetErrors() });
-                
             }
-
-            if (customer != null) this.Repository.Delete(customer);
-
-            return this.Json(new { result = "success" });
-            
+            if (customer != null) this.DataService.Delete(customer);
+            return this.Json(new { result = "success" });            
         }
 
         [HttpPost]
         public ActionResult DeleteCar(int Id)
         {
-            var invoices = this.CreateQuery<Invoice>(Proyection.Basic).Where(InvoiceFields.CarId, Id).ToList();
-
+            var invoices = this.DataService.InvoiceRepository.CreateQuery(Proyection.Basic).Where(InvoiceFields.CarId, Id).ToList();
             if (invoices.Count > 0)
             {
                 this.ModelState.AddModelError("ErrorSQL", "No se ha podido eliminar este coche, porque esta asociado a una factura");
@@ -133,17 +113,12 @@ namespace Motorlam.Controllers
             }
             else
             {
-                var car = this.CreateQuery<Car>(Proyection.Basic)
-                    .Where(CarFields.CarId, Id).ToList().FirstOrDefault();
-
-                if (car != null) this.Repository.Delete(car);
-               
-                var brands = this.CreateQuery<Brand>(Proyection.Basic).ToList();
-                ViewBag.Brands = brands;
+                var car = this.DataService.CarRepository.CreateQuery(Proyection.Basic).Where(CarFields.CarId, Id).ToList().FirstOrDefault();
+                if (car != null) this.DataService.Delete(car);               
+                ViewBag.Brands = this.DataService.BrandRepository.CreateQuery(Proyection.Basic).ToList();
                 ViewBag.Models = new List<Model>();
                 ViewBag.Motors = new List<ModelMotor>();
                 ViewBag.TypeMotors = new List<Motor>();
-
                 return this.Json(new { result = "success" });
             }
         }
@@ -151,17 +126,11 @@ namespace Motorlam.Controllers
         [HttpPost]
         public ActionResult EditarCoche(int CarId)
         {
-            var car = this.CreateQuery<Car>(Proyection.Detailed)
-                .Where(CarFields.CarId, CarId).ToList().FirstOrDefault();
-            
-            ViewBag.Brands = this.CreateQuery<Brand>(Proyection.Basic).ToList();
-            ViewBag.Models = this.CreateQuery<Model>(Proyection.Basic)
-                .Where(ModelFields.BrandId, car.BrandId).ToList();
-            ViewBag.Motors = this.CreateQuery<ModelMotor>(Proyection.Basic)
-                .Where(ModelMotorFields.ModelId, car.ModelId).ToList();
-            ViewBag.TypeMotors = this.CreateQuery<Motor>(Proyection.Detailed)
-                .Where(MotorFields.ModelId, car.ModelId).ToList();
-
+            var car = this.DataService.CarRepository.CreateQuery(Proyection.Detailed).Where(CarFields.CarId, CarId).ToList().FirstOrDefault();
+            ViewBag.Brands = this.DataService.BrandRepository.CreateQuery(Proyection.Basic).ToList();
+            ViewBag.Models = this.DataService.ModelRepository.CreateQuery(Proyection.Basic).Where(ModelFields.BrandId, car.BrandId).ToList();
+            ViewBag.Motors = this.DataService.ModelMotorRepository.CreateQuery(Proyection.Basic).Where(ModelMotorFields.ModelId, car.ModelId).ToList();
+            ViewBag.TypeMotors = this.DataService.MotorRepository.CreateQuery(Proyection.Detailed).Where(MotorFields.ModelId, car.ModelId).ToList();
             return PartialView("DatosCoche", car);            
         }
 
@@ -175,7 +144,7 @@ namespace Motorlam.Controllers
 
         public ActionResult LoadCustomers(string CustomerName, string CustomerSurName, string NIF)
         {
-            var customers = this.CreateQuery<Customer>(Proyection.Basic);
+            var customers = this.DataService.CustomerRepository.CreateQuery(Proyection.Basic);
 
             if (!string.IsNullOrEmpty(CustomerName))
                 customers.Where(CustomerFields.CustomerName, OperatorLite.Contains, CustomerName);
@@ -189,14 +158,11 @@ namespace Motorlam.Controllers
         
         public ActionResult LoadCars(int CustomerId)
         {
-            var cars = this.CreateQuery<Car>(Proyection.Detailed)
-                .Where(CarFields.CustomerId, CustomerId).ToList();
-            var brands = this.CreateQuery<Brand>(Proyection.Basic).ToList();
-            ViewBag.Brands = brands;
+            var cars = this.DataService.CarRepository.CreateQuery(Proyection.Detailed).Where(CarFields.CustomerId, CustomerId).ToList();
+            ViewBag.Brands = this.DataService.BrandRepository.CreateQuery(Proyection.Basic).ToList();
             ViewBag.Models = new List<Model>();
             ViewBag.Motors = new List<ModelMotor>();
             ViewBag.TypeMotors = new List<Motor>();
-
             return PartialView("ListCars", cars);
         }
 
@@ -204,7 +170,6 @@ namespace Motorlam.Controllers
         public ActionResult LoadCityByProvince(int fatherId)
         {
             var ChildItems = LoadCities(fatherId);
-
             return this.Json(new { result = "success", ChildItems }, JsonRequestBehavior.AllowGet);
         }
 
@@ -212,14 +177,12 @@ namespace Motorlam.Controllers
         public ActionResult LoadModelByBrand(int fatherId)
         {
             var ChildItems = LoadModels(fatherId);
-
             return this.Json(new { result = "success", ChildItems }, JsonRequestBehavior.AllowGet);
         }
 
         private IList<ChildItem> LoadModels(int fatherId)
         {
-            var models = this.CreateQuery<Model>(Proyection.Basic)
-                .Where(ModelFields.BrandId, fatherId).ToList();
+            var models = this.DataService.ModelRepository.CreateQuery(Proyection.Basic).Where(ModelFields.BrandId, fatherId).ToList();
             var ChildItems = ChildItem.GetChildItems(new SelectList(models, ModelFields.ModelId, ModelFields.ModelName));
             return ChildItems;            
         }
@@ -228,7 +191,6 @@ namespace Motorlam.Controllers
         public ActionResult LoadMotorByModel(int fatherId)
         {
             var ChildItems = LoadMotors(fatherId);
-
             return this.Json(new { result = "success", ChildItems }, JsonRequestBehavior.AllowGet);
         }
 
@@ -243,24 +205,20 @@ namespace Motorlam.Controllers
         public ActionResult LoadMotorTypeByMotor(int fatherId)
         {
             var ChildItems = LoadTypeMotors(fatherId);
-
             return this.Json(new { result = "success", ChildItems }, JsonRequestBehavior.AllowGet);
         }
 
         private IList<ChildItem> LoadTypeMotors(int fatherId)
         {
-            var modelmotor = this.CreateQuery<ModelMotor>(Proyection.Basic)
-                .Where(ModelMotorFields.ModelMotorId, fatherId).ToList().FirstOrDefault();
-            var motors = this.CreateQuery<Motor>(Proyection.Detailed)
-                .Where(MotorFields.ModelId, modelmotor.ModelId).ToList();
+            var modelmotor = this.DataService.ModelMotorRepository.CreateQuery(Proyection.Basic).Where(ModelMotorFields.ModelMotorId, fatherId).ToList().FirstOrDefault();
+            var motors = this.DataService.MotorRepository.CreateQuery(Proyection.Detailed).Where(MotorFields.ModelId, modelmotor.ModelId).ToList();
             var ChildItems = ChildItem.GetChildItems(new SelectList(motors, MotorFields.MotorId, ModelFields.MotorType));
             return ChildItems;
         }
 
         private IList<ChildItem> LoadCities(int fatherId)
         {
-            var cities = this.CreateQuery<City>(Proyection.Basic)
-                .Where(CityFields.ProvinceId, fatherId).ToList();
+            var cities = this.DataService.CityRepository.CreateQuery(Proyection.Basic).Where(CityFields.ProvinceId, fatherId).ToList();
             return ChildItem.GetChildItems(new SelectList(cities, CityFields.CityId, CityFields.CityName));
         }
 
@@ -271,14 +229,12 @@ namespace Motorlam.Controllers
         public ActionResult Upload(int Id)
         {
             // Comprobamos si habia un archivo ya asociado y lo elminamos
-            var file = this.CreateQuery<File>(Proyection.Basic)
-                .Where(FileFields.EntityId, Id).ToList().FirstOrDefault();
+            var file = this.DataService.FileRepository.CreateQuery(Proyection.Basic).Where(FileFields.EntityId, Id).ToList().FirstOrDefault();
             if (file != null) this.Repository.Delete(file);
-
 
             HttpPostedFileBase fileBase = Request.Files[0];
 
-            this.Repository.BeginTransaction();
+            this.DataService.BeginTransaction();
 
             byte[] fileData = GetFileByteArray(fileBase.InputStream);
             Entities.File doc = new Entities.File();
@@ -288,40 +244,32 @@ namespace Motorlam.Controllers
             doc.CreatedDate = DateTime.Now;
             SaveEntity(doc);
 
-            var car = this.CreateQuery<Car>(Proyection.Detailed).Get(Id);
+            var car = this.DataService.CarRepository.CreateQuery(Proyection.Detailed).Get(Id);
             car.CarITVName = doc.FileName;
             car.CarITVId = doc.FileId;
             SaveEntity(car);
 
-            this.Repository.Commit();
+            this.DataService.Commit();
 
             return View();
         }
 
         public ActionResult DeleteFile(int Id)
         {
-            var file = this.CreateQuery<File>(Proyection.Basic)
-                .Where(FileFields.EntityId, Id).ToList().FirstOrDefault();
-
-            this.Repository.BeginTransaction();
-
-            this.Repository.Delete(file);
-            var car = this.CreateQuery<Car>(Proyection.Basic).Get(Id);
+            var file = this.DataService.FileRepository.CreateQuery(Proyection.Basic).Where(FileFields.EntityId, Id).ToList().FirstOrDefault();
+            this.DataService.BeginTransaction();
+            this.DataService.Delete(file);
+            var car = this.DataService.CarRepository.CreateQuery(Proyection.Basic).Get(Id);
             car.CarITVName = "";
             car.CarITVId = null;
-            this.Repository.Update(car);
-
-            this.Repository.Commit();
-
+            this.DataService.Update(car);
+            this.DataService.Commit();
             return this.Json(new { result = "success", EntityId = Id });
         }
 
         public ActionResult LoadFile(int Id)
         {
-            var file = this.CreateQuery<File>(Proyection.Basic)
-                .Where(FileFields.EntityId, Id).ToList().FirstOrDefault();
-            ViewBag.File = file;
-
+            ViewBag.File  = this.DataService.FileRepository.CreateQuery(Proyection.Basic).Where(FileFields.EntityId, Id).ToList().FirstOrDefault();
             return this.Json(new { result = "success" });
         }
 
@@ -367,8 +315,7 @@ namespace Motorlam.Controllers
 
         private File GetFile(int Id)
         {
-            var file = this.CreateQuery<File>(Proyection.Basic)
-                .Where(FileFields.FileId, OperatorLite.Equals, Id).ToList().FirstOrDefault();
+            var file = this.DataService.FileRepository.CreateQuery(Proyection.Basic).Where(FileFields.FileId, OperatorLite.Equals, Id).ToList().FirstOrDefault();
             return file;
         }
 

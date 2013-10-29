@@ -62,6 +62,13 @@ namespace Motorlam.Entities
 		
 	}
 	
+	public partial class ModelRepository : Repository<Model> 
+	{
+		public ModelRepository(DataAccess dataAccess) : base(dataAccess)
+		{
+		}
+	}
+	
 	public static partial class ModelFields
 	{
 		public const string ModelId = "ModelId";

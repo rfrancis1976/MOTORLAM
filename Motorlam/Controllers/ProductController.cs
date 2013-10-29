@@ -20,16 +20,8 @@ namespace Motorlam.Controllers
         public ActionResult Index()
         {
             ViewBag.Message = "Productos";
-            CultureInfo culturaPersonal = new CultureInfo("es-ES");
-            culturaPersonal.NumberFormat.CurrencyDecimalDigits = 2;
-            culturaPersonal.NumberFormat.PercentDecimalDigits = 2;
-            culturaPersonal.NumberFormat.NumberDecimalDigits = 2;
-
-            ViewBag.Suppliers  = this.CreateQuery<Supplier>(Proyection.Basic).OrderBy(SupplierFields.SupplierName).ToList();
-            ViewBag.BrandsProduct = this.CreateQuery<BrandProduct>(Proyection.Basic).OrderBy(BrandProductFields.BrandProductName).ToList();
-            ViewBag.TypeProducts = this.CreateQuery<TypeProduct>(Proyection.Basic).OrderBy(TypeProductFields.TypeProductName).ToList();
+            ConfigurePage();
             var products = new List<Product>();
-
             return View(products);
         }
 
@@ -37,46 +29,17 @@ namespace Motorlam.Controllers
         public ActionResult Nuevo()
         {
             ViewBag.Message = "Productos";
-
-            CultureInfo culturaPersonal = new CultureInfo("es-ES");
-            culturaPersonal.NumberFormat.CurrencyDecimalDigits = 2;
-            culturaPersonal.NumberFormat.PercentDecimalDigits = 2;
-            culturaPersonal.NumberFormat.NumberDecimalDigits = 2;
-
-            var typesProduct = this.CreateQuery<TypeProduct>(Proyection.Basic).OrderBy(TypeProductFields.TypeProductName).ToList();
-            var brandsProduct = this.CreateQuery<BrandProduct>(Proyection.Basic).OrderBy(BrandProductFields.BrandProductName).ToList();
-            var suppliers = this.CreateQuery<Supplier>(Proyection.Basic).OrderBy(SupplierFields.SupplierName).ToList();
-
-            ViewBag.TypesProduct = typesProduct;
-            ViewBag.BrandsProduct = brandsProduct;
-            ViewBag.Suppliers = suppliers;
-            
-            return View(new Product());
-            
+            ConfigurePage();            
+            return View(new Product());            
         }
 
         public ActionResult Editar(int ProductId)
         {
             ViewBag.Message = "Productos";
-
-            CultureInfo culturaPersonal = new CultureInfo("es-ES");
-            culturaPersonal.NumberFormat.CurrencyDecimalDigits = 2;
-            culturaPersonal.NumberFormat.PercentDecimalDigits = 2;
-            culturaPersonal.NumberFormat.NumberDecimalDigits = 2;
-
-            var product = this.CreateQuery<Product>(Proyection.Detailed)
-                .Where(ProductFields.ProductId, ProductId).ToList().FirstOrDefault();
-
-            var typesProduct = this.CreateQuery<TypeProduct>(Proyection.Basic).OrderBy(TypeProductFields.TypeProductName).ToList();
-            var brandsProduct = this.CreateQuery<BrandProduct>(Proyection.Basic).OrderBy(BrandProductFields.BrandProductName).ToList();
-            var suppliers = this.CreateQuery<Supplier>(Proyection.Basic).OrderBy(SupplierFields.SupplierName).ToList();
-
-            ViewBag.TypesProduct = typesProduct;
-            ViewBag.BrandsProduct = brandsProduct;
-            ViewBag.Suppliers = suppliers;
-
+            ConfigurePage();
+            var product = this.DataService.ProductRepository.CreateQuery(Proyection.Detailed).Where(ProductFields.ProductId, ProductId).ToList().FirstOrDefault();
             return View("Nuevo", product);
-        }
+        }        
 
         [HttpPost]
         public ActionResult SalvarProducto(Product product, string TypeName, string BrandName)
@@ -85,7 +48,7 @@ namespace Motorlam.Controllers
 
             if (!string.IsNullOrEmpty(TypeName))
             {
-                var oldType = this.CreateQuery<TypeProduct>(Proyection.Basic)
+                var oldType = this.DataService.TypeProductRepository.CreateQuery(Proyection.Basic)
                     .Where(TypeProductFields.TypeProductName, TypeName).ToList().FirstOrDefault();
                 if (oldType == null)
                 {
@@ -102,7 +65,7 @@ namespace Motorlam.Controllers
 
             if (!string.IsNullOrEmpty(BrandName))
             {
-                var oldBp = this.CreateQuery<BrandProduct>(Proyection.Basic)
+                var oldBp = this.DataService.BrandProductRepository.CreateQuery(Proyection.Basic)
                     .Where(BrandProductFields.BrandProductName, BrandName).ToList().FirstOrDefault();
                 if (oldBp == null)
                 {
@@ -117,11 +80,7 @@ namespace Motorlam.Controllers
                 }
             }
 
-            if (product.ProductId == 0)
-                this.Repository.Insert(product);
-            else
-                this.Repository.Update(product);
-
+            SaveEntity(product);
             return this.Json(new { result = "success" });          
         }
 
@@ -130,7 +89,7 @@ namespace Motorlam.Controllers
         {
             ViewBag.Message = "Productos";
             
-            var products = this.CreateQuery<Product>(Proyection.Detailed);
+            var products = this.DataService.ProductRepository.CreateQuery(Proyection.Detailed);
 
             if (!string.IsNullOrEmpty(ProductReference))
                 products.Where(ProductFields.ProductReference, OperatorLite.Contains, ProductReference);
@@ -150,14 +109,13 @@ namespace Motorlam.Controllers
         [HttpPost]
         public ActionResult DeleteProduct(int Id)
         {
-            var product = this.CreateQuery<Product>(Proyection.Basic)
-                .Where(ProductFields.ProductId, Id).ToList().FirstOrDefault();
+            var product = this.DataService.ProductRepository.CreateQuery(Proyection.Basic).Where(ProductFields.ProductId, Id).ToList().FirstOrDefault();
 
             try
             {
-                if (product != null) this.Repository.Delete(product);
+                if (product != null) this.DataService.Delete(product);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 this.ModelState.AddModelError("ErrorSQL", "No se ha podido eliminar el Producto, porque esta asociado a una factura");
                 return this.Json(new { result = "error", validationErrors = ModelState.GetErrors() });
@@ -168,9 +126,8 @@ namespace Motorlam.Controllers
 
 
         public ActionResult LoadProducts(string ProductReference, string ProductName, int? SupplierId, int? BrandProductId, int? TypeProductId)
-        {
-           
-            var products = this.CreateQuery<Product>(Proyection.Detailed);
+        {           
+            var products = this.DataService.ProductRepository.CreateQuery(Proyection.Detailed);
 
             if (!string.IsNullOrEmpty(ProductReference))
                 products.Where(ProductFields.ProductReference, OperatorLite.Contains, ProductReference);
@@ -197,11 +154,21 @@ namespace Motorlam.Controllers
 
         private IList<ChildItem> LoadCities(int fatherId)
         {
-            var cities = this.CreateQuery<City>(Proyection.Basic)
-                .Where(CityFields.ProvinceId, fatherId).ToList();
+            var cities = this.DataService.CityRepository.CreateQuery(Proyection.Basic).Where(CityFields.ProvinceId, fatherId).ToList();
             var ChildItems = ChildItem.GetChildItems(new SelectList(cities, CityFields.CityId, CityFields.CityName));
-            return ChildItems;
-            
-        }     
+            return ChildItems;            
+        }
+
+        private void ConfigurePage()
+        {
+            CultureInfo culturaPersonal = new CultureInfo("es-ES");
+            culturaPersonal.NumberFormat.CurrencyDecimalDigits = 2;
+            culturaPersonal.NumberFormat.PercentDecimalDigits = 2;
+            culturaPersonal.NumberFormat.NumberDecimalDigits = 2;
+
+            ViewBag.Suppliers = this.DataService.SupplierRepository.CreateQuery(Proyection.Basic).OrderBy(SupplierFields.SupplierName).ToList();
+            ViewBag.BrandsProduct = this.DataService.BrandProductRepository.CreateQuery(Proyection.Basic).OrderBy(BrandProductFields.BrandProductName).ToList();
+            ViewBag.TypeProducts = this.DataService.TypeProductRepository.CreateQuery(Proyection.Basic).OrderBy(TypeProductFields.TypeProductName).ToList();
+        }
     }
 }
