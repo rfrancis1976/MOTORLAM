@@ -125,6 +125,10 @@ namespace Motorlam.Entities
 		public Int32? InvoiceIVAId { get; set; }
 		
 		[DataMember]
+		[SqlField(DbType.Currency, 8, 19, 255, AllowNull = true, BaseColumnName = "Expense", BaseTableName="Invoices" )]
+		public Decimal? Expense { get; set; }
+		
+		[DataMember]
 		[SqlField(DbType.AnsiString, 50, 255, 255, BaseColumnName = "CustomerName", BaseTableName="Customers" )]
 		public String CustomerName { get; set; }
 		
@@ -147,6 +151,10 @@ namespace Motorlam.Entities
 		[DataMember]
 		[SqlField(DbType.Int32, 4, 10, 255, AllowNull = true, BaseColumnName = "IvaValor", BaseTableName="Ivas" )]
 		public Int32? IvaValor { get; set; }
+		
+		[DataMember]
+		[SqlField(DbType.Currency, 8, 19, 255, AllowNull = true, IsReadOnly = true, BaseColumnName = "TotalInvoice", BaseTableName="" )]
+		public Decimal? TotalInvoice { get; set; }
 		
 	}
 	
@@ -187,11 +195,13 @@ namespace Motorlam.Entities
 		public const string InvoiceKilometres = "InvoiceKilometres";
 		public const string InvoiceNumber = "InvoiceNumber";
 		public const string InvoiceIVAId = "InvoiceIVAId";
+		public const string Expense = "Expense";
 		public const string CustomerName = "CustomerName";
 		public const string CustomerSurName = "CustomerSurName";
 		public const string ProvinceName = "ProvinceName";
 		public const string ProvinceId = "ProvinceId";
 		public const string CityName = "CityName";
 		public const string IvaValor = "IvaValor";
+		public const string TotalInvoice = "TotalInvoice";
 	}
 }

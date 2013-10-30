@@ -24,10 +24,9 @@ namespace Motorlam.Controllers
             culturaPersonal.NumberFormat.CurrencyDecimalDigits = 2;
             culturaPersonal.NumberFormat.PercentDecimalDigits = 2;
             culturaPersonal.NumberFormat.NumberDecimalDigits = 2;
-
             
             // Saca en un principio las facturas que estan sin Pagar
-            var invoices = this.CreateQuery<Invoice>(Proyection.Detailed)
+            var invoices = this.DataService.InvoiceRepository.CreateQuery(Proyection.Detailed)
                 .Where(InvoiceFields.IsInvoicePaid, false)
                 .OrderBy(InvoiceFields.InvoiceNumber)
                 .ToList();
@@ -39,16 +38,16 @@ namespace Motorlam.Controllers
         {
             ViewBag.Message = "Facturas";
 
-            ViewBag.Provinces = this.CreateQuery<Province>(Proyection.Basic).ToList();
-            ViewBag.Suppliers = this.CreateQuery<Supplier>(Proyection.Basic).ToList();
-            ViewBag.BrandProducts = this.CreateQuery<BrandProduct>(Proyection.Basic).ToList();
-            ViewBag.Brands = this.CreateQuery<Brand>(Proyection.Basic).ToList();
-            ViewBag.LastInvoice = this.CreateQuery<Invoice>(Proyection.Basic).ToList().LastOrDefault();
-            ViewBag.TypeProducts = this.CreateQuery<TypeProduct>(Proyection.Basic).ToList();
+            ViewBag.Provinces = this.DataService.ProvinceRepository.CreateQuery(Proyection.Basic).ToList();
+            ViewBag.Suppliers = this.DataService.SupplierRepository.CreateQuery(Proyection.Basic).ToList();
+            ViewBag.BrandProducts = this.DataService.BrandProductRepository.CreateQuery(Proyection.Basic).ToList();
+            ViewBag.Brands = this.DataService.BrandRepository.CreateQuery(Proyection.Basic).ToList();
+            ViewBag.LastInvoice = this.DataService.InvoiceRepository.CreateQuery(Proyection.Basic).ToList().LastOrDefault();
+            ViewBag.TypeProducts = this.DataService.TypeProductRepository.CreateQuery(Proyection.Basic).ToList();
 
-            ViewBag.Suppliers1 = this.CreateQuery<Supplier>(Proyection.Basic).ToList();
-            ViewBag.BrandProducts1 = this.CreateQuery<BrandProduct>(Proyection.Basic).ToList();
-            ViewBag.TypeProducts1 = this.CreateQuery<TypeProduct>(Proyection.Basic).ToList();
+            ViewBag.Suppliers1 = this.DataService.SupplierRepository.CreateQuery(Proyection.Basic).ToList();
+            ViewBag.BrandProducts1 = this.DataService.BrandProductRepository.CreateQuery(Proyection.Basic).ToList();
+            ViewBag.TypeProducts1 = this.DataService.TypeProductRepository.CreateQuery(Proyection.Basic).ToList();
      
             ViewBag.Models = new List<Model>();
             ViewBag.Cities = new List<City>();
@@ -57,7 +56,7 @@ namespace Motorlam.Controllers
             ViewBag.InvoiceLine = new InvoiceLine();
             ViewBag.Cars = new List<Car>();
             ViewBag.Tab = 1;
-            ViewBag.Iva = this.CreateQuery<Iva>(Proyection.Basic).ToList();
+            //ViewBag.Iva = this.DataService.IvaRepository.CreateQuery(Proyection.Basic).ToList();
             return View(new Invoice());
 
         }
@@ -73,14 +72,14 @@ namespace Motorlam.Controllers
         {
             ViewBag.Message = "Facturas";
 
-            var invoice = this.CreateQuery<Invoice>(Proyection.Detailed).Where(InvoiceFields.InvoiceId, InvoiceId).ToList().FirstOrDefault();
+            var invoice = this.DataService.InvoiceRepository.CreateQuery(Proyection.Detailed).Where(InvoiceFields.InvoiceId, InvoiceId).ToList().FirstOrDefault();
 
             string carName = "";
             string carRack = "";
 
             if (invoice.CarId != null)
             {
-                var car = this.CreateQuery<Car>(Proyection.Detailed).Where(CarFields.CarId, invoice.CarId).ToList().FirstOrDefault();
+                var car = this.DataService.CarRepository.CreateQuery(Proyection.Detailed).Where(CarFields.CarId, invoice.CarId).ToList().FirstOrDefault();
                 if (car != null)
                 {
                     if (car.BrandName != null) carName = car.BrandName;
@@ -89,7 +88,7 @@ namespace Motorlam.Controllers
                     if (car.CarRack != null) carRack = car.CarRack;
                 }
             }
-            ViewBag.Brands = this.CreateQuery<Brand>(Proyection.Basic).ToList();
+            ViewBag.Brands = this.DataService.BrandRepository.CreateQuery(Proyection.Basic).ToList();
             
             ViewBag.Models = new List<Model>();
 
@@ -97,25 +96,25 @@ namespace Motorlam.Controllers
             ViewBag.CarRack = carRack;
             ViewBag.Tab = tab;
 
-            ViewBag.Provinces = this.CreateQuery<Province>(Proyection.Basic).ToList();
-            ViewBag.Suppliers = this.CreateQuery<Supplier>(Proyection.Basic).ToList();
-            ViewBag.Cars = this.CreateQuery<Car>(Proyection.Detailed).Where(CarFields.CustomerId, invoice.CustomerId).ToList();
-            ViewBag.BrandProducts = this.CreateQuery<BrandProduct>(Proyection.Basic).ToList();
-            ViewBag.TypeProducts = this.CreateQuery<TypeProduct>(Proyection.Basic).ToList();
+            ViewBag.Provinces = this.DataService.ProvinceRepository.CreateQuery(Proyection.Basic).ToList();
+            ViewBag.Suppliers = this.DataService.SupplierRepository.CreateQuery(Proyection.Basic).ToList();
+            ViewBag.Cars = this.DataService.CarRepository.CreateQuery(Proyection.Detailed).Where(CarFields.CustomerId, invoice.CustomerId).ToList();
+            ViewBag.BrandProducts = this.DataService.BrandProductRepository.CreateQuery(Proyection.Basic).ToList();
+            ViewBag.TypeProducts = this.DataService.TypeProductRepository.CreateQuery(Proyection.Basic).ToList();
 
-            ViewBag.Suppliers1 = this.CreateQuery<Supplier>(Proyection.Basic).ToList();
-            ViewBag.BrandsProduct1 = this.CreateQuery<BrandProduct>(Proyection.Basic).ToList();
-            ViewBag.TypeProducts1 = this.CreateQuery<TypeProduct>(Proyection.Basic).ToList();
+            ViewBag.Suppliers1 = this.DataService.SupplierRepository.CreateQuery(Proyection.Basic).ToList();
+            ViewBag.BrandsProduct1 = this.DataService.BrandProductRepository.CreateQuery(Proyection.Basic).ToList();
+            ViewBag.TypeProducts1 = this.DataService.TypeProductRepository.CreateQuery(Proyection.Basic).ToList();
 
-            ViewBag.Cities = this.CreateQuery<City>(Proyection.Basic).Where(CityFields.ProvinceId,invoice.ProvinceId).ToList();
+            ViewBag.Cities = this.DataService.CityRepository.CreateQuery(Proyection.Basic).Where(CityFields.ProvinceId,invoice.ProvinceId).ToList();
             ViewBag.Customers = new List<Customer>();
-            ViewBag.InvoiceLines = this.CreateQuery<InvoiceLine>(Proyection.Basic).Where(InvoiceLineFields.InvoiceId, InvoiceId).ToList();
+            ViewBag.InvoiceLines = this.DataService.InvoiceLineRepository.CreateQuery(Proyection.Basic).Where(InvoiceLineFields.InvoiceId, InvoiceId).ToList();
             ViewBag.InvoiceLine = new InvoiceLine();
-            ViewBag.LastInvoice = this.CreateQuery<Invoice>(Proyection.Basic).ToList().LastOrDefault();
-            ViewBag.Iva = this.CreateQuery<Iva>(Proyection.Basic).ToList();
+            ViewBag.LastInvoice = this.DataService.InvoiceRepository.CreateQuery(Proyection.Basic).ToList().LastOrDefault();
+            //ViewBag.Iva = this.DataService.IvaRepository.CreateQuery(Proyection.Basic).ToList();
             if (invoice.InvoiceIVAId.HasValue)
             {
-                ViewBag.InvoiceIVA = invoice.InvoiceIVAId;
+                ViewBag.InvoiceIVA = invoice.InvoiceIVA;
             }
 
             return View("Nuevo",invoice);
@@ -124,22 +123,25 @@ namespace Motorlam.Controllers
         [HttpPost]
         public ActionResult DeleteInvoice(int Id, int? InvoiceId, string CustomerName, DateTime? InvoiceDate, string NIF, int IsInvoicePaid)
         {
-            var invoiceLines = this.CreateQuery<InvoiceLine>(Proyection.Basic)
+            this.DataService.BeginTransaction();
+            var invoiceLines = this.DataService.InvoiceLineRepository.CreateQuery(Proyection.Basic)
                 .Where(InvoiceLineFields.InvoiceId, Id).ToList();
 
             if (invoiceLines != null)
             {
                 foreach (var line in invoiceLines)
                 {
-                    this.Repository.Delete(line);
+                    this.DataService.Delete(line);
                 }
             }
 
-            var invoice = this.CreateQuery<Invoice>(Proyection.Basic).Get(Id);
+            var invoice = this.DataService.InvoiceRepository.CreateQuery(Proyection.Basic).Get(Id);
 
-            this.Repository.Delete(invoice);
+            this.DataService.Delete(invoice);
 
-            var invoices = this.CreateQuery<Invoice>(Proyection.Detailed);
+            this.DataService.Commit();
+
+            var invoices = this.DataService.InvoiceRepository.CreateQuery(Proyection.Detailed);
 
             if (!string.IsNullOrEmpty(CustomerName))
                 invoices.Where(InvoiceFields.CustomerName, OperatorLite.Contains, CustomerName);
@@ -160,13 +162,13 @@ namespace Motorlam.Controllers
 
         public ActionResult DeleteInvoiceLine(int ID)
         {
-            var line = this.CreateQuery<InvoiceLine>(Proyection.Basic).Get(ID);
+            var line = this.DataService.InvoiceLineRepository.CreateQuery(Proyection.Basic).Get(ID);
 
-            if (line != null) this.Repository.Delete(line);
+            if (line != null) this.DataService.Delete(line);
 
             TotalsInvoice(line.InvoiceId);
 
-            var invoiceLines = this.CreateQuery<InvoiceLine>(Proyection.Basic).Where(InvoiceLineFields.InvoiceId, line.InvoiceId).ToList();
+            var invoiceLines = this.DataService.InvoiceLineRepository.CreateQuery(Proyection.Basic).Where(InvoiceLineFields.InvoiceId, line.InvoiceId).ToList();
 
             return PartialView("OrderList", invoiceLines);
         }
@@ -174,16 +176,15 @@ namespace Motorlam.Controllers
         [HttpPost]
         public ActionResult LoadCustomer(int CustomerID)
         {
-            var customer = this.CreateQuery<Customer>(Proyection.Detailed).Get(CustomerID);
-            var cities = this.CreateQuery<City>(Proyection.Basic).Where(CityFields.ProvinceId, customer.ProvinceId).ToList();
+            var customer = this.DataService.CustomerRepository.CreateQuery(Proyection.Detailed).Get(CustomerID);
+            var cities = this.DataService.CityRepository.CreateQuery(Proyection.Basic).Where(CityFields.ProvinceId, customer.ProvinceId).ToList();
             return this.Json(new { result = "success", Customer = customer, Cities = cities });
-
         }
 
         [HttpPost]
         public ActionResult LoadCar(int CarID)
         {
-            var car = this.CreateQuery<Car>(Proyection.Detailed).Get(CarID);
+            var car = this.DataService.CarRepository.CreateQuery(Proyection.Detailed).Get(CarID);
            
             return this.Json(new { result = "success", Car = car});
         }
@@ -191,7 +192,7 @@ namespace Motorlam.Controllers
         [HttpPost]
         public ActionResult LoadProduct(int ProductID)
         {
-            var product = this.CreateQuery<Product>(Proyection.Detailed).Get(ProductID);
+            var product = this.DataService.ProductRepository.CreateQuery(Proyection.Detailed).Get(ProductID);
 
             return this.Json(new { result = "success", Product = product });
         }
@@ -209,7 +210,7 @@ namespace Motorlam.Controllers
 
         private IList<Customer> LoadCustomers(string CustomerName, string CustomerSurName, string NIF)
         {
-            var customers = this.CreateQuery<Customer>(Proyection.Basic);
+            var customers = this.DataService.CustomerRepository.CreateQuery(Proyection.Basic);
 
             if (!string.IsNullOrEmpty(CustomerName))
                 customers.Where(CustomerFields.CustomerName, OperatorLite.Contains, CustomerName);
@@ -225,34 +226,29 @@ namespace Motorlam.Controllers
         [HttpPost]
         public ActionResult SaveInvoice(Invoice invoice)
         {
-            var invoi = this.CreateQuery<Invoice>(Proyection.Basic)
-                .Where(InvoiceFields.InvoiceId, invoice.InvoiceId).ToList().FirstOrDefault();
+            this.DataService.BeginTransaction();
 
-            this.Repository.BeginTransaction();
-            if (invoi != null)
-                this.Repository.Update(invoice);
+            if (invoice.InvoiceId != null)
+                this.DataService.Update(invoice);
             else
-            {
-                
-                this.Repository.Insert(invoice);
-            }
+                this.DataService.Insert(invoice);
 
             if (invoice.InvoiceKilometres != null && invoice.InvoiceKilometres != "")
             {
-                var car = this.CreateQuery<Car>(Proyection.Basic).Where(CarFields.CarId, invoice.CarId).ToList().FirstOrDefault();
+                var car = this.DataService.CarRepository.CreateQuery(Proyection.Basic).Where(CarFields.CarId, invoice.CarId).ToList().FirstOrDefault();
                 car.CarKilometres = invoice.InvoiceKilometres;
-                this.Repository.Update(car);
+                this.DataService.Update(car);
             }
 
             PrintExcell(invoice.InvoiceId);
 
-            this.Repository.Commit();
+            this.DataService.Commit();
             
-            ViewBag.Provinces = this.CreateQuery<Province>(Proyection.Basic).ToList();
-            ViewBag.Cities = this.CreateQuery<City>(Proyection.Basic).Where(CityFields.ProvinceId, invoice.ProvinceId).ToList();
+            ViewBag.Provinces = this.DataService.ProvinceRepository.CreateQuery(Proyection.Basic).ToList();
+            ViewBag.Cities = this.DataService.CityRepository.CreateQuery(Proyection.Basic).Where(CityFields.ProvinceId, invoice.ProvinceId).ToList();
             ViewBag.Customers = new List<Customer>();
             ViewBag.InvoiceLine = new InvoiceLine();
-            ViewBag.LastInvoice = this.CreateQuery<Invoice>(Proyection.Basic).ToList().LastOrDefault();
+            ViewBag.LastInvoice = this.DataService.InvoiceRepository.CreateQuery(Proyection.Basic).ToList().LastOrDefault();
 
             return this.Json(new { result = "success" , Invoice = invoice});
         }
@@ -267,12 +263,12 @@ namespace Motorlam.Controllers
 
             if (InvoiceLineId > 0)
             {
-                invoiceLine = this.CreateQuery<InvoiceLine>(Proyection.Basic)
+                invoiceLine = this.DataService.InvoiceLineRepository.CreateQuery(Proyection.Basic)
                     .Where(InvoiceLineFields.InvoiceLineId, InvoiceLineId).ToList().FirstOrDefault();
             }
             
             var product = new Product();
-            if (ProductId.HasValue) product = this.CreateQuery<Product>(Proyection.Basic).Where(ProductFields.ProductId, ProductId).ToList().FirstOrDefault();
+            if (ProductId.HasValue) product = this.DataService.ProductRepository.CreateQuery(Proyection.Basic).Where(ProductFields.ProductId, ProductId).ToList().FirstOrDefault();
             if (InvoiceID.HasValue) invoiceLine.InvoiceId = InvoiceID;
             if (!string.IsNullOrEmpty(ProductReference)) product.ProductReference = ProductReference;
 
@@ -283,8 +279,8 @@ namespace Motorlam.Controllers
             if (BrandProductId.HasValue) product.BrandProductId = BrandProductId;
             if (TypeProductId.HasValue) product.TypeProductId = TypeProductId;
 
-            if (ProductId.HasValue) this.Repository.Update(product);
-            else this.Repository.Insert(product);
+            if (ProductId.HasValue) this.DataService.Update(product);
+            else this.DataService.Insert(product);
 
             
             invoiceLine.ProductId = product.ProductId;
@@ -302,20 +298,20 @@ namespace Motorlam.Controllers
             {
                 invoiceLine.InvoiceLineDiscount = 0;
                 invoiceLine.InvoiceLineTotal = total;
-            }               
+            }
 
-            this.Repository.BeginTransaction();
+            this.DataService.BeginTransaction();
             if (InvoiceLineId > 0)
             {
-                this.Repository.Update(invoiceLine);
+                this.DataService.Update(invoiceLine);
             }
             else
             {
-                this.Repository.Insert(invoiceLine);
+                this.DataService.Insert(invoiceLine);
             }
             TotalsInvoice(InvoiceID);
 
-            this.Repository.Commit();
+            this.DataService.Commit();
             
             return this.Json(new { result = "success" });
         }
@@ -325,15 +321,15 @@ namespace Motorlam.Controllers
         {
             car.CustomerId = CustomerId;
             SaveEntity(car);
-            var newCar = this.CreateQuery<Car>(Proyection.Detailed).Get(car.CarId);
+            var newCar = this.DataService.CarRepository.CreateQuery(Proyection.Detailed).Get(car.CarId);
             return this.Json(new { result = "success", Car = newCar });
         }
 
         private void TotalsInvoice(int? InvoiceID)
         {
-            var invoice = this.CreateQuery<Invoice>(Proyection.Basic).Where(InvoiceFields.InvoiceId, InvoiceID).ToList().FirstOrDefault();
+            var invoice = this.DataService.InvoiceRepository.CreateQuery(Proyection.Basic).Where(InvoiceFields.InvoiceId, InvoiceID).ToList().FirstOrDefault();
 
-            var invoiceLines = this.CreateQuery<InvoiceLine>(Proyection.Basic).Where(InvoiceLineFields.InvoiceId, InvoiceID).ToList();
+            var invoiceLines = this.DataService.InvoiceLineRepository.CreateQuery(Proyection.Basic).Where(InvoiceLineFields.InvoiceId, InvoiceID).ToList();
 
             decimal total = 0;
             double totaldiscount = 0;
@@ -351,16 +347,16 @@ namespace Motorlam.Controllers
             invoice.InvoiceTotal = total + (total * invoice.InvoiceIVA / 100);
             invoice.InvoiceTotalDiscount = (decimal)totaldiscount;
 
-            this.Repository.Update(invoice);
+            this.DataService.Update(invoice);
         }
 
         public ActionResult LoadInvoice(int InvoiceId)
         {
-            var invoice = this.CreateQuery<Invoice>(Proyection.Basic)
+            var invoice = this.DataService.InvoiceRepository.CreateQuery(Proyection.Basic)
                 .Where(InvoiceFields.InvoiceId, InvoiceId).ToList().FirstOrDefault();
-            ViewBag.InvoiceLines = this.CreateQuery<InvoiceLine>(Proyection.Basic)
+            ViewBag.InvoiceLines = this.DataService.InvoiceLineRepository.CreateQuery(Proyection.Basic)
                 .Where(InvoiceLineFields.InvoiceId, InvoiceId).ToList();
-            ViewBag.Provinces = this.CreateQuery<Province>(Proyection.Basic).ToList();
+            ViewBag.Provinces = this.DataService.ProvinceRepository.CreateQuery(Proyection.Basic).ToList();
             ViewBag.Cities = new List<City>();
             ViewBag.Customers = new List<Customer>();
 
@@ -370,12 +366,12 @@ namespace Motorlam.Controllers
 
         public ActionResult EditarLinea(int InvoiceLineId)
         {
-            var invoiceLine = this.CreateQuery<InvoiceLine>(Proyection.Basic)
+            var invoiceLine = this.DataService.InvoiceLineRepository.CreateQuery(Proyection.Basic)
                 .Where(InvoiceLineFields.InvoiceLineId, InvoiceLineId).ToList().FirstOrDefault();
 
-            ViewBag.BrandProducts  = this.CreateQuery<BrandProduct>(Proyection.Basic).ToList();
-            ViewBag.Suppliers = this.CreateQuery<Supplier>(Proyection.Basic).ToList();
-            ViewBag.TypeProducts = this.CreateQuery<TypeProduct>(Proyection.Basic).ToList(); 
+            ViewBag.BrandProducts  = this.DataService.BrandProductRepository.CreateQuery(Proyection.Basic).ToList();
+            ViewBag.Suppliers = this.DataService.SupplierRepository.CreateQuery(Proyection.Basic).ToList();
+            ViewBag.TypeProducts = this.DataService.TypeProductRepository.CreateQuery(Proyection.Basic).ToList(); 
 
             return PartialView("DatosLineaFactura",invoiceLine);
         }
@@ -385,7 +381,7 @@ namespace Motorlam.Controllers
         public ActionResult SearchInvoices(string InvoiceNumber, string CustomerName, DateTime? InvoiceDate, string NIF, string CarRack, int IsInvoicePaid)
         {
 
-            var invoices = this.CreateQuery<Invoice>(Proyection.Detailed);
+            var invoices = this.DataService.InvoiceRepository.CreateQuery(Proyection.Detailed);
 
 
             if (!string.IsNullOrEmpty(CustomerName))
@@ -398,7 +394,7 @@ namespace Motorlam.Controllers
                 invoices.And(InvoiceFields.InvoiceCustomerNIF, OperatorLite.Contains, NIF);
             if (!string.IsNullOrEmpty(CarRack))
             {
-                var car = this.CreateQuery<Car>(Proyection.Basic).Where(CarFields.CarRack, OperatorLite.Equals, CarRack.ToUpper()).ToList().FirstOrDefault();
+                var car = this.DataService.CarRepository.CreateQuery(Proyection.Basic).Where(CarFields.CarRack, OperatorLite.Equals, CarRack.ToUpper()).ToList().FirstOrDefault();
                 if (car!=null) invoices.And(InvoiceFields.CarId, car.CarId);
                 else invoices.And(InvoiceFields.CarId, -1);
             }
@@ -422,7 +418,7 @@ namespace Motorlam.Controllers
 
         private IList<Product> LoadProducts(int? BrandProductId, string ProductName, int? SupplierId, int? TypeProductId)
         {
-            var products = this.CreateQuery<Product>(Proyection.Detailed);
+            var products = this.DataService.ProductRepository.CreateQuery(Proyection.Detailed);
 
             if (!string.IsNullOrEmpty(ProductName))
                 products.Where(ProductFields.ProductName, OperatorLite.Contains, ProductName);
@@ -436,13 +432,11 @@ namespace Motorlam.Controllers
             return products.ToList();
         }
 
-
-
         [HttpPost]
         public ActionResult LoadProductByReference(string ProductReference)
         {
 
-            var product = this.CreateQuery<Product>(Proyection.Detailed).Where(ProductFields.ProductReference, ProductReference).ToList().FirstOrDefault();
+            var product = this.DataService.ProductRepository.CreateQuery(Proyection.Detailed).Where(ProductFields.ProductReference, ProductReference).ToList().FirstOrDefault();
 
             if (product != null) return this.Json(new { result = "success", Product = product });
             else return this.Json(new { result = "error"});
@@ -451,8 +445,8 @@ namespace Motorlam.Controllers
         [HttpPost]
         public ActionResult LoadCarsByCustomer(int CustomerId)
         {
-            var cars = this.CreateQuery<Car>(Proyection.Detailed).Where(CarFields.CustomerId, CustomerId).ToList();
-            var brands = this.CreateQuery<Brand>(Proyection.Basic).ToList();
+            var cars = this.DataService.CarRepository.CreateQuery(Proyection.Detailed).Where(CarFields.CustomerId, CustomerId).ToList();
+            var brands = this.DataService.BrandRepository.CreateQuery(Proyection.Basic).ToList();
             ViewBag.Brands = brands;
             ViewBag.Models = new List<Model>();
 
@@ -466,9 +460,10 @@ namespace Motorlam.Controllers
             string str1 = "";
             try
             {
-                Invoice invoice = this.CreateQuery<Invoice>(Proyection.Basic).Get(id);
-                var list = this.CreateQuery<InvoiceLine>(Proyection.Basic).Where(InvoiceLineFields.InvoiceId, invoice.InvoiceId).OrderBy(InvoiceLineFields.InvoiceLineId).ToList();
-                Car car = this.CreateQuery<Car>(Proyection.Basic).Where(CarFields.CarId, invoice.CarId).ToList().FirstOrDefault();
+                Invoice invoice = this.DataService.InvoiceRepository.CreateQuery(Proyection.Basic).Get(id);
+                var list = this.DataService.InvoiceLineRepository.CreateQuery(Proyection.Basic)
+                    .Where(InvoiceLineFields.InvoiceId, invoice.InvoiceId).OrderBy(InvoiceLineFields.InvoiceLineId).ToList();
+                Car car = this.DataService.CarRepository.CreateQuery(Proyection.Basic).Where(CarFields.CarId, invoice.CarId).ToList().FirstOrDefault();
 
                 string FilePath = Server.MapPath("~/Facturas/Factura nº " + invoice.InvoiceNumber + " - " + invoice.InvoiceCustomerName + ".xls");
                 string FilePDFPath = Server.MapPath("~/Facturas/Factura nº " + invoice.InvoiceNumber + " - " + invoice.InvoiceCustomerName + ".pdf");

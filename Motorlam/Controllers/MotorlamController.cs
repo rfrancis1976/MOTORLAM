@@ -40,11 +40,11 @@ namespace Motorlam.Controllers
             {
                 if ((int)entity.GetId() == 0)
                 {                    
-                    this.Repository.Insert(entity);
+                    this.DataService.Insert(entity);
                 }
                 else
                 {
-                    this.Repository.Update(entity);
+                    this.DataService.Update(entity);
                 }
                 return this.Json(new { result = "success", EntityId = entity.GetId() });
             }

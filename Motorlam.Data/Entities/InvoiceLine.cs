@@ -77,10 +77,6 @@ namespace Motorlam.Entities
 		public Int32? BrandProductId { get; set; }
 		
 		[DataMember]
-		[SqlField(DbType.Int32, 4, 10, 255, AllowNull = true, BaseColumnName = "SupplierId", BaseTableName="Products" )]
-		public Int32? Expr1 { get; set; }
-		
-		[DataMember]
 		[SqlField(DbType.AnsiString, 50, 255, 255, BaseColumnName = "TypeProductName", BaseTableName="TypesProduct" )]
 		public String TypeProductName { get; set; }
 		
@@ -119,7 +115,6 @@ namespace Motorlam.Entities
 		public const string SupplierName = "SupplierName";
 		public const string SupplierId = "SupplierId";
 		public const string BrandProductId = "BrandProductId";
-		public const string Expr1 = "Expr1";
 		public const string TypeProductName = "TypeProductName";
 		public const string TypeProductId = "TypeProductId";
 		public const string InvoiceProductValue = "InvoiceProductValue";
