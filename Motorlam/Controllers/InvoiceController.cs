@@ -121,6 +121,59 @@ namespace Motorlam.Controllers
         }
 
         [HttpPost]
+        public ActionResult LoadInvoiceData(int InvoiceId)
+        {
+            ViewBag.Message = "Facturas";
+
+            var invoice = this.DataService.InvoiceRepository.CreateQuery(Proyection.Detailed).Where(InvoiceFields.InvoiceId, InvoiceId).ToList().FirstOrDefault();
+
+            string carName = "";
+            string carRack = "";
+
+            if (invoice.CarId != null)
+            {
+                var car = this.DataService.CarRepository.CreateQuery(Proyection.Detailed).Where(CarFields.CarId, invoice.CarId).ToList().FirstOrDefault();
+                if (car != null)
+                {
+                    if (car.BrandName != null) carName = car.BrandName;
+                    if (car.ModelName != null) carName = carName + " " + car.ModelName;
+                    if (car.MotorName != null) carName = carName + " " + car.MotorName;
+                    if (car.CarRack != null) carRack = car.CarRack;
+                }
+            }
+            ViewBag.Brands = this.DataService.BrandRepository.CreateQuery(Proyection.Basic).ToList();
+
+            ViewBag.Models = new List<Model>();
+
+            ViewBag.CarName = carName;
+            ViewBag.CarRack = carRack;
+            ViewBag.Tab = 1;
+
+            ViewBag.Provinces = this.DataService.ProvinceRepository.CreateQuery(Proyection.Basic).ToList();
+            ViewBag.Suppliers = this.DataService.SupplierRepository.CreateQuery(Proyection.Basic).ToList();
+            ViewBag.Cars = this.DataService.CarRepository.CreateQuery(Proyection.Detailed).Where(CarFields.CustomerId, invoice.CustomerId).ToList();
+            ViewBag.BrandProducts = this.DataService.BrandProductRepository.CreateQuery(Proyection.Basic).ToList();
+            ViewBag.TypeProducts = this.DataService.TypeProductRepository.CreateQuery(Proyection.Basic).ToList();
+
+            ViewBag.Suppliers1 = this.DataService.SupplierRepository.CreateQuery(Proyection.Basic).ToList();
+            ViewBag.BrandsProduct1 = this.DataService.BrandProductRepository.CreateQuery(Proyection.Basic).ToList();
+            ViewBag.TypeProducts1 = this.DataService.TypeProductRepository.CreateQuery(Proyection.Basic).ToList();
+
+            ViewBag.Cities = this.DataService.CityRepository.CreateQuery(Proyection.Basic).Where(CityFields.ProvinceId, invoice.ProvinceId).ToList();
+            ViewBag.Customers = new List<Customer>();
+            ViewBag.InvoiceLines = this.DataService.InvoiceLineRepository.CreateQuery(Proyection.Basic).Where(InvoiceLineFields.InvoiceId, InvoiceId).ToList();
+            ViewBag.InvoiceLine = new InvoiceLine();
+            ViewBag.LastInvoice = this.DataService.InvoiceRepository.CreateQuery(Proyection.Basic).ToList().LastOrDefault();
+            //ViewBag.Iva = this.DataService.IvaRepository.CreateQuery(Proyection.Basic).ToList();
+            if (invoice.InvoiceIVAId.HasValue)
+            {
+                ViewBag.InvoiceIVA = invoice.InvoiceIVA;
+            }
+
+            return PartialView("~/Views/Invoice/DatosFactura.cshtml", invoice);
+        }
+
+        [HttpPost]
         public ActionResult DeleteInvoice(int Id, int? InvoiceId, string CustomerName, DateTime? InvoiceDate, string NIF, int IsInvoicePaid)
         {
             this.DataService.BeginTransaction();
@@ -228,7 +281,7 @@ namespace Motorlam.Controllers
         {
             this.DataService.BeginTransaction();
 
-            if (invoice.InvoiceId != null)
+            if (invoice.InvoiceId != 0)
                 this.DataService.Update(invoice);
             else
                 this.DataService.Insert(invoice);

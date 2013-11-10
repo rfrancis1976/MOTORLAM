@@ -323,27 +323,92 @@ namespace Motorlam.Data
 
         #region METHODS
 
+        //public override int Update(object entity)
+        //{
+        //    if (entity == null) throw new ArgumentNullException("entity");
+        //    Type entityType = entity.GetType();
+
+        //    IQueryLite baseTableQuery = BaseTableQueryLite.Create(entityType);
+        //    baseTableQuery.SetPropertyValue("DataAccess", this);
+        //    object originalEntity = baseTableQuery.Get(entity.GetId());
+
+        //    if (originalEntity == null){
+        //        throw new InvalidOperationException(string.Format("Cannot update {0} with ID {1} because it doesn't exist", entityType.Name, entity.GetId()));
+        //    }
+
+        //    var getters = PropertyHelper.GetPropertyGetters(entityType);
+        //    var metadata = inercya.ORMLite.DataAccess.GetEntityMetadata(entityType);
+
+        //    var isModified = false;
+        //    foreach (var propKeyVal in metadata.Properties)
+        //    {
+        //        var sqlField = propKeyVal.Value.SqlField;
+        //        if (sqlField != null){
+        //            var fieldName = propKeyVal.Value.PropertyInfo.Name;
+
+        //            if (sqlField.BaseTableName == metadata.BaseTableName
+        //                && !sqlField.IsAutoincrement
+        //                && !sqlField.IsKey
+        //                && !sqlField.IsReadOnly
+        //                && fieldName != this.ModifiedDateFieldName
+        //                && fieldName != this.ModifiedByFieldName
+        //                && fieldName != this.CreatedDateFieldName
+        //                && fieldName != this.CreatedByFieldName
+        //                && fieldName != this.EntityRowVersionFieldName
+        //                && !object.Equals(getters[fieldName](entity), getters[fieldName](originalEntity))
+        //                )
+        //            {
+        //                isModified = true;
+        //                //break;
+        //            }
+        //        }
+        //    }
+
+        //    if (!isModified) return 0;
+
+        //    int affectedRows = 0;
+        //    affectedRows = base.Update(entity);
+        //    if (affectedRows == 0){
+        //        throw new DBConcurrencyException("Updated cancelled. Concurrency conflict, the loaded data have been modified by another user");
+        //    }
+
+        //    return affectedRows;
+        //}
+
         public override int Update(object entity)
         {
             if (entity == null) throw new ArgumentNullException("entity");
             Type entityType = entity.GetType();
 
-            IQueryLite baseTableQuery = BaseTableQueryLite.Create(entityType);
+            IQueryLite baseTableQuery = this.CreateQueryLite(entityType, Proyection.Basic);
+            var metadata = inercya.ORMLite.DataAccess.GetEntityMetadata(entityType);
+
+            var fieldArray = metadata.Properties
+                .Where(kv => kv.Value.SqlField.BaseTableName == metadata.BaseTableName
+                    && kv.Value.PropertyInfo.Name == kv.Value.SqlField.BaseColumnName
+                    && !(kv.Value.SqlField.DbType == System.Data.DbType.Binary && kv.Value.SqlField.Size == 2147483647)
+                    )
+                .Select(kv => kv.Key).ToArray();
+
+            baseTableQuery.FieldList = string.Join(",", fieldArray);
+
+
             baseTableQuery.SetPropertyValue("DataAccess", this);
             object originalEntity = baseTableQuery.Get(entity.GetId());
 
-            if (originalEntity == null){
+            if (originalEntity == null)
+            {
                 throw new InvalidOperationException(string.Format("Cannot update {0} with ID {1} because it doesn't exist", entityType.Name, entity.GetId()));
             }
 
             var getters = PropertyHelper.GetPropertyGetters(entityType);
-            var metadata = inercya.ORMLite.DataAccess.GetEntityMetadata(entityType);
 
             var isModified = false;
             foreach (var propKeyVal in metadata.Properties)
             {
                 var sqlField = propKeyVal.Value.SqlField;
-                if (sqlField != null){
+                if (sqlField != null)
+                {
                     var fieldName = propKeyVal.Value.PropertyInfo.Name;
 
                     if (sqlField.BaseTableName == metadata.BaseTableName
@@ -354,25 +419,18 @@ namespace Motorlam.Data
                         && fieldName != this.ModifiedByFieldName
                         && fieldName != this.CreatedDateFieldName
                         && fieldName != this.CreatedByFieldName
-                        && fieldName != this.EntityRowVersionFieldName
                         && !object.Equals(getters[fieldName](entity), getters[fieldName](originalEntity))
                         )
                     {
                         isModified = true;
-                        //break;
+                        break;
                     }
                 }
             }
 
             if (!isModified) return 0;
-
-            int affectedRows = 0;
-            affectedRows = base.Update(entity);
-            if (affectedRows == 0){
-                throw new DBConcurrencyException("Updated cancelled. Concurrency conflict, the loaded data have been modified by another user");
-            }
-
-            return affectedRows;
+            int result = base.Update(entity);
+            return result == 0 ? -1 : result;
         }
 
         #endregion

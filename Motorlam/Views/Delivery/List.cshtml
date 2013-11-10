@@ -37,13 +37,13 @@
          @foreach (var delivery in Model)
          {
             rowClass = cont % 2 != 0 ? "odd" : string.Empty;
-            
+            decimal deliveryTotal = (decimal)(delivery.DeliveryNetTotal != null ? delivery.DeliveryNetTotal * 21 / 100 : 0);  
             <tr class="@rowClass">                                
                 <td class="center TH100">@delivery.RefDelivery</td>
                 <td class="center TH180">@if(delivery.DeliveryDate.HasValue){ @delivery.DeliveryDate.Value.ToShortDateString()}</td>
                 <td class="left TH240">@delivery.SupplierName</td>
-                <td class="center TH90">@String.Format("{0:#.##}", @delivery.TotalDeliverySinIVA) €</td>
-                <td class="center TH90">@String.Format("{0:#.##}", @delivery.TotalDeliveryConIVA) €</td> 
+                <td class="center TH90">@String.Format("{0:#.##}", @delivery.DeliveryNetTotal) €</td>
+                <td class="center TH90">@String.Format("{0:#.##}", @delivery.DeliveryNetTotal + deliveryTotal) €</td> 
                 <td class="center">@if (delivery.DeliveryIsPaid == false)
                                    { <b></b>}
                                    else {<img src="../../img/OK2.png" alt="Albaran Pagado" />} </td>              

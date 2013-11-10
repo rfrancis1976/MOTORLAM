@@ -15,28 +15,7 @@
         <div class="infoAdminContent"> 
             @Html.Partial("~/Views/Delivery/DatosDelivery.cshtml")
         </div>
-    </div>
-        @if (Model.DeliveryId > 0)
-        {
-            <div class="tabsContent">  
-                <div class="infoAdminContent"> 
-                    <div id="NewDeliveryLine">
-                        @Html.Partial("~/Views/Delivery/DatosLineaDelivery.cshtml", new DeliveryLine())
-                    </div>
-                
-                    <div id="ContainerDeliveryLines">
-                        @if (lines != null)
-                        {
-                            @Html.Partial("~/Views/Delivery/OrderList.cshtml", lines)
-                        }
-                        else
-                        {
-                            @Html.Partial("~/Views/Delivery/OrderList.cshtml", new List<DeliveryLine>())
-                        }
-                    </div> 
-               </div>
-            </div>
-        }
+    </div>   
 </div>
 <div id="SaveDeliveryCorrect" style="display:none" class="popup validationDiv">
     <div class="main">
@@ -44,14 +23,14 @@
         <label class="succesSave">Albaran Guardado Correctamente</label>
     </div>
     <div class="footer"></div>       
-</div>  
-   
+</div>     
 
-<script type="text/javascript">
-                 
+<script type="text/javascript">                 
     jQuery(".SaveDelivery").click(function (e) {
         e.preventDefault();
         var reloadUrl = '@Url.Action("Editar", "Delivery")';
+        $("#DeliveryNetTotal").val($("#DeliveryNetTotal").val().replace(",", "."));
+        
         jQuery("#AltaDeliveryForm").ajaxSubmit({
             success: function (event) {
                 jQuery("#SaveDeliveryCorrect").show();
@@ -63,10 +42,7 @@
             }
         });
     });
-
-
     
-   
     jQuery("#Buscar").click(function (e) {
         e.preventDefault();
        jQuery("#DialogSearchCustomer").dialog({
@@ -79,7 +55,6 @@
                jQuery("#DialogSearchCustomer").dialog("destroy");
             }
         });
-    });  
-        
+    });         
 
 </script>

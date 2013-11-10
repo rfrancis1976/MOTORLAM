@@ -22,16 +22,18 @@
                 </div>
                 <div class="rowForm">
                       <label class="fieldName" style="width: 120px;">Fecha Albaran:</label>
-                       <input type="text" style="width: 100px;" class="datepicker" id="@DeliveryFields.DeliveryDate" name="@DeliveryFields.DeliveryDate" 
+                      <input type="text" style="width: 100px;" class="datepicker" id="@DeliveryFields.DeliveryDate" name="@DeliveryFields.DeliveryDate" 
                                                         value="@if (Model.DeliveryDate.HasValue)
                                                                {@Model.DeliveryDate.Value.ToShortDateString()}" />                   
                 </div>
                 <div class="rowForm">
                     <label class="fieldName" style="width: 120px;">Proveedor:</label>
                     @Html.DropDownList(@SupplierFields.SupplierId, new SelectList(suppliers, @SupplierFields.SupplierId, @SupplierFields.SupplierName), "<< seleccione >>", new { style = "width:208px" })
-                </div>
-                                
-                        
+                </div>                                
+                <div class="rowForm">
+                    <label class="fieldName" style="width: 120px;">Total Albaran:</label>
+                    @Html.TextBox(@DeliveryFields.DeliveryNetTotal, Model.DeliveryNetTotal, new { @class = "TH100" }) 
+                </div>        
                 <div class="rowForm">
                     <label class="fieldName" style="width: 120px;">Pagado:</label>
                      @Html.CheckBox(@DeliveryFields.DeliveryIsPaid, @Model.DeliveryIsPaid == true ? true : false)                     

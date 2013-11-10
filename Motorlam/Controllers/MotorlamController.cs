@@ -52,8 +52,7 @@ namespace Motorlam.Controllers
             {
                 return this.Json(new
                 {
-                    result = "error"
-                    //validationErrors = ModelState.GetErrors()
+                    result = "error"   //validationErrors = ModelState.GetErrors()
                 });
             }
         }

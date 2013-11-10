@@ -2,10 +2,6 @@
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "bin", "bin", "{BFE3EE64-335F-46D1-8192-4612D800440F}"
-	ProjectSection(SolutionItems) = preProject
-		Bin\inercya.ORMLite.dll = Bin\inercya.ORMLite.dll
-		Bin\inercya.ORMLite.pdb = Bin\inercya.ORMLite.pdb
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Motorlam", "Motorlam\Motorlam.csproj", "{EF27DE01-D60D-4B1C-89C5-EE0A7AB1FD0A}"
 EndProject

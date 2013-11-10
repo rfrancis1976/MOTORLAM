@@ -474,7 +474,6 @@
     <Content Include="Views\Car\Nuevo.cshtml" />
     <Content Include="Views\Delivery\Criteria.cshtml" />
     <Content Include="Views\Delivery\DatosDelivery.cshtml" />
-    <Content Include="Views\Delivery\DatosLineaDelivery.cshtml" />
     <Content Include="Views\Delivery\Index.cshtml" />
     <Content Include="Views\Delivery\List.cshtml" />
     <Content Include="Views\Delivery\Nuevo.cshtml" />
@@ -486,6 +485,7 @@
     <Content Include="Views\Invoice\CriteriaProduct.cshtml" />
     <Content Include="Views\Invoice\ListProduct.cshtml" />
     <Content Include="Views\Cliente\UploadFile.cshtml" />
+    <Content Include="Views\Shared\DeliveryLayout.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Motorlam.Data\Motorlam.Data.csproj">

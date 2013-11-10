@@ -53,6 +53,10 @@ namespace Motorlam.Entities
 		public DateTime? DeliveryPaidDate { get; set; }
 		
 		[DataMember]
+		[SqlField(DbType.Currency, 8, 19, 255, AllowNull = true, BaseColumnName = "DeliveryNetTotal", BaseTableName="Deliverys" )]
+		public Decimal? DeliveryNetTotal { get; set; }
+		
+		[DataMember]
 		[SqlField(DbType.AnsiString, 100, 255, 255, BaseColumnName = "SupplierName", BaseTableName="Suppliers" )]
 		public String SupplierName { get; set; }
 		
@@ -77,6 +81,7 @@ namespace Motorlam.Entities
 		public const string DeliveryComments = "DeliveryComments";
 		public const string DeliveryIsPaid = "DeliveryIsPaid";
 		public const string DeliveryPaidDate = "DeliveryPaidDate";
+		public const string DeliveryNetTotal = "DeliveryNetTotal";
 		public const string SupplierName = "SupplierName";
 	}
 }

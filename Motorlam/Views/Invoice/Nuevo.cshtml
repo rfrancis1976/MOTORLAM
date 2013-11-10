@@ -22,7 +22,7 @@
                 </li>
             }                
             <li class="ui-state-default ui-corner-top ui-state-active ui-tabs-selected">
-                <a href="#tabs-1">Datos Factura</a>
+                <a href="#tabs-1" class="LoadDataInvoice">Datos Factura</a>
             </li>
         }
         else
@@ -34,7 +34,7 @@
                 </li>                
             }
             <li class="ui-state-default ui-corner-top ui-state-active ui-tabs">
-                <a href="#tabs-1">Datos Factura</a>
+                <a href="#tabs-1" class="LoadDataInvoice">Datos Factura</a>
             </li>
           
         }
@@ -46,7 +46,7 @@
         <div class="tabsContent">           
             <div class="infoAdminContent">
                 <div id="NewInvoiceLine">
-                @Html.Partial("~/Views/Invoice/DatosLineaFactura.cshtml", new InvoiceLine())    
+                    @Html.Partial("~/Views/Invoice/DatosLineaFactura.cshtml", new InvoiceLine())    
                 </div>
                 <div id="ContainerInvoiceLines">
                     @if (lines != null)
@@ -88,9 +88,9 @@
     var LoadCityUrl = '@Url.Action("LoadCityByProvince", "Cliente")';
     var reloadUrl = '@Url.Action("Editar", "Invoice")';
 
-        
     jQuery(".SaveInvoice").click(function (e) {
         e.preventDefault();
+        $("#Expense").val($("#Expense").val().replace(",", "."));
         jQuery("#AltaFacturaForm").ajaxSubmit({
             success: function (event) {
                 jQuery("#SaveInvoiceCorrect").show();
@@ -109,8 +109,6 @@
         childFieldName: "CityId",
         loadChildUrl: LoadCityUrl
     });
-
-    
    
     jQuery("#Buscar").click(function (e) {
         e.preventDefault();

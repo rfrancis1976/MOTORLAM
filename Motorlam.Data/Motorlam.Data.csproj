@@ -45,8 +45,7 @@
     <Reference Include="FluentValidation.Mvc">
       <HintPath>..\Bin\FluentValidation.Mvc.dll</HintPath>
     </Reference>
-    <Reference Include="inercya.ORMLite, Version=1.0.0.0, Culture=neutral, PublicKeyToken=9f4da00116c38ec5, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="inercya.ORMLite">
       <HintPath>..\Bin\inercya.ORMLite.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">

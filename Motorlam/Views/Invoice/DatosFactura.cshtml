@@ -14,15 +14,14 @@
 
 @using (Html.BeginForm("SaveInvoice", "Invoice", FormMethod.Post, new { id = "AltaFacturaForm" }))
 {
-
     @Html.Hidden(InvoiceFields.InvoiceId, Model.InvoiceId)
     @Html.Hidden(InvoiceFields.CustomerId, Model.CustomerId)
     @Html.Hidden(InvoiceFields.InvoiceTotal, Model.InvoiceTotal)
+    @Html.Hidden(InvoiceFields.InvoiceNetTotal, Model.InvoiceNetTotal)
     @Html.Hidden(InvoiceFields.CarId, Model.CarId)
-    @Html.Hidden(InvoiceFields.InvoiceIVAId, Model.InvoiceIVAId!= null?Model.InvoiceIVAId: 2)
-
-     
-<div id="tabs" class="ui-tabs ui-widget ui-widget-content ui-corner-all">                           
+    @Html.Hidden(InvoiceFields.InvoiceIVAId, Model.InvoiceIVAId != null ? Model.InvoiceIVAId : 2)
+         
+    <div id="tabs" class="ui-tabs ui-widget ui-widget-content ui-corner-all">                           
         <div class="tabsContent">           
             <div class="infoAdminContent">
                 <h2>Datos Factura</h2>
@@ -32,21 +31,20 @@
                 </div>
                 <div class="rowForm">
                     <span>
-                       <label class="fieldName" style="width: 120px;">Fecha:</label>
-                       <input type="text" style="width: 100px;" class="datepicker" id="@InvoiceFields.InvoiceDate" name="@InvoiceFields.InvoiceDate" 
+                        <label class="fieldName" style="width: 120px;">Fecha:</label>
+                        <input type="text" style="width: 100px;" class="datepicker" id="@InvoiceFields.InvoiceDate" name="@InvoiceFields.InvoiceDate" 
                                                         value="@if (Model.InvoiceDate.HasValue)
-                                                               {@Model.InvoiceDate.Value.ToShortDateString()}" />
-                     </span><span style="text-align:right;">
-                     @if (Model.InvoiceId > 0)
-                     {
-                         //<a href="../../Facturas/Factura nº @(Model.InvoiceNumber) - @(Model.InvoiceCustomerName).xls" title="Imprimir Factura" id="FileOpen_@(Model.InvoiceId)" class="FileOpen" target="_blank">
-                         <a href="#" title="Imprimir Factura" id="FileOpen_@(Model.InvoiceId)" class="FileOpen">
-                         <img src="../../img/impresion_ico.png" alt="" /></a>}
-                     else
-                     {
-                         <b>Guardar, antes de imprimir</b>
-                     }
-                     </span>
+                                                                {@Model.InvoiceDate.Value.ToShortDateString()}" />
+                        </span><span style="text-align:right;">
+                        @if (Model.InvoiceId > 0)
+                        {
+                            <a href="#" title="Imprimir Factura" id="FileOpen_@(Model.InvoiceId)" class="FileOpen">
+                            <img src="../../img/impresion_ico.png" alt="" /></a>}
+                        else
+                        {
+                            <b>Guardar, antes de imprimir</b>
+                        }
+                        </span>
                 </div>
                 <div class="rowForm">
                     <span style="width:55%"><label class="fieldName" style="width: 120px;">Cliente:</label>
@@ -57,23 +55,13 @@
                     <a href="#" id="Buscar"><img src="../../img/seleccionarcliente.png" alt="" /> </a></span>
                 </div>
                 <div class="rowForm">
-                    <span>
                     <label class="fieldName" style="width: 120px;">Facturar a:</label>
                     <span class="radio" style="float:none;"><label>Cliente</label>@Html.RadioButton(@InvoiceFields.InvoiceBy, "1", Model.InvoiceBy)</span>
                     <span class="radio" style="float:none;"><label>A otra</label>@Html.RadioButton(@InvoiceFields.InvoiceBy, "2", Model.InvoiceBy)</span>                     
-                    </span><span>
-                    <label class="fieldName" style="width: 120px;">Total Factura:</label>
-                    @Html.TextBox(InvoiceFields.InvoiceNetTotal, Model.InvoiceNetTotal, new { @style = "width: 100px;", @readonly = "readonly" })    
-                    </span>
                 </div>
                 <div class="rowForm">
-                    <span>
                     <label class="fieldName" style="width: 120px;">NIF:</label>
                     <input type="text" style="width: 100px;" id="@InvoiceFields.InvoiceCustomerNIF" name="@InvoiceFields.InvoiceCustomerNIF" value="@Model.InvoiceCustomerNIF" />
-                    </span><span>
-                    <label class="fieldName" style="width: 120px;">Coste:</label>
-                    @Html.TextBox(InvoiceFields.Expense, Model.Expense, new { @style="width: 100px;"})
-                    </span>
                 </div>
                 <div class="rowForm">
                     <label class="fieldName" style="width: 120px;">Nombre y Apellidos:</label>
@@ -92,7 +80,6 @@
                         @Html.DropDownList(@InvoiceFields.CityId, new SelectList(Cities, @InvoiceFields.CityId, @InvoiceFields.CityName), "<< seleccione >>", new { style = "width:208px" })    
                 </div> 
                 <div class="rowForm">   
-                    <span>
                     <label class="fieldName" style="width: 120px;">Codigo Postal:</label>
                     <input type="text" style="width: 100px;" id="@InvoiceFields.InvoiceCustomerCodPostal" name="@InvoiceFields.InvoiceCustomerCodPostal" value="@Model.InvoiceCustomerCodPostal" /> 
                 </div>
@@ -102,13 +89,13 @@
                 </div>
                 <div class="rowForm">
                     <label class="fieldName" style="width: 120px;">Pagada:</label>
-                     @Html.CheckBox(@InvoiceFields.IsInvoicePaid, @Model.IsInvoicePaid == true ? true : false)
+                        @Html.CheckBox(@InvoiceFields.IsInvoicePaid, @Model.IsInvoicePaid == true ? true : false)
                      
                 </div>
                 <div class="rowForm">
                     <label class="fieldName" style="width: 120px;">Fecha Pago:</label>
                     <input type="text" style="width: 100px;" class="datepicker" id="@InvoiceFields.InvoicePaidDate" name="@InvoiceFields.InvoicePaidDate"
-                                                                 value="@if (Model.InvoicePaidDate.HasValue)
+                                                                    value="@if (Model.InvoicePaidDate.HasValue)
                                                                         {@Model.InvoicePaidDate.Value.ToShortDateString()}" />
                 </div>
                 <div class="rowForm">
@@ -118,18 +105,22 @@
                 </div>
                 <div class="rowForm">   
                     <label class="fieldName" style="width: 120px;">IVA (%):</label>
-                    @Html.TextBox("InvoiceIva", Model.InvoiceIVAId != null ? Model.InvoiceIVAId == 1 ? "18" : "21" : "21", new { @style="width:60px;", @readonly="readonly" })
+                    @Html.TextBox("InvoiceIva", Model.InvoiceIVAId != null ? Model.InvoiceIVAId == 1 ? "18" : "21" : "21", new { @style = "width:60px;", @readonly = "readonly" })
                 </div>
                 @*<div class="rowForm">   
                     <label class="fieldName" style="width: 120px;">IVA (%):</label>
                     @Html.DropDownList(@InvoiceFields.InvoiceIVAId, new SelectList(iva, @IvaFields.Id, @IvaFields.IvaValor), "<<seleccione>>", new { style = "width:115px" })
                 </div>*@
                 <div class="rowForm">   
+                    <label class="fieldName" style="width: 120px;">Coste:</label>
+                    <input type="text" style="width: 100px;" id="@InvoiceFields.Expense" name="@InvoiceFields.Expense" value="@Model.Expense" />
+                </div>
+                <div class="rowForm">   
                     <span style="width:52%"><label class="fieldName" style="width: 120px;">Coche / Matricula:</label>
                     <input type="text" style="width: 200px;" id="CarNameComplete" name="CarNameComplete" readonly="readonly" value="@carName" />
-                     <input type="text" style="width: 80px;" id="CarRack" name="CarRack" readonly="readonly" value="@carRack" /></span>
-                     <span style="width:48%">
-                     <a href="#" class="OpenListCar"><img src="../../img/seleccionarcoche.png" alt="" /> </a></span>
+                        <input type="text" style="width: 80px;" id="CarRack" name="CarRack" readonly="readonly" value="@carRack" /></span>
+                        <span style="width:48%">
+                        <a href="#" class="OpenListCar"><img src="../../img/seleccionarcoche.png" alt="" /> </a></span>
                    
                 </div>
                 <div class="rowForm">   
@@ -139,7 +130,7 @@
                 <div class="rowForm texareaContent">    
                     <label class="fieldName" style="width: 120px;">Comentarios:  <br /> <i>(Estos Comentarios salen en la Factura)</i></label>
                         <textarea style="width:600px;" id="@InvoiceFields.InvoiceComments" name="@InvoiceFields.InvoiceComments">@Model.InvoiceComments</textarea>                        
-                 </div>                 
+                    </div>                 
                 <div id="DialogSearchCar" style="display:none;" title="Seleccionar Coche">
                     @Html.Partial("~/Views/Invoice/ListCar.cshtml", cars)
                 </div>                                
@@ -151,9 +142,9 @@
                         <input type="submit" class="SaveInvoice"value="Guardar" />
                     </div>
                 </div>   
-          </div>
-      </div>
-     </div>
+            </div>
+        </div>
+</div>
 }
 
 <script type="text/javascript">
