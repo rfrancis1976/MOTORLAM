@@ -134,13 +134,14 @@ namespace Motorlam.Controllers
                 {
                     newModel.BrandId = BrandId;
                     newModel.ModelName = NewModelName;
+                    
                     SaveEntity(newModel);
                 }
             }
             this.DataService.Commit();
 
             ViewBag.Brands = this.DataService.BrandRepository.CreateQuery(Proyection.Basic).OrderBy(BrandFields.BrandName).ToList();
-            ViewBag.Models = this.CreateQuery<Model>(Proyection.Basic).Where(ModelFields.BrandId,BrandId).OrderBy(ModelFields.ModelName).ToList();
+            ViewBag.Models = this.DataService.ModelRepository.CreateQuery(Proyection.Basic).Where(ModelFields.BrandId, BrandId).OrderBy(ModelFields.ModelName).ToList();
 
             return this.Json(new{ result = "success" });
         }

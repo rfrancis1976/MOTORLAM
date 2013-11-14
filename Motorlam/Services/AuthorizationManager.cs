@@ -4,8 +4,8 @@ using System.Linq;
 using System.Web;
 using inercya.ORMLite;
 using System.Web.Mvc;
-using Motorlam.Data;
 using Motorlam.Entities;
+using Motorlam.Data;
 
 namespace Motorlam.Services
 { 
@@ -13,9 +13,9 @@ namespace Motorlam.Services
     {
         public DataService DataService { get; private set; }
 
-        public AuthorizationManager(DataService dataService)
+        public AuthorizationManager(DataService MotorlamDataService)
         {
-            this.DataService = dataService;
+            this.DataService = MotorlamDataService;
         }
 
         public User CurrentUser

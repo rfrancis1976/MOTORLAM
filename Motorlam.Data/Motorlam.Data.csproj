@@ -100,6 +100,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>BrandProduct.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\PageSize.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PageSize.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\User.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -207,6 +212,10 @@
     <None Include="Entities\BrandProduct.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>BrandProduct.cs</LastGenOutput>
+    </None>
+    <None Include="Entities\PageSize.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>PageSize.cs</LastGenOutput>
     </None>
     <None Include="Entities\User.tt">
       <Generator>TextTemplatingFileGenerator</Generator>

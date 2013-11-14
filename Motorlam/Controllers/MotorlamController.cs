@@ -4,9 +4,9 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using inercya.ORMLite;
-using Motorlam.Data;
-using Motorlam.Entities;
 using Motorlam.Services;
+using Motorlam.Entities;
+using Motorlam.Data;
 
 
 namespace Motorlam.Controllers
@@ -16,6 +16,7 @@ namespace Motorlam.Controllers
         public DataService DataService { get; set; }
         public AuthorizationManager AuthorizationManager { get; set; }
 
+
         public User CurrentUser
         {
             get
@@ -24,22 +25,25 @@ namespace Motorlam.Controllers
             }
         }
 
+
         protected DataService Repository
         {
             get { return (DataService)this.HttpContext.Items["DataService"]; }
         }
 
-        protected QueryLite<T> CreateQuery<T>(Proyection proyection) where T:class, new()
+
+        protected QueryLite<T> CreateQuery<T>(Proyection proyection) where T : class, new()
         {
             return new QueryLite<T>(proyection, this.Repository);
         }
+
 
         protected virtual ActionResult SaveEntity(object entity)
         {
             if (TryUpdateModel(entity))
             {
                 if ((int)entity.GetId() == 0)
-                {                    
+                {
                     this.DataService.Insert(entity);
                 }
                 else
@@ -56,5 +60,7 @@ namespace Motorlam.Controllers
                 });
             }
         }
+
+       
     }
 }

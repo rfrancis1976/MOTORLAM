@@ -51,9 +51,12 @@ namespace Motorlam.Controllers
         {
             ViewBag.Message = "Clientes";
 
-            SaveEntity(customer);
+            if (customer.CustomerId == 0)
+                this.DataService.Insert(customer);
+            else
+                this.DataService.Update(customer);
 
-            var cars = this.CreateQuery<Car>(Proyection.Detailed)
+            var cars = this.DataService.CarRepository.CreateQuery(Proyection.Detailed)
                 .Where(CarFields.CustomerId, customer.CustomerId).ToList();
 
             if (cars.Count > 0) ViewBag.Cars = cars;
@@ -196,7 +199,7 @@ namespace Motorlam.Controllers
 
         private IList<ChildItem> LoadMotors(int fatherId)
         {
-            var motors = this.CreateQuery<ModelMotor>(Proyection.Basic)
+            var motors = this.DataService.ModelMotorRepository.CreateQuery(Proyection.Basic)
                 .Where(ModelMotorFields.ModelId, fatherId).ToList();
             return ChildItem.GetChildItems(new SelectList(motors, ModelMotorFields.ModelMotorId, ModelFields.MotorName));
         }

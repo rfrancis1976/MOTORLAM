@@ -1,0 +1,72 @@
+﻿@using inercya.MillHill.Data.Models
+@model string
+@{ 
+    var pageInfo = (PageInfo)ViewData["PageInfo"];
+ }
+
+@if (pageInfo != null)
+ {
+     // Pintar boton de Actualizar solo cuando hay datos
+     if (pageInfo.Records > 0 || pageInfo.ShowRefreshButton == true)
+     {
+         var RefreshPageRouteValues = pageInfo.GetRouteValues(pageInfo.Page.Value, Model);
+        <span><a class="ListPageInfo buttonPagination pages refreshPage" href="@Url.Action(pageInfo.Action, (pageInfo.ContollerName != null ? pageInfo.ContollerName : null), RefreshPageRouteValues)"><img title="Refresh page" src="@Url.Content("~/img/gridButtons/reload.gif")" /></a></span>
+     }
+
+     if (pageInfo.Pages.Value >= 0)
+     {
+         if (pageInfo.Page > 1)
+         {
+             var firstPageRouteValues = pageInfo.GetRouteValues(1, Model);
+             var previousPageRouteValues = pageInfo.GetRouteValues(pageInfo.Page.Value - 1, Model);       
+        <span><a class="ListPageInfo buttonPagination firstPage" href="@Url.Action(pageInfo.Action, (pageInfo.ContollerName != null ? pageInfo.ContollerName : null), firstPageRouteValues)"><img title="First page" src="@Url.Content("~/img/gridButtons/first.gif")" /></a></span>
+        <span><a class="ListPageInfo buttonPagination previousPage" href="@Url.Action(pageInfo.Action, (pageInfo.ContollerName != null ? pageInfo.ContollerName : null), previousPageRouteValues)"><img title="Previous page" src="@Url.Content("~/img/gridButtons/previous.gif")" /></a></span>
+    
+         }
+         else
+         {
+        <span><img title="first page" class="buttonPagination" src="@Url.Content("~/img/gridButtons/first.gif")" alt="" /></span>
+        <span><img title="Previous page" class="buttonPagination" src="@Url.Content("~/img/gridButtons/previous.gif")" alt="" /></span>
+         }
+         if (pageInfo.FirstPage > 1)
+         {
+          <span>...</span>
+         }
+
+         for (var i = pageInfo.FirstPage; i <= (int)pageInfo.LastPage; i++)
+         {
+          <span class="pagesContainer">
+            @if (pageInfo.Page == i)
+            { 
+                <span class="pages paginaActiva">[@i.ToString()]</span>
+            }
+            else
+            {   <span class="pages">
+                @{
+                var pageRouteValues = pageInfo.GetRouteValues(i, Model);  
+                    @Html.ActionLink(i.ToString(), pageInfo.Action, (pageInfo.ContollerName != null ? pageInfo.ContollerName : null), pageRouteValues, new RouteValueDictionary { { "class", "ListPageInfo pages" } })
+                 }
+                </span>
+            }
+        </span>
+         }
+
+         if (pageInfo.LastPage < pageInfo.Pages)
+         { 
+        <span>...</span>
+         }
+         if (pageInfo.Page < pageInfo.Pages)
+         {
+             var nextPageRouteValues = pageInfo.GetRouteValues(pageInfo.Page.Value + 1, Model);
+             var lastPageRouteValues = pageInfo.GetRouteValues(pageInfo.Pages.Value, Model);
+    
+        <span><a class="ListPageInfo buttonPagination nextPage" href="@Url.Action(pageInfo.Action, (pageInfo.ContollerName != null ? pageInfo.ContollerName : null), nextPageRouteValues)"><img title="Next page" src="@Url.Content("~/img/gridButtons/next.gif")" /></a></span>
+        <span><a class="ListPageInfo buttonPagination latestPage" href="@Url.Action(pageInfo.Action, (pageInfo.ContollerName != null ? pageInfo.ContollerName : null), lastPageRouteValues)"><img title="Latest page" src="@Url.Content("~/img/gridButtons/latest.gif")" /></a></span>        
+         }
+         else
+         {
+        <span><img title="next page" src="@Url.Content("~/img/gridButtons/next.gif")" /></span>
+        <span><img title="Latest page" src="@Url.Content("~/img/gridButtons/latest.gif")" /></span>
+   }
+ }
+}

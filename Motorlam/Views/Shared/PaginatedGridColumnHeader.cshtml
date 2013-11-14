@@ -1,0 +1,45 @@
+﻿@model inercya.MillHill.Web.Models.PaginatedGridColumnHeaderViewModel
+
+@{
+    var pageInfo = Model.PageInfo;
+    string fieldName = Model.FieldName;
+    string fieldTitle = string.IsNullOrEmpty(Model.FieldTitle) ? fieldName : Model.FieldTitle;
+    string cssClass = Model.CssClass;
+    string columnTitle = Model.ColumnTitle;
+        var prefix = Model.Prefix;
+    string fieldAlign = string.IsNullOrEmpty(Model.FieldAlign) ? "left" : Model.FieldAlign;
+    
+RouteValueDictionary sortRouteValues = 
+    pageInfo.Order == "Desc" && pageInfo.Field == fieldName || pageInfo.Field != fieldName ? 
+    pageInfo.GetRouteValues("Asc", fieldName, pageInfo.Title, prefix) : 
+    pageInfo.GetRouteValues("Desc", fieldName, pageInfo.Title, prefix);
+     
+ 
+    var sortUrlAction = "";   
+ if (pageInfo.ContollerName == null){    
+    sortUrlAction = Url.Action(pageInfo.Action, sortRouteValues);}
+  else{
+    sortUrlAction = Url.Action(pageInfo.Action, pageInfo.ContollerName, sortRouteValues); }
+var classOrderField = (pageInfo.Field == fieldName ? "separator selected" : "separator") + (string.IsNullOrEmpty(cssClass) ? string.Empty : " " + cssClass);
+ }
+<th align="@fieldAlign" class="@classOrderField">
+    <!-- Para que si no hay registros no pueda dar a ordenar, asi no hay link que ejecute la accion  -->
+    @if (pageInfo.Records != 0)
+    {
+        if (pageInfo.Field == fieldName)
+        {
+            @*<span><a href="@sortUrlAction" class="ListPageInfo orderColum order_@(pageInfo.Order)" title="Sort @(pageInfo.Order=="Asc"?"Desc":"Asc")ending">@fieldTitle</a></span>*@
+            <span><a href="@sortUrlAction" class="ListPageInfo orderColum order_@(pageInfo.Order)" title="@columnTitle">@fieldTitle</a></span>
+        }
+    
+    else
+    {
+            <span><a href="@sortUrlAction" class="ListPageInfo orderColum" title="@columnTitle">@fieldTitle</a></span>
+    }
+
+    }
+    else
+    {
+        <span><a href="#" class="" title="@columnTitle">@fieldTitle</a></span>
+    }
+</th>

@@ -1,0 +1,20 @@
+﻿@model inercya.MillHill.Web.Models.PageRecordsViewModel
+@{
+    string recordsMessage = Model.PluralNameEntityResource + " from " + ((Model.PageInfo.Page * Model.PageInfo.PageSize) - (Model.PageInfo.PageSize - 1)).ToString();    
+    if(Model.PageInfo.Page == Model.PageInfo.Pages){
+        recordsMessage += " to " + Model.PageInfo.Records;
+    }
+    else{
+        recordsMessage += " to " + (Model.PageInfo.Page * Model.PageInfo.PageSize).ToString();
+    }
+    
+    recordsMessage += " of " + Model.PageInfo.Records;
+    
+}
+@if (Model.PageInfo.Records <= Model.PageInfo.PageSize){
+        @(Model.PageInfo.Records.ToString()) @(Model.PluralNameEntityResource)
+}
+else
+{ 
+	@recordsMessage
+}

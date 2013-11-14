@@ -1,0 +1,49 @@
+﻿
+@using inercya.MillHill.Web.Models
+@model inercya.MillHill.Web.Models.PageSizesViewModel
+@{
+    var id = Guid.NewGuid().ToString("N");
+    
+    var pageInfo = this.Model.PageInfo;
+    var PageSizes = this.Model.PageSizes;
+    var gridContainerId = this.Model.GridContainerId;
+    var prefix = this.Model.Prefix;
+    if (pageInfo.Action == null) { pageInfo.Action = "SearchResult"; }
+    
+    
+    RouteValueDictionary routeValues = pageInfo.GetRouteValues(prefix);
+    routeValues["Page"] = 1;
+    var selectedRouteValues = new RouteValueDictionary(routeValues);
+    selectedRouteValues["PageSize"] = pageInfo.PageSize;
+    var selectedValue = "";
+    if (pageInfo.ContollerName == null){
+         selectedValue = Url.Action(pageInfo.Action, selectedRouteValues);}
+    else{
+        selectedValue = Url.Action(pageInfo.Action,pageInfo.ContollerName, selectedRouteValues);
+    }
+    
+    
+    var pageSizesSelectList = new SelectList(
+        PageSizes.Select(pgs =>
+        {
+            var rValues = new RouteValueDictionary(routeValues);
+            rValues["PageSize"] = pgs.SizeValue;
+            return new { Value = (pageInfo.ContollerName == null?Url.Action(pageInfo.Action, rValues):Url.Action(pageInfo.Action,pageInfo.ContollerName, rValues)), Text = pgs.SizeValue.ToString() };
+        }), "Value", "Text", selectedValue);    
+}
+
+
+<select id="@id" class="PageSizes showTooltip" title="Records per page">
+    @foreach (var p in pageSizesSelectList)
+    {
+        if (p.Value == selectedValue)
+        {
+            <option value="@p.Value" selected="selected">@p.Text</option>
+        }
+        else
+        {
+            <option value="@p.Value">@p.Text</option>
+        }
+    }
+</select>
+@*<span class="PageSizeText">Records per page</span>*@

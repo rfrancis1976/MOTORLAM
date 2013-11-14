@@ -109,7 +109,6 @@
     <Compile Include="Controllers\CarController.cs" />
     <Compile Include="Controllers\ClienteController.cs" />
     <Compile Include="Controllers\DeliveryController.cs" />
-    <Compile Include="Controllers\EstimateController.cs" />
     <Compile Include="Controllers\InvoiceController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Controllers\SupplierController.cs" />
@@ -121,9 +120,14 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="HtmlHelpers\PaginationHelpers.cs" />
     <Compile Include="Models\ChildItem.cs" />
+    <Compile Include="Models\PageInfo.cs" />
+    <Compile Include="Models\PageSizesViewModel.cs" />
+    <Compile Include="Models\PaginatedGridColumnHeaderViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\AuthorizationManager.cs" />
+    <Compile Include="Utils\PaginationManager.cs" />
     <Compile Include="WebForms\ReportViewerBuiltinForm.aspx.cs">
       <DependentUpon>ReportViewerBuiltinForm.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -448,15 +452,6 @@
     <Content Include="Views\Invoice\CriteriaCustomer.cshtml" />
     <Content Include="Views\Invoice\DatosLineaFactura.cshtml" />
     <Content Include="Views\Shared\Footer.cshtml" />
-    <Content Include="Views\Estimate\Criteria.cshtml" />
-    <Content Include="Views\Estimate\SearchCustomer.cshtml" />
-    <Content Include="Views\Estimate\CriteriaCustomer.cshtml" />
-    <Content Include="Views\Estimate\DatosLineaFactura.cshtml" />
-    <Content Include="Views\Estimate\Index.cshtml" />
-    <Content Include="Views\Estimate\List.cshtml" />
-    <Content Include="Views\Estimate\ListCustomer.cshtml" />
-    <Content Include="Views\Estimate\Nuevo.cshtml" />
-    <Content Include="Views\Estimate\OrderList.cshtml" />
     <Content Include="Views\Invoice\ListCar.cshtml" />
     <Content Include="Views\Invoice\DatosFactura.cshtml" />
     <Content Include="Views\Invoice\DatosCoche.cshtml" />
@@ -486,6 +481,10 @@
     <Content Include="Views\Invoice\ListProduct.cshtml" />
     <Content Include="Views\Cliente\UploadFile.cshtml" />
     <Content Include="Views\Shared\DeliveryLayout.cshtml" />
+    <Content Include="Views\Shared\PageRecordsHeader.cshtml" />
+    <Content Include="Views\Shared\PageSizesDropDown.cshtml" />
+    <Content Include="Views\Shared\PaginatedGridColumnHeader.cshtml" />
+    <Content Include="Views\Shared\Pagination.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Motorlam.Data\Motorlam.Data.csproj">
@@ -493,7 +492,6 @@
       <Name>Motorlam.Data</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

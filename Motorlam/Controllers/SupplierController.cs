@@ -37,7 +37,7 @@ namespace Motorlam.Controllers
                 .Where(SupplierFields.SupplierId, SupplierId).ToList().FirstOrDefault();
                         
             ViewBag.Provinces = this.DataService.ProvinceRepository.CreateQuery(Proyection.Basic).ToList();
-            ViewBag.Cities = this.CreateQuery<City>(Proyection.Basic).ToList();
+            ViewBag.Cities = this.DataService.CityRepository.CreateQuery(Proyection.Basic).ToList();
             return View("Nuevo", supplier);
         }
 
