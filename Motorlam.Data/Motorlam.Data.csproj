@@ -40,25 +40,16 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="FluentValidation">
-      <HintPath>..\Bin\FluentValidation.dll</HintPath>
+      <HintPath>..\Motorlam\bin\FluentValidation.dll</HintPath>
     </Reference>
     <Reference Include="FluentValidation.Mvc">
-      <HintPath>..\Bin\FluentValidation.Mvc.dll</HintPath>
+      <HintPath>..\Motorlam\bin\FluentValidation.Mvc.dll</HintPath>
     </Reference>
     <Reference Include="inercya.ORMLite">
-      <HintPath>..\Bin\inercya.ORMLite.dll</HintPath>
+      <HintPath>..\Motorlam\bin\inercya.ORMLite.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\Bin\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="NVelocity">
-      <HintPath>..\Bin\NVelocity.dll</HintPath>
-    </Reference>
-    <Reference Include="SpreadsheetGear">
-      <HintPath>..\Bin\SpreadsheetGear.dll</HintPath>
-    </Reference>
-    <Reference Include="SqlRanger.StoredProcedures.StoredProcedure">
-      <HintPath>..\Bin\SqlRanger.StoredProcedures.StoredProcedure.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -68,7 +59,7 @@
     <Reference Include="System.Web" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
-    <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Web.Mvc, Version=4.0.0.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
